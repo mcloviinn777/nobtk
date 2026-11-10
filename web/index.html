@@ -91,6 +91,16 @@ main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px
 .chip.way{background:var(--ok-soft);color:var(--ok)}
 .chip.ph{background:var(--warn-soft);color:var(--warn)}
 .muted{color:var(--muted)}
+.lq{display:flex;flex-direction:column;gap:8px}
+.lq-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--surface-2)}
+.lq-row.me{background:var(--primary);color:var(--primary-ink)}
+.lq-row .bdg{font-family:var(--f-display);font-weight:800;font-size:20px;min-width:46px;height:42px;padding:0 8px;border-radius:11px;display:grid;place-items:center;background:var(--surface);color:var(--primary)}
+.lq-row.me .bdg{background:var(--accent);color:var(--accent-ink)}
+.lq-row.free .bdg{color:var(--muted)}
+.lq-row .lbl2{flex:1;min-width:0;font-weight:700}
+.lq-row .lbl2 small{display:block;font-weight:500;opacity:.75;font-size:12.5px}
+.lq-row .tm{font-size:13px;font-weight:700;white-space:nowrap}
+.lq-sep{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:6px}
 .lineviz{position:relative;z-index:1;margin-top:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .lv-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .lv-row i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.3);flex:none}
@@ -389,7 +399,7 @@ demo_cap1:"تيليفون الزبون",demo_cap2:"الحلاق، مباشرة",
 mins_ago:"هادي {m} دقيقة",now:"دابا"}
 };
 
-Object.assign(STR.fr,{pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
+Object.assign(STR.fr,{lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
 st_called_p:"Présente-toi au fauteuil {c}.",tr3:"Ton tour",tr4:"Terminé",
 grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé. Le barbier peut te marquer absent.",
 cant_come:"Je ne peux pas venir",n_called_b:"Fauteuil {c}. Tu as {g} min pour te présenter.",
@@ -403,7 +413,7 @@ b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
 lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
-Object.assign(STR.ar,{pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
+Object.assign(STR.ar,{lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
 st_called_p:"سير للكرسي {c}.",tr3:"نوبتك",tr4:"سالات",
 grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات. الحلاق يقدر يحسبك غايب.",
 cant_come:"ما نقدرش نجي",n_called_b:"الكرسي {c}. عندك {g} دقايق باش توصل.",
@@ -615,6 +625,7 @@ function ClientView(root,key,standalone){
    <div class="track" data-k="track"><div>${t("tr1")}</div><div>${t("tr2")}</div><div>${t("tr3")}</div><div>${t("tr4")}</div></div>
    <div class="warnbox" data-k="strike" hidden></div>
    <div data-k="acts" style="display:flex;flex-direction:column;gap:8px"></div>
+   <section class="card" data-k="lineCard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px"><h3 style="font-size:17px">${t("lq_t")}</h3><span class="pill live"><span class="dot"></span>${t("lq_live")}</span></div><div class="lq" data-k="lineList"></div></section>
    <section class="card notif-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="font-size:17px">${t("alerts")}</h3><button class="btn ghost sm" data-a="test" type="button">${t("test")}</button></div>
     <div class="notif-st" data-k="nst"></div>
     <div><div class="lbl" style="margin-bottom:6px">${t("warn_me")}</div><div class="opts" data-k="warn">${[10,20,30].map(m=>`<button type="button" data-m="${m}">${m} ${t("min")}</button>`).join("")}</div></div>
@@ -671,6 +682,15 @@ function ClientView(root,key,standalone){
   }else if(stg==="done"||stg==="noshow"){const blocked=x.blockedUntil&&x.blockedUntil>Date.now();acts.innerHTML=blocked?"":`<button class="btn acc block" data-a="new" type="button">${t("new_ticket")}</button>`;const nb=acts.querySelector("button");if(nb)nb.onclick=()=>{ls.del(myKey);picked=null;update()}}
   else acts.innerHTML="";
   if(stg==="noshow"&&x.blockedUntil&&x.blockedUntil>Date.now()){acts.innerHTML=`<div class="warnbox bad">${esc(t("blocked_msg",{d:dateStr(x.blockedUntil)}))}</div><button class="btn ghost block" data-a="ok" type="button">OK</button>`;acts.querySelector('[data-a="ok"]').onclick=()=>{ls.del(myKey);update()}}
+  // whole line, live: chairs then waiting list, own ticket highlighted
+  const lc=$("lineCard"); lc.hidden=stg==="done"||stg==="noshow";
+  if(!lc.hidden){const num=n=>String(n).padStart(2,"0");let h="";
+   q.inChair.forEach((y,i)=>{const me=y&&y.id===x.id;
+    h+=y?`<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${t("chair")} ${i+1}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm">${t("lq_chair")}</span></div>`
+     :`<div class="lq-row free"><span class="bdg">–</span><span class="lbl2">${t("chair")} ${i+1}<small>${t("b_free")}</small></span></div>`});
+   h+=`<div class="lq-sep">${t("lv_wait")} · ${q.waiting.length}</div>`;
+   h+=q.waiting.length?q.waiting.map((y,i)=>{const me=y.id===x.id;return `<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${i+1}${i===0?t("lq_first"):t("lq_nth")}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm num">≈ ${mins(q.eta[y.id])} ${t("min")}</span></div>`}).join(""):`<div class="muted" style="font-size:14px;padding:4px 2px">${t("lq_empty")}</div>`;
+   $("lineList").innerHTML=h}
   // alerts
   const nState=ls.get("nobtk-notif",null);
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
