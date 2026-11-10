@@ -399,7 +399,7 @@ demo_cap1:"تيليفون الزبون",demo_cap2:"الحلاق، مباشرة",
 mins_ago:"هادي {m} دقيقة",now:"دابا"}
 };
 
-Object.assign(STR.fr,{lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
+Object.assign(STR.fr,{travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
 st_called_p:"Présente-toi au fauteuil {c}.",tr3:"Ton tour",tr4:"Terminé",
 grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé. Le barbier peut te marquer absent.",
 cant_come:"Je ne peux pas venir",n_called_b:"Fauteuil {c}. Tu as {g} min pour te présenter.",
@@ -413,7 +413,7 @@ b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
 lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
-Object.assign(STR.ar,{lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
+Object.assign(STR.ar,{travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
 st_called_p:"سير للكرسي {c}.",tr3:"نوبتك",tr4:"سالات",
 grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات. الحلاق يقدر يحسبك غايب.",
 cant_come:"ما نقدرش نجي",n_called_b:"الكرسي {c}. عندك {g} دقايق باش توصل.",
@@ -541,8 +541,8 @@ function strikeMsg(s,bu){if(bu&&bu>Date.now())return t("strike_block",{d:dateStr
 /* ================= Actions ================= */
 const newId=()=>"t"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const A={
- async join({name,phone,svcId,src}){const q=Q();const num=(q.all.reduce((m,x)=>Math.max(m,x.num||0),0))+1;const id=newId();
-  const d={num,pos:num,name:name.trim().slice(0,40),phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0};
+ async join({name,phone,svcId,src,travel}){const q=Q();const num=(q.all.reduce((m,x)=>Math.max(m,x.num||0),0))+1;const id=newId();
+  const d={num,pos:num,name:name.trim().slice(0,40),phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0,travel:(travel==null?null:+travel)};
   await Store.setTicket(id,d);await A.fill();return id},
  // Puts the first person in line into every free chair. Runs after any change that can free a chair.
  async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id));if(!w)return;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
@@ -555,7 +555,8 @@ const A={
   await Store.patchTicket(id,{status:"waiting",chair:null,startedAt:null,pos,delayed:true,onWay:false});await A.fill()},
  async forgive(k){const c=Store.clients.find(x=>x.id===k);if(!c)return;await Store.setClient(k,{phone:c.phone||k,name:c.name||"",strikes:0,lastNoShow:c.lastNoShow||null,blockedUntil:null})},
  async cancel(id,byShop){const x=Store.tickets.find(y=>y.id===id);await Store.patchTicket(id,{status:"cancelled",byShop:!!byShop,chair:null});if(x&&inChairSt(x))await A.fill()},
- async onWay(id){await Store.patchTicket(id,{onWay:true})},
+ async onWay(id){await Store.patchTicket(id,{onWay:true,onWayAt:Date.now()})},
+ async setTravel(id,m){await Store.patchTicket(id,{travel:+m})},
  async up(id){const w=Q().waiting;const i=w.findIndex(x=>x.id===id);if(i<1)return;const a=w[i],b=w[i-1];const pa=a.pos??a.num,pb=b.pos??b.num;await Store.patchTicket(a.id,{pos:pb});await Store.patchTicket(b.id,{pos:pa})},
  async examples(){const names=["Youssef","Amine","Hamza","Mehdi","Ayoub","Othmane","Zakaria","Karim"];const svcs=["degrade","combo","coupe","barbe","degrade","enfant"];const srcs=["app","walkin","app","phone","app","app"];
   const q=Q();let num=q.all.reduce((m,x)=>Math.max(m,x.num||0),0);const now=Date.now();const start=Math.floor(Math.random()*4);
@@ -572,11 +573,12 @@ function ClientView(root,key,standalone){
  root.className="cv"+(standalone?" standalone":"");
  root.innerHTML=`<div class="banners"></div><div class="cv-body"></div><div class="called-ov" hidden></div>`;
  const body=root.querySelector(".cv-body"),bannerBox=root.querySelector(".banners"),ov=root.querySelector(".called-ov");
- const myKey="nobtk-my-"+key;let screen=null,picked=null,cancelArm=false,ovTimer=null;
+ const myKey="nobtk-my-"+key;let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10);
  const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"");
  const hist=id=>ls.get("nobtk-hist-"+key+"-"+id,[]);
  const addHist=(id,title)=>{const h=hist(id);h.unshift({ts:Date.now(),title});ls.set("nobtk-hist-"+key+"-"+id,h.slice(0,20))};
- const warnMin=()=>ls.get("nobtk-warn-"+key,20);
+ const travelOf=x=>(x&&x.travel!=null)?+x.travel:ls.get("nobtk-travel-"+key,10);
+ const warnMin=x=>travelOf(x)+5;
  function banner(title,msg,strong,id){const el=document.createElement("div");el.className="banner";el.innerHTML=`<div class="ic">${ICON.bell}</div><div><small>NOBTK · ${t("now")}</small><b>${esc(title)}</b><p>${esc(msg)}</p></div>`;bannerBox.prepend(el);while(bannerBox.children.length>2)bannerBox.lastChild.remove();setTimeout(()=>el.remove(),7000);chime(strong);vibrate(strong?[300,120,300,120,500]:[200,80,200]);sysNotify(title,msg);if(id)addHist(id,title)}
  function toTop(){const sc=root.closest(".scr");if(sc)sc.scrollTop=0;else try{window.scrollTo(0,0)}catch{}}
 
@@ -593,10 +595,12 @@ function ClientView(root,key,standalone){
     <div class="field"><span class="lbl">${t("services")}</span><div class="svc-list" role="radiogroup">
      ${SERVICES.map(s=>`<button type="button" class="svc" role="radio" aria-checked="${picked===s.id}" data-s="${s.id}"><span class="rad"></span><span class="nm">${esc(s[lang])}<small>~${s.min} ${t("min")}</small></span><span class="pr">${money(s.price)}</span></button>`).join("")}
     </div></div>
+    <div class="field"><span class="lbl">${t("travel_q")}</span><div class="opts" data-k="travel">${[0,5,10,15,20,30].map(m=>`<button type="button" data-tr="${m}" aria-pressed="${m===travelPick}">${m===0?t("travel_0"):m===30?"30+ "+t("min"):m+" "+t("min")}</button>`).join("")}</div><p class="policy" data-k="thint" style="text-align:start"></p></div>
     <div class="err" hidden></div>
     <button class="btn acc block" type="submit" style="font-size:16px;padding:15px">${t("join_btn")}</button>
     <p class="policy" data-k="pol"></p>
    </form>`;
+  body.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{travelPick=+b.dataset.tr;ls.set("nobtk-travel-"+key,travelPick);body.querySelectorAll("[data-tr]").forEach(x=>x.setAttribute("aria-pressed",x===b));updateShop()});
   body.querySelectorAll(".svc").forEach(b=>b.onclick=()=>{picked=b.dataset.s;body.querySelectorAll(".svc").forEach(x=>x.setAttribute("aria-checked",x===b))});
   body.querySelector("form").onsubmit=async e=>{e.preventDefault();unlockAudio();const err=body.querySelector(".err");const name=body.querySelector("#nm-"+key).value;const phone=body.querySelector("#ph-"+key).value;
    const fail=m=>{err.textContent=m;err.hidden=false};
@@ -606,12 +610,13 @@ function ClientView(root,key,standalone){
    const c=clientRec(phone);if(c&&c.blockedUntil&&c.blockedUntil>Date.now())return fail(t("blocked_msg",{d:dateStr(c.blockedUntil)}));
    if(Store.tickets.some(x=>phoneKey(x.phone)===phoneKey(phone)&&(x.status==="waiting"||inChairSt(x))))return fail(t("already"));
    if(!picked)return fail(t("need_svc"));
-   err.hidden=true;const id=await A.join({name,phone,svcId:picked,src:"app"});ls.set(myKey,id);
+   err.hidden=true;const id=await A.join({name,phone,svcId:picked,src:"app",travel:travelPick});ls.set(myKey,id);
    if(ls.get("nobtk-notif",null)==null)ls.set("nobtk-notif","app");update()};
  }
  function updateShop(){const q=Q();body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"));
   body.querySelector('[data-k="w"]').textContent=q.waiting.length;body.querySelector('[data-k="e"]').textContent=Store.shop.paused?"–":`${mins(q.nextFree)} ${t("min")}`;
   body.querySelector('[data-k="pol"]').textContent=t("policy_short",{g:+Store.shop.grace||5,d:blockDays()});
+  const th=body.querySelector('[data-k="thint"]');if(th){const w=mins(q.nextFree);th.textContent=Store.shop.paused?"":(travelPick>0&&travelPick>=w?t("travel_far"):t("travel_note",{m:travelPick+5}))}
   const W=q.waiting.length,shown=Math.min(W,12);
   body.querySelector('[data-k="line"]').innerHTML=q.inChair.map(x=>`<i class="${x?"ch":"fr"}"></i>`).join("")+`<span class="sep"></span>`+Array.from({length:shown},()=>"<i></i>").join("")+(W>shown?`<b>+${W-shown}</b>`:"")+(Store.shop.paused?"":`<i class="you"></i>`)}
 
@@ -628,15 +633,15 @@ function ClientView(root,key,standalone){
    <section class="card" data-k="lineCard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px"><h3 style="font-size:17px">${t("lq_t")}</h3><span class="pill live"><span class="dot"></span>${t("lq_live")}</span></div><div class="lq" data-k="lineList"></div></section>
    <section class="card notif-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="font-size:17px">${t("alerts")}</h3><button class="btn ghost sm" data-a="test" type="button">${t("test")}</button></div>
     <div class="notif-st" data-k="nst"></div>
-    <div><div class="lbl" style="margin-bottom:6px">${t("warn_me")}</div><div class="opts" data-k="warn">${[10,20,30].map(m=>`<button type="button" data-m="${m}">${m} ${t("min")}</button>`).join("")}</div></div>
+    <div><div class="lbl" style="margin-bottom:6px">${t("travel_lbl")}</div><div class="opts" data-k="warn">${[0,5,10,15,20,30].map(m=>`<button type="button" data-m="${m}">${m===0?t("travel_0"):m===30?"30+ "+t("min"):m+" "+t("min")}</button>`).join("")}</div><p class="muted" data-k="tnote" style="margin:8px 0 0;font-size:13px"></p></div>
     <div><div class="lbl" style="margin-bottom:6px">${t("history")}</div><div class="hist" data-k="hist"></div></div>
    </section>
    <section class="card"><h3 style="font-size:17px;margin-bottom:6px">${t("details")}</h3><div data-k="det"></div></section>`;
   body.querySelector('[data-a="test"]').onclick=()=>{unlockAudio();banner(t("n_test_t"),t("n_test_b"),false,ls.get(myKey));updateTicket()};
-  body.querySelectorAll('[data-k="warn"] button').forEach(b=>b.onclick=()=>{ls.set("nobtk-warn-"+key,+b.dataset.m);updateTicket()});
+  body.querySelectorAll('[data-k="warn"] button').forEach(b=>b.onclick=()=>{const id=ls.get(myKey);ls.set("nobtk-travel-"+key,+b.dataset.m);if(id)A.setTravel(id,+b.dataset.m)});
  }
  function stageOf(x,q){if(inChairSt(x))return"called";if(x.status==="done")return"done";if(x.status==="noshow")return"noshow";
-  const a=q.ahead[x.id]??0,e=mins(q.eta[x.id]||0);if(a===0)return"next";if(a<=2||e<=warnMin())return"soon";return"wait"}
+  const a=q.ahead[x.id]??0,e=mins(q.eta[x.id]||0);if(a===0)return"next";if(a<=2||(travelOf(x)>0&&e<=warnMin(x)))return"soon";return"wait"}
  const RANK={wait:0,soon:1,next:2,called:3,done:4,noshow:5};
  function graceLeft(x){return (x.startedAt||Date.now())+graceMs()-Date.now()}
  function renderOverlay(x){
@@ -696,7 +701,8 @@ function ClientView(root,key,standalone){
   const nState=ls.get("nobtk-notif",null);
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
   if(nState!=="system"&&"Notification" in window){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
-  $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===warnMin()));
+  $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===travelOf(x)));
+  $("tnote").textContent=travelOf(x)===0?t("travel_note0"):t("travel_note",{m:warnMin(x)});
   $("det").innerHTML=`<div class="kv"><span>${t("service")}</span><b>${esc(svcName(x.svc))}</b></div><div class="kv"><span>${t("price")}</span><b>${money(svc(x.svc).price)}</b></div><div class="kv"><span>${t("joined")}</span><b class="num">${hhmm(x.created)}</b></div>`;
   // fire each alert once
   const fk=firedKey(x),fired=ls.get(fk,-1),r=RANK[stg];
@@ -799,7 +805,7 @@ function BarberView(root){
   $("qn").textContent=q.waiting.length?`· ${q.waiting.length}`:"";
   $("nf").textContent=Store.shop.paused?t("paused"):`${t("b_next_free")} ≈ ${mins(q.nextFree)} ${t("min")}`;
   $("q").innerHTML=q.waiting.length?q.waiting.map((x,i)=>{const srcChip=x.src==="app"?`<span class="chip app">${t("b_app")}</span>`:x.src==="phone"?`<span class="chip ph">${t("b_phone")}</span>`:`<span class="chip">${t("b_walkin")}</span>`;
-    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div><div class="info"><b>${esc(x.name)} ${srcChip}${x.onWay?`<span class="chip way">${t("b_onway")}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
+    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div><div class="info"><b>${esc(x.name)} ${srcChip}${x.travel===0?`<span class="chip way">${t("travel_0")}</span>`:x.onWay?`<span class="chip way">${x.travel?t("b_arrive",{t:hhmm((x.onWayAt||now)+x.travel*60000)}):t("b_onway")}</span>`:x.travel?`<span class="chip">${t("b_travel_at",{m:x.travel})}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
      <button class="ibtn" data-up="${x.id}" ${i===0?"disabled style='opacity:.3'":""} title="${t("b_up")}" aria-label="${t("b_up")}" type="button">${ICON.up}</button><button class="ibtn" data-rm="${x.id}" title="${t("b_remove")}" aria-label="${t("b_remove")}" type="button">${ICON.x}</button></div>`}).join("")
    :`<div class="empty">${ICON.users}<div>${t("b_empty")}</div><button class="btn ghost sm" data-a="ex2" type="button">${t("b_examples")}</button></div>`;
   // absences list
