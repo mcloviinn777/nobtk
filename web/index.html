@@ -399,32 +399,32 @@ demo_cap1:"تيليفون الزبون",demo_cap2:"الحلاق، مباشرة",
 mins_ago:"هادي {m} دقيقة",now:"دابا"}
 };
 
-Object.assign(STR.fr,{travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
+Object.assign(STR.fr,{here_btn:"Je suis au salon",here_ok:"Le barbier sait que tu es au salon",prio_note:"Priorité aux clients présents au salon : en arrivant, appuie sur « Je suis au salon ».",n_bump_t:"Ton tour est passé à un client présent",n_bump_b:"Tu n'étais pas au salon à temps. Tu restes en tête : présente-toi et appuie sur « Je suis au salon ».",lq_here:"au salon",b_here:"Arrivé",b_not_here:"pas encore là",b_toast_bump:"#{n} {name} n'est pas là : #{m}, présent au salon, passe avant",travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
 st_called_p:"Présente-toi au fauteuil {c}.",tr3:"Ton tour",tr4:"Terminé",
-grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé. Le barbier peut te marquer absent.",
+grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé : un client présent au salon peut passer avant toi.",
 cant_come:"Je ne peux pas venir",n_called_b:"Fauteuil {c}. Tu as {g} min pour te présenter.",
 n_noshow_t:"Tour manqué",st_noshow_p:"Tu n'étais pas là à ton tour.",n_delay_t:"Tour décalé",st_delayed_p:"Tu n'étais pas là à ton tour : le barbier t'a décalé de 2 places. C'est ta dernière chance.",
 strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 absences sur 3. À la prochaine, réservation bloquée {d} jours.",
 strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
 blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
-policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours.",
+policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours. Priorité aux clients présents au salon.",
 b_done:"Terminé",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
 b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",b_delayed_chip:"Décalé",b_strike_chip:"{s}/3 absences",
-b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place.",
+b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place. Priorité aux clients présents : si le client n'est pas là à la fin du délai et qu'un autre attend au salon, celui-ci passe automatiquement.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
 lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
-Object.assign(STR.ar,{travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
+Object.assign(STR.ar,{here_btn:"أنا فالصالون",here_ok:"الحلاق عارف بلي راك فالصالون",prio_note:"الأولوية للكليان اللي فالصالون: ملي توصل، كليكي على «أنا فالصالون».",n_bump_t:"نوبتك دازت لكليان اللي كان فالصالون",n_bump_b:"ما كنتيش فالصالون فالوقت. باقي نتا الأول: اجي و كليكي على «أنا فالصالون».",lq_here:"فالصالون",b_here:"وصل",b_not_here:"مازال ما وصل",b_toast_bump:"#{n} {name} ما وصلش: #{m} اللي فالصالون دوز قبلو",travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
 st_called_p:"سير للكرسي {c}.",tr3:"نوبتك",tr4:"سالات",
-grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات. الحلاق يقدر يحسبك غايب.",
+grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات: كليان اللي فالصالون يقدر يدوز قبلك.",
 cant_come:"ما نقدرش نجي",n_called_b:"الكرسي {c}. عندك {g} دقايق باش توصل.",
 n_noshow_t:"فاتتك النوبة",st_noshow_p:"ما كنتيش حاضر فنوبتك.",n_delay_t:"تأخرات نوبتك",st_delayed_p:"ما كنتيش حاضر فنوبتك: الحلاق رجعك جوج بلايص اللور. هادي آخر فرصة.",
 strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غيابات من 3. المرة الجاية يتبلوكا الحجز {d} أيام.",
 strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
 blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
-policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام.",
+policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام. الأولوية للكليان اللي فالصالون.",
 b_done:"سالا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
 b_notcome:"ما جاش؟",b_delay:"رجعو جوج بلايص",b_absent_confirm:"غايب",b_delayed_chip:"مأخر",b_strike_chip:"{s}/3 غيابات",
-b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون.",
+b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون. الأولوية للي فالصالون: إلا ما وصلش فالوقت و كاين واحد كيتسنى فالصالون، كيدوز هو أوتوماتيكيا.",
 b_abs_none:"حتى غياب ما زال. الزبناء اللي تحسبو غايبين كيبانو هنا.",b_blocked:"مبلوكي",b_until:"حتى {d}",b_forgive:"سامحو",
 lv_chair:"فالكرسي",lv_wait:"كيتسناو",lv_you:"بلاصتك",b_grace:"الوقت باش يوصل",b_blockdays:"البلوكاج من بعد 3 غيابات",days:"أيام",phone:"التيليفون (اختياري)"});
 const SERVICES=[
@@ -515,10 +515,11 @@ function durMin(id){
  if(done.length>=3){const avg=done.reduce((a,x)=>a+(x.doneAt-x.startedAt),0)/done.length/60000;return Math.max(5,Math.round(avg))}
  return svc(id).min}
 const inChairSt=x=>x.status==="chair"||x.status==="called";
+const isHere=x=>!!x&&(x.src==="walkin"||!!x.arrived||x.travel===0);
 function Q(){
  const all=Store.tickets.slice().sort((a,b)=>a.num-b.num);
  const chairs=Math.max(1,Math.min(4,+Store.shop.chairs||1));
- const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(a.pos??a.num)-(b.pos??b.num));
+ const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(isHere(b)-isHere(a))||((a.pos??a.num)-(b.pos??b.num)));
  const inChair=Array.from({length:chairs},(_,i)=>all.find(x=>inChairSt(x)&&x.chair===i)||null);
  const now=Date.now();
  const free=inChair.map(x=>{if(!x)return 0;const d=durMin(x.svc)*60000;return Math.max(60000,(x.startedAt||x.calledAt||now)+d-now)});
@@ -556,6 +557,10 @@ const A={
  async forgive(k){const c=Store.clients.find(x=>x.id===k);if(!c)return;await Store.setClient(k,{phone:c.phone||k,name:c.name||"",strikes:0,lastNoShow:c.lastNoShow||null,blockedUntil:null})},
  async cancel(id,byShop){const x=Store.tickets.find(y=>y.id===id);await Store.patchTicket(id,{status:"cancelled",byShop:!!byShop,chair:null});if(x&&inChairSt(x))await A.fill()},
  async onWay(id){await Store.patchTicket(id,{onWay:true,onWayAt:Date.now()})},
+ async here(id){await Store.patchTicket(id,{arrived:true,arrivedAt:Date.now()});await A.fill()},
+ // A client whose turn came but who is not in the shop gives the chair to a client who is there, and stays at the head of the line.
+ async bump(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;const w=Q().waiting;const minPos=w.reduce((m,y)=>Math.min(m,y.pos??y.num),x.pos??x.num);
+  await Store.patchTicket(id,{status:"waiting",chair:null,startedAt:null,pos:minPos-1,bumps:(x.bumps||0)+1,bumpedAt:Date.now()});await A.fill()},
  async setTravel(id,m){await Store.patchTicket(id,{travel:+m})},
  async up(id){const w=Q().waiting;const i=w.findIndex(x=>x.id===id);if(i<1)return;const a=w[i],b=w[i-1];const pa=a.pos??a.num,pb=b.pos??b.num;await Store.patchTicket(a.id,{pos:pb});await Store.patchTicket(b.id,{pos:pa})},
  async examples(){const names=["Youssef","Amine","Hamza","Mehdi","Ayoub","Othmane","Zakaria","Karim"];const svcs=["degrade","combo","coupe","barbe","degrade","enfant"];const srcs=["app","walkin","app","phone","app","app"];
@@ -574,7 +579,7 @@ function ClientView(root,key,standalone){
  root.innerHTML=`<div class="banners"></div><div class="cv-body"></div><div class="called-ov" hidden></div>`;
  const body=root.querySelector(".cv-body"),bannerBox=root.querySelector(".banners"),ov=root.querySelector(".called-ov");
  const myKey="nobtk-my-"+key;let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10);
- const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"");
+ const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:"");
  const hist=id=>ls.get("nobtk-hist-"+key+"-"+id,[]);
  const addHist=(id,title)=>{const h=hist(id);h.unshift({ts:Date.now(),title});ls.set("nobtk-hist-"+key+"-"+id,h.slice(0,20))};
  const travelOf=x=>(x&&x.travel!=null)?+x.travel:ls.get("nobtk-travel-"+key,10);
@@ -649,8 +654,10 @@ function ClientView(root,key,standalone){
   ov.innerHTML=`<div class="pulse num">${String(x.num).padStart(2,"0")}</div><h2>${t("st_called")}</h2><p>${t("st_called_p",{c})}</p>
    <div class="cdbox">${left>0?`<span>${t("grace_left")}</span><b class="num cd">${mmss(left)}</b>`:`<b class="cd-over">${t("grace_over_client")}</b>`}</div>
    <button class="btn acc" type="button" style="margin-top:6px;min-width:200px;font-size:16px">${t("coming")}</button>
+   ${isHere(x)?"":`<button class="btn ghost ovhere" type="button" style="min-width:200px;background:#FFFFFF;color:var(--primary)">${t("here_btn")}</button>`}
    <button class="btn ghost sm cantcome" type="button" style="background:rgba(255,255,255,.14);color:inherit">${t("cant_come")}</button>`;
-  ov.querySelector(".btn.acc").onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":""),true);ov.hidden=true;stopOv();if(!x.onWay)A.onWay(x.id)};
+  const oh=ov.querySelector(".ovhere");if(oh)oh.onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:""),true);ov.hidden=true;stopOv();A.here(x.id)};
+  ov.querySelector(".btn.acc").onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:""),true);ov.hidden=true;stopOv();if(!x.onWay)A.onWay(x.id)};
   ov.querySelector(".cantcome").onclick=async()=>{ov.hidden=true;stopOv();await A.cancel(x.id);ls.del(myKey);update()};
  }
  function stopOv(){if(ovTimer){clearInterval(ovTimer);ovTimer=null}}
@@ -666,6 +673,7 @@ function ClientView(root,key,standalone){
   if(stg==="called")p+=" "+(left>0?t("grace_inline",{m:Math.ceil(left/60000)}):t("grace_over_client"));
   if(stg==="noshow")p+=" "+(x.strike?strikeMsg(x.strike,x.blockedUntil):"");
   if(x.delayed&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("st_delayed_p");
+  if(x.bumps&&!isHere(x)&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("n_bump_b");
   $("stp").textContent=p;
   const waitingLike=stg==="wait"||stg==="soon"||stg==="next";
   if(waitingLike){$("eta").textContent=mins(etaMs);$("etal").textContent=t("min");
@@ -681,11 +689,14 @@ function ClientView(root,key,standalone){
   const rec=clientRec(x.phone),sw=$("strike");
   if(waitingLike&&rec&&rec.strikes>0){sw.hidden=false;sw.textContent=strikeMsg(rec.strikes,null)+" "+t("cancel_free")}else sw.hidden=true;
   const acts=$("acts");
-  if(waitingLike){acts.innerHTML=(x.onWay?`<div class="btn ghost block" style="cursor:default;color:var(--ok)">${ICON.car} ${t("on_way_ok")}</div>`:`<button class="btn pri block" data-a="way" type="button">${ICON.car} ${t("on_way")}</button>`)+
+  const hereBtn=isHere(x)?`<div class="btn ghost block" style="cursor:default;color:var(--ok)">${t("here_ok")}</div>`:`<button class="btn acc block" data-a="here" type="button">${t("here_btn")}</button>`;
+  if(waitingLike){acts.innerHTML=hereBtn+(isHere(x)?"":x.onWay?`<div class="btn ghost block" style="cursor:default;color:var(--ok)">${ICON.car} ${t("on_way_ok")}</div>`:`<button class="btn pri block" data-a="way" type="button">${ICON.car} ${t("on_way")}</button>`)+
     `<button class="btn ${cancelArm?"danger":"ghost"} block" data-a="cancel" type="button">${cancelArm?t("cancel_sure"):t("cancel")}</button>`;
    const w=acts.querySelector('[data-a="way"]');if(w)w.onclick=()=>A.onWay(x.id);
+   const hb=acts.querySelector('[data-a="here"]');if(hb)hb.onclick=()=>A.here(x.id);
    acts.querySelector('[data-a="cancel"]').onclick=async()=>{if(!cancelArm){cancelArm=true;updateTicket();setTimeout(()=>{cancelArm=false;if(screen==="ticket")updateTicket()},4000);return}cancelArm=false;await A.cancel(x.id);ls.del(myKey);update()};
   }else if(stg==="done"||stg==="noshow"){const blocked=x.blockedUntil&&x.blockedUntil>Date.now();acts.innerHTML=blocked?"":`<button class="btn acc block" data-a="new" type="button">${t("new_ticket")}</button>`;const nb=acts.querySelector("button");if(nb)nb.onclick=()=>{ls.del(myKey);picked=null;update()}}
+  else if(stg==="called"&&!isHere(x)){acts.innerHTML=hereBtn;acts.querySelector('[data-a="here"]').onclick=()=>A.here(x.id)}
   else acts.innerHTML="";
   if(stg==="noshow"&&x.blockedUntil&&x.blockedUntil>Date.now()){acts.innerHTML=`<div class="warnbox bad">${esc(t("blocked_msg",{d:dateStr(x.blockedUntil)}))}</div><button class="btn ghost block" data-a="ok" type="button">OK</button>`;acts.querySelector('[data-a="ok"]').onclick=()=>{ls.del(myKey);update()}}
   // whole line, live: chairs then waiting list, own ticket highlighted
@@ -695,16 +706,17 @@ function ClientView(root,key,standalone){
     h+=y?`<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${t("chair")} ${i+1}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm">${t("lq_chair")}</span></div>`
      :`<div class="lq-row free"><span class="bdg">–</span><span class="lbl2">${t("chair")} ${i+1}<small>${t("b_free")}</small></span></div>`});
    h+=`<div class="lq-sep">${t("lv_wait")} · ${q.waiting.length}</div>`;
-   h+=q.waiting.length?q.waiting.map((y,i)=>{const me=y.id===x.id;return `<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${i+1}${i===0?t("lq_first"):t("lq_nth")}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm num">≈ ${mins(q.eta[y.id])} ${t("min")}</span></div>`}).join(""):`<div class="muted" style="font-size:14px;padding:4px 2px">${t("lq_empty")}</div>`;
+   h+=q.waiting.length?q.waiting.map((y,i)=>{const me=y.id===x.id;return `<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${i+1}${i===0?t("lq_first"):t("lq_nth")}${me?" · "+t("lq_you"):""}${isHere(y)?" · "+t("lq_here"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm num">≈ ${mins(q.eta[y.id])} ${t("min")}</span></div>`}).join(""):`<div class="muted" style="font-size:14px;padding:4px 2px">${t("lq_empty")}</div>`;
    $("lineList").innerHTML=h}
   // alerts
   const nState=ls.get("nobtk-notif",null);
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
   if(nState!=="system"&&"Notification" in window){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
   $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===travelOf(x)));
-  $("tnote").textContent=travelOf(x)===0?t("travel_note0"):t("travel_note",{m:warnMin(x)});
+  $("tnote").textContent=(travelOf(x)===0?t("travel_note0"):t("travel_note",{m:warnMin(x)}))+(isHere(x)?"":" "+t("prio_note"));
   $("det").innerHTML=`<div class="kv"><span>${t("service")}</span><b>${esc(svcName(x.svc))}</b></div><div class="kv"><span>${t("price")}</span><b>${money(svc(x.svc).price)}</b></div><div class="kv"><span>${t("joined")}</span><b class="num">${hhmm(x.created)}</b></div>`;
   // fire each alert once
+  if(x.bumps&&ls.get("nobtk-bump-"+key+"-"+x.id,0)<x.bumps){ls.set("nobtk-bump-"+key+"-"+x.id,x.bumps);banner(t("n_bump_t"),t("n_bump_b"),true,x.id);ls.set(firedKey(x),RANK[stg])}
   const fk=firedKey(x),fired=ls.get(fk,-1),r=RANK[stg];
   if(x.delayed&&fired<0&&waitingLike){ls.set(fk,r);banner(t("n_delay_t"),t("st_delayed_p"),true,x.id)}
   else if(r>fired){ls.set(fk,r);
@@ -715,7 +727,7 @@ function ClientView(root,key,standalone){
   }
   const h=hist(x.id);$("hist").innerHTML=h.length?h.map(e=>`<div><time class="num">${hhmm(e.ts)}</time><span>${esc(e.title)}</span></div>`).join(""):`<span class="muted" style="font-size:13px">${t("nohist")}</span>`;
   // full-screen "your turn" with countdown
-  const dismissed=ls.get("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":""),false);
+  const dismissed=ls.get("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:""),false);
   if(stg==="called"&&!dismissed){if(ov.hidden||!ovTimer){ov.hidden=false;renderOverlay(x);stopOv();ovTimer=setInterval(()=>{const l=graceLeft(x);const cd=ov.querySelector(".cd");if(cd&&l>0)cd.textContent=mmss(l);else if(l<=0){renderOverlay(x);stopOv()}},1000)}}
   else{ov.hidden=true;stopOv()}
  }
@@ -732,7 +744,7 @@ function ClientView(root,key,standalone){
 
 /* ================= Barber view ================= */
 function BarberView(root){
- root.className="bv";let src="walkin",dayArm=false,seen=null,noshowArm=null;
+ root.className="bv";let src="walkin",dayArm=false,seen=null,noshowArm=null;const bumping=new Set();
  root.innerHTML=`
   <div class="bhead"><h1 data-k="title"></h1><span class="pill" data-k="state"></span><button class="btn ghost sm" data-a="pause" type="button"></button></div>
   <div class="stats" data-k="stats"></div>
@@ -783,6 +795,7 @@ function BarberView(root){
    else if(p){if(!p.w&&x.onWay&&x.status!=="done"){toast(t("b_toast_way",{n:x.num,name:x.name}))}
     if(p.s!=="cancelled"&&x.status==="cancelled"&&!x.byShop){toast(t("b_toast_cancel",{n:x.num,name:x.name}))}}})}
   seen=cur;
+  q.inChair.forEach(x=>{if(x&&!isHere(x)&&!bumping.has(x.id)&&now-(x.startedAt||now)>graceMs()){const nx=q.waiting.find(isHere);if(nx){bumping.add(x.id);toast(t("b_toast_bump",{n:x.num,name:x.name,m:nx.num}));A.bump(x.id)}}});
   $("title").textContent=Store.shop.name;if(!nameInit){root.querySelector("#b-shop").value=Store.shop.name;nameInit=true}
   $("state").className="pill "+(Store.shop.paused?"paused":"live");$("state").innerHTML=`<span class="dot"></span>${Store.shop.paused?t("paused"):t("open")}`;
   root.querySelector('[data-a="pause"]').innerHTML=Store.shop.paused?`${ICON.play} ${t("b_resume")}`:`${ICON.pause} ${t("b_pause")}`;
@@ -794,19 +807,20 @@ function BarberView(root){
    if(!x)return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span><span class="chip">${t("b_free")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("b_free")}</b><span>${t("b_auto")}</span></div></div>${q.waiting.length?`<div class="acts"><button class="btn acc" data-fill="1" type="button">${t("b_fill")}</button></div>`:""}</div>`;
    const el=mins(now-(x.startedAt||now)),d=durMin(x.svc),pct=Math.min(100,el/d*100);
    const gl=(x.startedAt||now)+graceMs()-now;
-   const gchip=gl>0?`<span class="chip ph num">${t("b_grace_left",{t:mmss(gl)})}</span>`:"";
+   const hereNow=isHere(x);
+   const gchip=hereNow?"":(gl>0?`<span class="chip ph num">${t("b_not_here")} · ${mmss(gl)}</span>`:`<span class="chip bad">${t("b_not_here")}</span>`);
    const arm=noshowArm===x.id;
    return `<div class="chair st-chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span>${gchip||`<span class="chip app">${t("tr3")}</span>`}</div>
     <div class="who"><div class="badge num">${x.num}</div><div style="min-width:0"><b>${esc(x.name)} ${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${money(svc(x.svc).price)}${x.onWay?" · "+t("b_onway"):""}</span></div></div>
     <div><div class="bar ${el>d?"over":""}"><i style="width:${pct}%"></i></div><div class="muted num" style="font-size:12.5px;margin-top:4px">${t("b_since",{m:el,d})}</div></div>
     <div class="acts"><button class="btn okb" data-fin="${x.id}" type="button" style="flex-basis:100%">${t("b_done")}</button>
-     ${arm?`<button class="btn ghost sm" data-delay="${x.id}" type="button" ${x.delayed||!q.waiting.length?"disabled":""}>${t("b_delay")}</button><button class="btn danger sm" data-abs="${x.id}" type="button">${t("b_absent_confirm")}</button>`
+     ${hereNow?"":`<button class="btn ghost sm" data-here="${x.id}" type="button">${t("b_here")}</button>`}${arm?`<button class="btn ghost sm" data-delay="${x.id}" type="button" ${x.delayed||!q.waiting.length?"disabled":""}>${t("b_delay")}</button><button class="btn danger sm" data-abs="${x.id}" type="button">${t("b_absent_confirm")}</button>`
       :`<button class="btn ghost sm" data-nsarm="${x.id}" type="button">${t("b_notcome")}</button>`}</div></div>`}).join("");
   $("qn").textContent=q.waiting.length?`· ${q.waiting.length}`:"";
   $("nf").textContent=Store.shop.paused?t("paused"):`${t("b_next_free")} ≈ ${mins(q.nextFree)} ${t("min")}`;
   $("q").innerHTML=q.waiting.length?q.waiting.map((x,i)=>{const srcChip=x.src==="app"?`<span class="chip app">${t("b_app")}</span>`:x.src==="phone"?`<span class="chip ph">${t("b_phone")}</span>`:`<span class="chip">${t("b_walkin")}</span>`;
-    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div><div class="info"><b>${esc(x.name)} ${srcChip}${x.travel===0?`<span class="chip way">${t("travel_0")}</span>`:x.onWay?`<span class="chip way">${x.travel?t("b_arrive",{t:hhmm((x.onWayAt||now)+x.travel*60000)}):t("b_onway")}</span>`:x.travel?`<span class="chip">${t("b_travel_at",{m:x.travel})}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
-     <button class="ibtn" data-up="${x.id}" ${i===0?"disabled style='opacity:.3'":""} title="${t("b_up")}" aria-label="${t("b_up")}" type="button">${ICON.up}</button><button class="ibtn" data-rm="${x.id}" title="${t("b_remove")}" aria-label="${t("b_remove")}" type="button">${ICON.x}</button></div>`}).join("")
+    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div><div class="info"><b>${esc(x.name)} ${srcChip}${x.travel===0||x.arrived?`<span class="chip way">${t("lq_here")}</span>`:x.onWay?`<span class="chip way">${x.travel?t("b_arrive",{t:hhmm((x.onWayAt||now)+x.travel*60000)}):t("b_onway")}</span>`:x.travel?`<span class="chip">${t("b_travel_at",{m:x.travel})}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
+     ${isHere(x)?"":`<button class="btn ghost sm" data-here="${x.id}" type="button" style="padding:7px 10px;flex:none">${t("b_here")}</button>`}<button class="ibtn" data-up="${x.id}" ${i===0?"disabled style='opacity:.3'":""} title="${t("b_up")}" aria-label="${t("b_up")}" type="button">${ICON.up}</button><button class="ibtn" data-rm="${x.id}" title="${t("b_remove")}" aria-label="${t("b_remove")}" type="button">${ICON.x}</button></div>`}).join("")
    :`<div class="empty">${ICON.users}<div>${t("b_empty")}</div><button class="btn ghost sm" data-a="ex2" type="button">${t("b_examples")}</button></div>`;
   // absences list
   $("rule").textContent=t("b_rule",{g:+Store.shop.grace||5,d:blockDays()});
@@ -822,6 +836,7 @@ function BarberView(root){
   root.querySelectorAll("[data-abs]").forEach(b=>b.onclick=()=>{noshowArm=null;A.absent(b.dataset.abs)});
   root.querySelectorAll("[data-delay]").forEach(b=>b.onclick=()=>{noshowArm=null;A.delay(b.dataset.delay)});
   root.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>A.up(b.dataset.up));
+  root.querySelectorAll("[data-here]").forEach(b=>b.onclick=()=>A.here(b.dataset.here));
   root.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>A.cancel(b.dataset.rm,true));
   root.querySelectorAll("[data-forgive]").forEach(b=>b.onclick=()=>A.forgive(b.dataset.forgive));
   const ex2=root.querySelector('[data-a="ex2"]');if(ex2)ex2.onclick=()=>A.examples();
