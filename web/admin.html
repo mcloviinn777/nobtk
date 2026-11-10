@@ -46,6 +46,19 @@ details.more summary{cursor:pointer;color:var(--primary);font-weight:700;font-si
 .links a{color:var(--primary);font-weight:700}
 #qr{background:#fff;padding:14px;border-radius:14px;width:max-content}
 .poster{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.ov{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:140px;padding-top:10px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:11px;color:var(--muted)}
+.bars i{display:block;width:100%;background:var(--primary);border-radius:6px 6px 2px 2px;min-height:2px}
+.bars b{font-size:12px;color:var(--ink)}
+.li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li small{display:block;color:var(--muted)}
+.days{font-weight:800;white-space:nowrap}
+.days.urg{color:var(--bad)}
+.lk{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.lk a{display:block;padding:11px 12px;border-radius:12px;background:var(--surface-2);color:var(--ink);text-decoration:none;font-weight:700;font-size:14px}
+.lk a small{display:block;font-weight:500;color:var(--muted)}
 @media (max-width:760px){.su{grid-template-columns:1fr}}
 @media print{.top,.tabs,.noprint{display:none!important}body{background:#fff}.card{border:0}}
 </style>
@@ -54,6 +67,9 @@ details.more summary{cursor:pointer;color:var(--primary);font-weight:700;font-si
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="pdf.js"></script>
 </head>
 <body>
 <header class="top"><div class="top-in"><img src="icon-192.png" width="34" height="34" alt=""><b>NOBTK</b><span class="tag">ADMIN</span><span style="margin-left:auto;font-size:13px;opacity:.8" id="who"></span><button class="btn ghost sm" id="logout" hidden>Se déconnecter</button></div></header>
@@ -99,23 +115,78 @@ function login(auth) {
 }
 
 function dashboard(db, keep) {
-  let tab = "signups", signups = [], tickets = [], shop = {}, filter = "all", q = "";
+  let tab = "overview", signups = [], tickets = [], shop = {}, filter = "all", q = "";
   $("main").innerHTML = `
     <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between"><h1 style="font-size:30px">Tableau de bord</h1>
-      <div class="tabs" role="group"><button data-tab="signups" aria-pressed="true">Inscriptions</button><button data-tab="shop" aria-pressed="false">Salon en direct</button><button data-tab="qr" aria-pressed="false">QR code vitrine</button></div></div>
+      <div class="tabs" role="group"><button data-tab="overview" aria-pressed="true">Aperçu</button><button data-tab="signups" aria-pressed="false">Inscriptions</button><button data-tab="shop" aria-pressed="false">Salon en direct</button><button data-tab="qr" aria-pressed="false">QR code vitrine</button></div></div>
     <div id="view"></div>`;
   document.querySelectorAll("[data-tab]").forEach((b) => b.onclick = () => { tab = b.dataset.tab; document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-pressed", x === b)); render(); });
 
-  keep(db.collection("signups").orderBy("createdAt", "desc").onSnapshot((s) => { signups = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "signups") render(); }, (e) => { console.warn(e); $("view").innerHTML = `<div class="err">Lecture refusée. Vérifie que ton compte est bien connecté.</div>`; }));
+  keep(db.collection("signups").orderBy("createdAt", "desc").onSnapshot((s) => { signups = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "signups" || tab === "overview") render(); }, (e) => { console.warn(e); $("view").innerHTML = `<div class="err">Lecture refusée. Vérifie que ton compte est bien connecté.</div>`; }));
   const sid = C.shopId || "salon-1";
-  keep(db.doc("shops/" + sid).onSnapshot((s) => { shop = s.exists ? s.data() : {}; if (tab === "shop") render(); }));
-  keep(db.collection("shops/" + sid + "/tickets").onSnapshot((s) => { tickets = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "shop") render(); }));
+  keep(db.doc("shops/" + sid).onSnapshot((s) => { shop = s.exists ? s.data() : {}; if (tab === "shop" || tab === "overview") render(); }));
+  keep(db.collection("shops/" + sid + "/tickets").onSnapshot((s) => { tickets = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "shop" || tab === "overview") render(); }));
 
   function render() {
     const v = $("view");
+    if (tab === "overview") return renderOverview(v);
     if (tab === "signups") return renderSignups(v);
     if (tab === "shop") return renderShop(v);
     return renderQr(v);
+  }
+
+  const monthlyOf = (x) => x.billing === "year" ? Math.round((x.price || 0) / 12) : (x.price || 0);
+  const toD = (v) => v && v.toDate ? v.toDate() : (v ? new Date(v) : null);
+  function renderOverview(v) {
+    const by = (st) => signups.filter((x) => (x.status || "nouveau") === st);
+    const paying = by("payant"), trial = by("essai"), fresh = by("nouveau"), lost = by("annule");
+    const mrr = paying.reduce((a, x) => a + monthlyOf(x), 0);
+    const potential = trial.reduce((a, x) => a + monthlyOf(x), 0);
+    const conv = paying.length + lost.length ? Math.round(paying.length / (paying.length + lost.length) * 100) + " %" : "–";
+    const now = Date.now();
+    const ending = trial.map((x) => ({ x, d: toD(x.trialEnds) })).filter((o) => o.d).sort((a, b) => a.d - b.d).slice(0, 6);
+    const weeks = []; const start = new Date(); start.setHours(0, 0, 0, 0); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+    for (let i = 7; i >= 0; i--) { const a = new Date(start); a.setDate(a.getDate() - i * 7); const b = new Date(a); b.setDate(b.getDate() + 7);
+      weeks.push({ label: a.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }), n: signups.filter((x) => { const d = toD(x.createdAt); return d && d >= a && d < b; }).length }); }
+    const maxW = Math.max(1, ...weeks.map((w) => w.n));
+    const done = tickets.filter((t) => t.status === "done"), waiting = tickets.filter((t) => t.status === "waiting");
+    const rev = done.reduce((a, t) => a + ((SVC[t.svc] || [, 0])[1]), 0);
+    const wa = (p) => "https://wa.me/212" + String(p || "").replace(/\D/g, "").replace(/^0/, "");
+    v.innerHTML = `
+      <div class="stats" style="margin-bottom:16px">
+        <div class="card stat hl"><b>${fmt(mrr)} DH</b><span>Revenu mensuel (salons payants)</span></div>
+        <div class="card stat"><b>${paying.length}</b><span>Salons payants</span></div>
+        <div class="card stat"><b>${trial.length}</b><span>En essai gratuit</span></div>
+        <div class="card stat"><b>${fresh.length}</b><span>Nouveaux à contacter</span></div>
+        <div class="card stat"><b>${fmt(potential)} DH</b><span>En plus si les essais paient</span></div>
+        <div class="card stat"><b>${conv}</b><span>Essais devenus payants</span></div>
+      </div>
+      <div class="ov">
+        <div class="card"><h3 style="font-size:17px">Fins d'essai à venir</h3>
+          ${ending.length ? ending.map(({ x, d }) => { const left = Math.ceil((d - now) / 864e5); return `<div class="li"><span><b>${esc(x.shop)}</b><small>${esc(x.owner)} · ${fmt(x.price || 0)} DH / ${x.billing === "year" ? "an" : "mois"} · <a href="${esc(wa(x.phone))}" target="_blank" rel="noopener">WhatsApp</a></small></span><span class="days ${left <= 7 ? "urg" : ""}">${left < 0 ? "terminé" : left + " j"}</span></div>`; }).join("") : `<div class="empty">Aucun salon en essai. Passe un salon en « En essai » dans Inscriptions.</div>`}
+        </div>
+        <div class="card"><h3 style="font-size:17px">Inscriptions par semaine</h3>
+          <div class="bars">${weeks.map((w) => `<div><b>${w.n || ""}</b><i style="height:${Math.round(w.n / maxW * 100)}%"></i><span>${w.label}</span></div>`).join("")}</div>
+        </div>
+        <div class="card"><h3 style="font-size:17px">Dernières inscriptions</h3>
+          ${signups.slice(0, 5).map((x) => { const st = x.status || "nouveau"; return `<div class="li"><span><b>${esc(x.shop)}</b><small>${esc(x.city)} · ${dateStr(x.createdAt)}</small></span><span class="chip st-${st}">${esc((STATUSES.find((s) => s[0] === st) || [, st])[1])}</span></div>`; }).join("") || `<div class="empty">Aucune inscription pour l'instant.</div>`}
+        </div>
+        <div class="card"><h3 style="font-size:17px">Salon pilote aujourd'hui</h3>
+          <div class="li"><span>${esc(shop.name || "Salon")}</span><span class="chip ${shop.paused ? "st-essai" : "st-payant"}">${shop.paused ? "En pause" : "Ouvert"}</span></div>
+          <div class="li"><span>En attente maintenant</span><b>${waiting.length}</b></div>
+          <div class="li"><span>Clients servis</span><b>${done.length}</b></div>
+          <div class="li"><span>Chiffre du jour (estimé)</span><b>${fmt(rev)} DH</b></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3 style="font-size:17px;margin-bottom:10px">Liens utiles</h3>
+        <div class="lk">
+          <a href="inscription.html" target="_blank" rel="noopener">Formulaire d'inscription<small>À envoyer aux barbiers</small></a>
+          <a href="NOBTK-formulaire-inscription.pdf" target="_blank" rel="noopener">Formulaire PDF vierge<small>Pour WhatsApp ou email</small></a>
+          <a href="index.html#client" target="_blank" rel="noopener">Application client<small>Le lien du QR code</small></a>
+          <a href="index.html#barber" target="_blank" rel="noopener">Tableau du barbier<small>Code salon demandé</small></a>
+          <a href="index.html#screen" target="_blank" rel="noopener">Écran TV du salon<small>Pour la télé</small></a>
+          <a href="https://github.com/mcloviinn777/nobtk/releases/latest" target="_blank" rel="noopener">APK Android<small>Pour le téléphone du barbier</small></a>
+        </div></div>`;
   }
 
   function renderSignups(v) {
@@ -141,6 +212,12 @@ function dashboard(db, keep) {
     $("q").oninput = (e) => { q = e.target.value.toLowerCase(); const pos = e.target.selectionStart; renderSignups(v); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
     $("flt").onchange = (e) => { filter = e.target.value; renderSignups(v); };
     v.querySelectorAll("[data-status]").forEach((s) => s.onchange = () => db.collection("signups").doc(s.dataset.status).update({ status: s.value }));
+    v.querySelectorAll("[data-pdf]").forEach((b) => b.onclick = async () => {
+      const x = signups.find((y) => y.id === b.dataset.pdf); if (!x) return;
+      const l = b.textContent; b.disabled = true; b.textContent = "Création…";
+      try { await window.NOBTK_PDF(x); } catch (e) { console.warn(e); b.textContent = "Erreur, réessaie"; setTimeout(() => b.textContent = l, 2500); }
+      b.disabled = false; if (b.textContent === "Création…") b.textContent = l;
+    });
     v.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => {
       if (b.dataset.armed) { db.collection("signups").doc(b.dataset.del).delete(); return; }
       b.dataset.armed = "1"; b.textContent = "Confirmer la suppression"; setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = "Supprimer"; } }, 4000);
@@ -163,7 +240,7 @@ function dashboard(db, keep) {
           <div>${x.email ? esc(x.email) : "<span style='color:var(--muted)'>Pas d'email</span>"}</div>
           <div>${esc(x.address || "")}</div>
           <div style="color:var(--muted)">${x.barbers || 1} barbier(s) · Source : ${esc(x.source || "–")}</div>
-          <button class="btn danger sm" data-del="${esc(x.id)}" type="button" style="margin-top:10px">Supprimer</button></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" data-pdf="${esc(x.id)}" type="button">Télécharger le PDF</button><button class="btn danger sm" data-del="${esc(x.id)}" type="button">Supprimer</button></div></div>
         <div><h3 style="font-size:15px;margin-bottom:6px">Services</h3><table>${(x.services || []).map((s) => `<tr><td>${esc(s.name)} <span style="color:var(--muted)">· ${s.minutes} min</span></td><td><b>${s.price} DH</b></td></tr>`).join("")}</table></div>
         <div><h3 style="font-size:15px;margin-bottom:6px">Horaires</h3><table>${(x.hours || []).map((h) => `<tr><td>${esc(h.day)}</td><td>${h.open ? esc(h.from) + " – " + esc(h.to) : "<span style='color:var(--muted)'>Fermé</span>"}</td></tr>`).join("")}</table></div>
       </div></details></div>`;
