@@ -75,11 +75,15 @@ details.more summary{cursor:pointer;color:var(--primary);font-weight:700;font-si
 <script src="pdf.js"></script>
 </head>
 <body>
-<header class="top"><div class="top-in"><img src="icon-192.png" width="34" height="34" alt=""><b>NOBTK</b><span class="tag">ADMIN</span><span style="margin-left:auto;font-size:13px;opacity:.8" id="who"></span><button class="btn ghost sm" id="logout" hidden>Se déconnecter</button></div></header>
+<header class="top"><div class="top-in"><img src="icon-192.png" width="34" height="34" alt=""><b>NOBTK</b><span class="tag">ADMIN</span><button class="btn sm" id="install" hidden style="margin-left:auto;background:var(--accent);color:var(--accent-ink)">Installer l'application</button><span style="margin-left:auto;font-size:13px;opacity:.8" id="who"></span><button class="btn ghost sm" id="logout" hidden>Se déconnecter</button></div></header>
 <main id="main"><div class="empty">Chargement…</div></main>
 
 <script>
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; const b = document.getElementById("install"); if (b) b.hidden = false; });
+window.addEventListener("appinstalled", () => { const b = document.getElementById("install"); if (b) b.hidden = true; });
+document.addEventListener("click", async (e) => { if (e.target && e.target.id === "install" && installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (x) {} installEvt = null; e.target.hidden = true; } });
 const C = window.NOBTK_CONFIG || {};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
