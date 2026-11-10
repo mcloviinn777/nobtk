@@ -332,7 +332,7 @@ paused_msg:"Le salon a mis la file en pause. Réessaie dans quelques minutes.",
 your_no:"Ton numéro",ahead:"devant toi",eta_in:"ton tour dans",
 st_wait:"Tu es dans la file",st_wait_p:"Reste tranquille chez toi. On te prévient.",
 st_soon:"Ton tour approche",st_soon_p:"Prends la route maintenant.",
-st_next:"Tu es le prochain",st_next_p:"Rejoins le salon, ça va être à toi.",
+st_next:"Tu es le prochain",st_next_p:"Personne n'attend devant toi. Le prochain fauteuil libre est pour toi.",
 st_called:"C'est ton tour !",st_called_p:"Présente-toi au fauteuil {c}.",
 st_chair:"Coupe en cours",st_chair_p:"Fauteuil {c}. Bonne coupe !",
 st_done:"Merci et à bientôt",st_done_p:"Ta coupe est terminée. Montant : {p}.",
@@ -370,7 +370,7 @@ paused_msg:"الصالون وقف الصف. عاود من بعد شوية.",
 your_no:"النمرة ديالك",ahead:"قدامك",eta_in:"نوبتك من بعد",
 st_wait:"راك فالصف",st_wait_p:"بقا مرتاح فالدار. غادي نعلموك.",
 st_soon:"نوبتك قربات",st_soon_p:"بدا تجي دابا.",
-st_next:"نتا اللي من بعد",st_next_p:"اجي للصالون، قربات نوبتك.",
+st_next:"نتا اللي من بعد",st_next_p:"حتى واحد ما كيتسنى قدامك. أول كرسي يخوا ديالك.",
 st_called:"وصلات نوبتك!",st_called_p:"سير للكرسي {c}.",
 st_chair:"الحلاقة خدامة",st_chair_p:"الكرسي {c}. بالصحة!",
 st_done:"بالصحة و نتلاقاو",st_done_p:"سالات الحلاقة ديالك. الثمن: {p}.",
@@ -665,7 +665,8 @@ function ClientView(root,key,standalone){
   const waitingLike=stg==="wait"||stg==="soon"||stg==="next";
   if(waitingLike){$("eta").textContent=mins(etaMs);$("etal").textContent=t("min");
    const total=Math.max(x.etaAtJoin||0,etaMs,60000);$("arc").style.strokeDashoffset=String(276.5*(etaMs/total));
-   $("ahead").innerHTML=`<span style="font-size:13px;font-weight:700;margin-inline-end:4px">${a} ${t("ahead")}</span>`+Array.from({length:Math.min(a,8)},()=>"<i></i>").join("")+`<i class="me"></i>`;
+   const busy=q.inChair.filter(Boolean).length;
+   $("ahead").innerHTML=`<span style="font-size:13px;font-weight:700;margin-inline-end:4px">${a} ${t("ahead")}${busy?` · ${busy} ${t("lq_chair")}`:""}</span>`+Array.from({length:busy},()=>'<i class="ch"></i>').join("")+(busy?'<span style="width:2px;height:14px;background:rgba(255,255,255,.4)"></span>':"")+Array.from({length:Math.min(a,8)},()=>"<i></i>").join("")+`<i class="me"></i>`;
   }else if(stg==="called"){$("eta").textContent=c;$("etal").textContent=t("chair");$("arc").style.strokeDashoffset="0";$("ahead").innerHTML=""}
   else{$("eta").textContent=stg==="done"?"✓":"!";$("etal").textContent="";$("arc").style.strokeDashoffset=stg==="done"?"0":"276.5";$("ahead").innerHTML=""}
   const lvl={wait:0,soon:1,next:1,called:2,done:3,noshow:0}[stg];
