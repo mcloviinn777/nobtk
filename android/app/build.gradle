@@ -1,0 +1,33 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'ma.nobtk.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'ma.nobtk.app'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+        // The barber app opens the barber dashboard of the NOBTK website.
+        buildConfigField 'String', 'START_URL', '"https://mcloviinn777.github.io/nobtk/index.html#barber"'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

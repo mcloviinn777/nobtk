@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin · NOBTK</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#15143A">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#F2F1FA;--surface:#FFFFFF;--surface-2:#E9E8F6;--ink:#15143A;--muted:#5D5C86;--line:#DEDDF0;--primary:#3A31D2;--primary-soft:#E4E2FF;--accent:#FFC53D;--accent-ink:#2B1E00;--ok:#0E6B4D;--ok-soft:#DDF4EA;--warn:#8A5300;--warn-soft:#FFF0D6;--bad:#B42332;--bad-soft:#FDE3E5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,sans-serif;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:"Bricolage Grotesque","Manrope",sans-serif;margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.top{background:var(--ink);color:#fff;padding:12px max(16px,env(safe-area-inset-left)) 12px max(16px,env(safe-area-inset-right))}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top b{font-family:"Bricolage Grotesque",sans-serif;font-size:21px;letter-spacing:.02em}
+.tag{background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:12px;padding:2px 8px;border-radius:6px}
+main{max-width:1180px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}
+.btn.pri{background:var(--primary);color:#fff}.btn.ghost{background:var(--surface-2)}.btn.danger{background:var(--bad-soft);color:var(--bad)}.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.top .btn.ghost{background:rgba(255,255,255,.12);color:#fff}
+input[type=email],input[type=password],input[type=search],select{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 12px;width:100%}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:30px;line-height:1.15}
+.stat span{color:var(--muted);font-weight:600;font-size:13px}
+.stat.hl{background:var(--primary);color:#fff;border-color:var(--primary)}.stat.hl span{color:#D9D6FF}.stat.hl b{color:var(--accent)}
+.tabs{display:flex;gap:4px;background:var(--surface-2);border-radius:12px;padding:4px;width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:transparent;border-radius:9px;padding:9px 14px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(21,20,58,.12)}
+.list{display:flex;flex-direction:column;gap:10px}
+.su{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 170px;gap:14px;align-items:center}
+.su .nm b{font-size:16px}.su .nm div{color:var(--muted);font-size:13px}
+.chip{display:inline-block;padding:3px 9px;border-radius:999px;font-weight:800;font-size:12px}
+.st-nouveau{background:var(--primary-soft);color:var(--primary)}.st-contacte{background:var(--surface-2);color:var(--muted)}.st-essai{background:var(--warn-soft);color:var(--warn)}.st-payant{background:var(--ok-soft);color:var(--ok)}.st-annule{background:var(--bad-soft);color:var(--bad)}
+details.more summary{cursor:pointer;color:var(--primary);font-weight:700;font-size:13px;margin-top:8px}
+.det{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px;font-size:14px}
+.det table{width:100%;border-collapse:collapse}.det td{padding:4px 0;border-bottom:1px solid var(--line)}.det td:last-child{text-align:right}
+.empty{color:var(--muted);text-align:center;padding:30px 10px}
+.err{background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:10px 12px;font-weight:700}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.links a{color:var(--primary);font-weight:700}
+#qr{background:#fff;padding:14px;border-radius:14px;width:max-content}
+.poster{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+@media (max-width:760px){.su{grid-template-columns:1fr}}
+@media print{.top,.tabs,.noprint{display:none!important}body{background:#fff}.card{border:0}}
+</style>
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<header class="top"><div class="top-in"><img src="icon-192.png" width="34" height="34" alt=""><b>NOBTK</b><span class="tag">ADMIN</span><span style="margin-left:auto;font-size:13px;opacity:.8" id="who"></span><button class="btn ghost sm" id="logout" hidden>Se déconnecter</button></div></header>
+<main id="main"><div class="empty">Chargement…</div></main>
+
+<script>
+const C = window.NOBTK_CONFIG || {};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const STATUSES = [["nouveau","Nouveau"],["contacte","Contacté"],["essai","En essai"],["payant","Payant"],["annule","Annulé"]];
+const SVC = {coupe:["Coupe classique",50],degrade:["Dégradé",60],barbe:["Barbe",30],combo:["Coupe + Barbe",80],enfant:["Enfant",40]};
+const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+const dateStr = (v) => { const d = v && v.toDate ? v.toDate() : (v ? new Date(v) : null); return d && !isNaN(d) ? d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "–"; };
+const base = location.href.replace(/[^/]*([?#].*)?$/, "");
+
+if (!C.firebase || !window.firebase) {
+  $("main").innerHTML = `<div class="card empty">Firebase n'est pas configuré. Ajoute la configuration dans <b>config.js</b>.</div>`;
+} else {
+  firebase.initializeApp(C.firebase);
+  const auth = firebase.auth(), db = firebase.firestore();
+  $("logout").onclick = () => auth.signOut();
+  let unsub = [];
+  auth.onAuthStateChanged((u) => {
+    unsub.forEach((f) => f()); unsub = [];
+    $("logout").hidden = !u; $("who").textContent = u ? u.email : "";
+    u ? dashboard(db, (f) => unsub.push(f)) : login(auth);
+  });
+}
+
+function login(auth) {
+  $("main").innerHTML = `<form class="card" id="lf" style="max-width:400px;margin:40px auto;display:flex;flex-direction:column;gap:12px" novalidate>
+    <h1 style="font-size:26px">Connexion admin</h1>
+    <label style="font-weight:700;font-size:14px;display:flex;flex-direction:column;gap:6px">Email<input type="email" id="em" autocomplete="username"></label>
+    <label style="font-weight:700;font-size:14px;display:flex;flex-direction:column;gap:6px">Mot de passe<input type="password" id="pw" autocomplete="current-password"></label>
+    <div class="err" id="le" hidden></div>
+    <button class="btn pri" type="submit">Se connecter</button>
+    <p style="margin:0;color:var(--muted);font-size:13px">Le compte se crée dans Firebase › Authentication › Utilisateurs.</p></form>`;
+  $("lf").onsubmit = async (e) => {
+    e.preventDefault();
+    try { await auth.signInWithEmailAndPassword($("em").value.trim(), $("pw").value); }
+    catch (x) { const el = $("le"); el.textContent = "Email ou mot de passe incorrect."; el.hidden = false; }
+  };
+}
+
+function dashboard(db, keep) {
+  let tab = "signups", signups = [], tickets = [], shop = {}, filter = "all", q = "";
+  $("main").innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between"><h1 style="font-size:30px">Tableau de bord</h1>
+      <div class="tabs" role="group"><button data-tab="signups" aria-pressed="true">Inscriptions</button><button data-tab="shop" aria-pressed="false">Salon en direct</button><button data-tab="qr" aria-pressed="false">QR code vitrine</button></div></div>
+    <div id="view"></div>`;
+  document.querySelectorAll("[data-tab]").forEach((b) => b.onclick = () => { tab = b.dataset.tab; document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-pressed", x === b)); render(); });
+
+  keep(db.collection("signups").orderBy("createdAt", "desc").onSnapshot((s) => { signups = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "signups") render(); }, (e) => { console.warn(e); $("view").innerHTML = `<div class="err">Lecture refusée. Vérifie que ton compte est bien connecté.</div>`; }));
+  const sid = C.shopId || "salon-1";
+  keep(db.doc("shops/" + sid).onSnapshot((s) => { shop = s.exists ? s.data() : {}; if (tab === "shop") render(); }));
+  keep(db.collection("shops/" + sid + "/tickets").onSnapshot((s) => { tickets = s.docs.map((d) => ({ id: d.id, ...d.data() })); if (tab === "shop") render(); }));
+
+  function render() {
+    const v = $("view");
+    if (tab === "signups") return renderSignups(v);
+    if (tab === "shop") return renderShop(v);
+    return renderQr(v);
+  }
+
+  function renderSignups(v) {
+    const count = (st) => signups.filter((x) => (x.status || "nouveau") === st).length;
+    const mrr = signups.filter((x) => x.status === "payant").reduce((a, x) => a + (x.billing === "year" ? Math.round((x.price || 0) / 12) : (x.price || 0)), 0);
+    const list = signups.filter((x) => (filter === "all" || (x.status || "nouveau") === filter) && (!q || JSON.stringify([x.shop, x.owner, x.city, x.phone]).toLowerCase().includes(q)));
+    v.innerHTML = `
+      <div class="stats" style="margin-bottom:16px">
+        <div class="card stat"><b>${signups.length}</b><span>Inscriptions</span></div>
+        <div class="card stat"><b>${count("nouveau")}</b><span>À contacter</span></div>
+        <div class="card stat"><b>${count("essai")}</b><span>En essai gratuit</span></div>
+        <div class="card stat"><b>${count("payant")}</b><span>Salons payants</span></div>
+        <div class="card stat hl"><b>${fmt(mrr)} DH</b><span>Revenu mensuel</span></div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap" class="noprint">
+          <input type="search" id="q" placeholder="Chercher un salon, un nom, une ville…" value="${esc(q)}" style="flex:1 1 240px">
+          <select id="flt" style="width:auto"><option value="all">Tous les statuts</option>${STATUSES.map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select>
+          <a class="btn ghost" href="inscription.html" target="_blank" rel="noopener" style="text-decoration:none">Ouvrir le formulaire</a>
+        </div>
+        <div class="list">${list.length ? list.map(row).join("") : `<div class="empty">${signups.length ? "Aucun résultat." : "Aucune inscription pour l'instant. Partage le formulaire avec les barbiers : " + esc(base + "inscription.html")}</div>`}</div>
+      </div>`;
+    $("q").oninput = (e) => { q = e.target.value.toLowerCase(); const pos = e.target.selectionStart; renderSignups(v); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
+    $("flt").onchange = (e) => { filter = e.target.value; renderSignups(v); };
+    v.querySelectorAll("[data-status]").forEach((s) => s.onchange = () => db.collection("signups").doc(s.dataset.status).update({ status: s.value }));
+    v.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => {
+      if (b.dataset.armed) { db.collection("signups").doc(b.dataset.del).delete(); return; }
+      b.dataset.armed = "1"; b.textContent = "Confirmer la suppression"; setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = "Supprimer"; } }, 4000);
+    });
+  }
+
+  function row(x) {
+    const st = x.status || "nouveau";
+    const wa = "https://wa.me/212" + String(x.phone || "").replace(/\D/g, "").replace(/^0/, "");
+    const plan = (x.plan === "solo" ? "Solo" : "Salon") + " · " + (x.chairs || 1) + " fauteuil" + ((x.chairs || 1) > 1 ? "s" : "");
+    return `<div class="card" style="padding:14px 16px">
+      <div class="su">
+        <div class="nm"><b>${esc(x.shop)}</b> <span class="chip st-${st}">${esc((STATUSES.find((s) => s[0] === st) || [, st])[1])}</span><div>${esc(x.owner)} · ${esc(x.city)} · inscrit le ${dateStr(x.createdAt)}</div></div>
+        <div style="font-size:14px"><b>${esc(plan)}</b><div style="color:var(--muted)">${fmt(x.price || 0)} DH / ${x.billing === "year" ? "an" : "mois"} · essai jusqu'au ${dateStr(x.trialEnds)}</div></div>
+        <select data-status="${esc(x.id)}" aria-label="Statut">${STATUSES.map(([k, l]) => `<option value="${k}" ${k === st ? "selected" : ""}>${l}</option>`).join("")}</select>
+      </div>
+      <details class="more"><summary>Détails</summary><div class="det">
+        <div><h3 style="font-size:15px;margin-bottom:6px">Contact</h3>
+          <div>${esc(x.phone)} · <a href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a></div>
+          <div>${x.email ? esc(x.email) : "<span style='color:var(--muted)'>Pas d'email</span>"}</div>
+          <div>${esc(x.address || "")}</div>
+          <div style="color:var(--muted)">${x.barbers || 1} barbier(s) · Source : ${esc(x.source || "–")}</div>
+          <button class="btn danger sm" data-del="${esc(x.id)}" type="button" style="margin-top:10px">Supprimer</button></div>
+        <div><h3 style="font-size:15px;margin-bottom:6px">Services</h3><table>${(x.services || []).map((s) => `<tr><td>${esc(s.name)} <span style="color:var(--muted)">· ${s.minutes} min</span></td><td><b>${s.price} DH</b></td></tr>`).join("")}</table></div>
+        <div><h3 style="font-size:15px;margin-bottom:6px">Horaires</h3><table>${(x.hours || []).map((h) => `<tr><td>${esc(h.day)}</td><td>${h.open ? esc(h.from) + " – " + esc(h.to) : "<span style='color:var(--muted)'>Fermé</span>"}</td></tr>`).join("")}</table></div>
+      </div></details></div>`;
+  }
+
+  function renderShop(v) {
+    const done = tickets.filter((t) => t.status === "done");
+    const waiting = tickets.filter((t) => t.status === "waiting");
+    const chair = tickets.filter((t) => t.status === "chair" || t.status === "called");
+    const noshow = tickets.filter((t) => t.status === "noshow");
+    const app = tickets.filter((t) => t.src === "app");
+    const rev = done.reduce((a, t) => a + ((SVC[t.svc] || [, 0])[1]), 0);
+    const durs = done.filter((t) => t.startedAt && t.doneAt).map((t) => (t.doneAt - t.startedAt) / 60000);
+    const avg = durs.length ? Math.round(durs.reduce((a, b) => a + b, 0) / durs.length) : null;
+    const bySvc = Object.entries(done.reduce((m, t) => { m[t.svc] = (m[t.svc] || 0) + 1; return m; }, {})).sort((a, b) => b[1] - a[1]);
+    v.innerHTML = `
+      <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div><h2 style="font-size:22px">${esc(shop.name || "Salon")}</h2><span style="color:var(--muted)">${shop.paused ? "File en pause" : "File ouverte"} · ${shop.chairs || 2} fauteuils · identifiant ${esc(C.shopId || "salon-1")}</span></div>
+        <div class="links"><a href="index.html#client" target="_blank" rel="noopener">Page client</a><a href="index.html#barber" target="_blank" rel="noopener">Tableau barbier</a><a href="index.html#screen" target="_blank" rel="noopener">Écran TV</a></div>
+      </div>
+      <div class="stats">
+        <div class="card stat"><b>${waiting.length}</b><span>En attente maintenant</span></div>
+        <div class="card stat"><b>${chair.length}</b><span>Au fauteuil</span></div>
+        <div class="card stat"><b>${done.length}</b><span>Servis aujourd'hui</span></div>
+        <div class="card stat hl"><b>${fmt(rev)} DH</b><span>Chiffre du jour (estimé)</span></div>
+        <div class="card stat"><b>${avg == null ? "–" : avg + " min"}</b><span>Durée moyenne</span></div>
+        <div class="card stat"><b>${noshow.length}</b><span>Absents</span></div>
+        <div class="card stat"><b>${tickets.length ? Math.round(app.length / tickets.length * 100) : 0} %</b><span>Tickets pris dans l'appli</span></div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3 style="font-size:17px;margin-bottom:8px">Services les plus demandés</h3>
+        ${bySvc.length ? bySvc.map(([k, n]) => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc((SVC[k] || [k])[0])}</span><b>${n}</b></div>`).join("") : `<div class="empty">Les coupes terminées aujourd'hui apparaîtront ici.</div>`}
+        <p style="margin:10px 0 0;color:var(--muted);font-size:13px">Chiffres de la journée en cours. Le barbier remet à zéro avec « Nouvelle journée ».</p></div>`;
+  }
+
+  function renderQr(v) {
+    const url = base + "index.html";
+    v.innerHTML = `<div class="card poster">
+      <div id="qr"></div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:420px">
+        <h2 style="font-size:28px">Prenez votre ticket sur NOBTK</h2>
+        <p style="margin:0;color:var(--muted)">Scannez, choisissez votre service, et revenez quand c'est votre tour.</p>
+        <p style="margin:0;font-weight:700;direction:rtl;font-size:18px">خود نوبتك من التيليفون، و رجع ملي توصل نوبتك</p>
+        <code style="font-size:13px;word-break:break-all">${esc(url)}</code>
+        <div class="noprint" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="button" id="pr">Imprimer l'affiche</button></div>
+      </div></div>`;
+    try { new QRCode($("qr"), { text: url, width: 240, height: 240, colorDark: "#15143A", colorLight: "#FFFFFF" }); } catch (e) { $("qr").textContent = url; }
+    $("pr").onclick = () => window.print();
+  }
+  render();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NOBTK</title>
+<meta name="theme-color" content="#3A31D2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: app shell with sticky top bar; views = client (phone-first), barber (dashboard grid), screen (TV), demo (phone frame + dashboard side by side) */
+:root{
+  --bg:#F2F1FA; --surface:#FFFFFF; --surface-2:#E9E8F6; --ink:#15143A; --muted:#64638C; --line:#DEDDF0;
+  --primary:#3A31D2; --primary-ink:#FFFFFF; --primary-soft:#E4E2FF;
+  --accent:#FFC53D; --accent-ink:#2B1E00;
+  --ok:#14936A; --ok-soft:#DDF4EA; --warn:#C77700; --warn-soft:#FFF0D6; --bad:#D23C4A; --bad-soft:#FDE3E5;
+  --frame:#15143A; --shadow:0 1px 2px rgba(21,20,58,.06),0 8px 24px rgba(21,20,58,.08);
+  --f-display:"Bricolage Grotesque","Tajawal",system-ui,sans-serif;
+  --f-body:"Manrope","Tajawal",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C0B20; --surface:#16153A; --surface-2:#201F4A; --ink:#F1F0FF; --muted:#A09FC9; --line:#2B2A58;
+  --primary:#6C63FF; --primary-ink:#FFFFFF; --primary-soft:#26245E;
+  --accent:#FFC53D; --accent-ink:#2B1E00;
+  --ok:#3CCB97; --ok-soft:#123A30; --warn:#FFB43D; --warn-soft:#3A2C10; --bad:#FF6B78; --bad-soft:#3E1A22;
+  --frame:#000000; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0C0B20; --surface:#16153A; --surface-2:#201F4A; --ink:#F1F0FF; --muted:#A09FC9; --line:#2B2A58;
+  --primary:#6C63FF; --primary-ink:#FFFFFF; --primary-soft:#26245E;
+  --accent:#FFC53D; --accent-ink:#2B1E00;
+  --ok:#3CCB97; --ok-soft:#123A30; --warn:#FFB43D; --warn-soft:#3A2C10; --bad:#FF6B78; --bad-soft:#3E1A22;
+  --frame:#000000; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+[dir="rtl"]{font-family:"Tajawal",var(--f-body)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+[dir="rtl"] h1,[dir="rtl"] h2,[dir="rtl"] h3{font-family:"Tajawal",var(--f-display);letter-spacing:0}
+
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+.top-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:1320px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;margin-inline-end:auto}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.02em}
+.brand small{display:block;color:var(--muted);font-size:12px;line-height:1.1}
+.seg{display:flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:2px;overflow-x:auto;max-width:100%}
+.seg button{border:0;background:transparent;padding:7px 12px;border-radius:9px;font-weight:600;font-size:13px;white-space:nowrap;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.pill.live{color:var(--ok);background:var(--ok-soft)}
+.pill.live .dot{animation:pulse 1.6s infinite}
+.pill.paused{color:var(--warn);background:var(--warn-soft)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.lang{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px}
+
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1320px;margin:0 auto}
+
+/* Generic */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,filter .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.pri{background:var(--primary);color:var(--primary-ink)}
+.btn.acc{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface-2);color:var(--ink)}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.okb{background:var(--ok);color:#fff}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn.block{width:100%}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+[dir="rtl"] .lbl{letter-spacing:0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input,.field select{border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px;width:100%}
+.field input:focus{border-color:var(--primary);outline:none}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.chip.app{background:var(--primary-soft);color:var(--primary)}
+.chip.way{background:var(--ok-soft);color:var(--ok)}
+.chip.ph{background:var(--warn-soft);color:var(--warn)}
+.muted{color:var(--muted)}
+.lineviz{position:relative;z-index:1;margin-top:12px;background:rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.lv-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lv-row i{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.3);flex:none}
+.lv-row i.ch{background:var(--accent)}
+.lv-row i.fr{background:transparent;border:2px solid rgba(255,255,255,.45)}
+.lv-row i.you{background:transparent;border:2px dashed var(--accent);width:34px}
+.lv-row .sep{width:2px;height:22px;background:rgba(255,255,255,.4);margin:0 4px;border-radius:2px}
+.lv-row b{font-size:12px;font-weight:700;opacity:.9}
+.lv-leg{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;opacity:.85}
+.lv-leg span{display:inline-flex;align-items:center;gap:5px}
+.lv-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:14px;padding:12px 14px;font-size:13.5px;font-weight:600}
+.warnbox.bad{background:var(--bad-soft);color:var(--bad)}
+.policy{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
+.cdbox{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.12);border-radius:16px;padding:10px 18px}
+.cdbox span{font-size:13px;opacity:.85}.cdbox .cd{font-family:var(--f-display);font-size:34px;color:var(--accent)}.cd-over{font-size:14px;max-width:260px}
+
+svg.i{width:18px;height:18px;flex:none}
+
+/* ---------- Client ---------- */
+.cv{position:relative;max-width:460px;margin:0 auto}
+.cv-body{display:flex;flex-direction:column;gap:14px}
+.hero{background:var(--primary);color:var(--primary-ink);border-radius:22px;padding:20px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset-inline-end:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:var(--accent);opacity:.95}
+.hero h1{font-size:26px;position:relative;z-index:1;max-width:75%}
+.hero p{margin:6px 0 0;opacity:.85;position:relative;z-index:1}
+.livebox{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1;margin-top:16px}
+.livebox div{background:rgba(255,255,255,.12);border-radius:14px;padding:10px 12px}
+.livebox b{font-family:var(--f-display);font-size:28px;display:block;line-height:1.1}
+.livebox span{font-size:12px;opacity:.85}
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.steps3 div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;font-size:12.5px;font-weight:600}
+.steps3 i{font-style:normal;display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-weight:800;margin-bottom:6px}
+.svc-list{display:grid;gap:8px}
+.svc{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);text-align:start;width:100%}
+.svc[aria-checked="true"]{border-color:var(--primary);background:var(--primary-soft)}
+.svc .rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.svc[aria-checked="true"] .rad{border-color:var(--primary)}
+.svc[aria-checked="true"] .rad::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--primary)}
+.svc .nm{flex:1;min-width:0;font-weight:700}
+.svc .nm small{display:block;font-weight:500;color:var(--muted)}
+.svc .pr{font-weight:800;font-family:var(--f-display);white-space:nowrap}
+.join{display:flex;flex-direction:column;gap:12px}
+.err{color:var(--bad);font-size:13px;font-weight:600}
+
+/* ticket */
+.ticket{background:var(--primary);color:var(--primary-ink);border-radius:22px;position:relative;overflow:hidden}
+.ticket .tt{padding:18px 20px 22px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.ticket .tno{font-family:var(--f-display);font-weight:800;font-size:76px;line-height:.9;color:var(--accent)}
+.ticket .shop{font-weight:700;opacity:.9}
+.ticket .perf{height:0;border-top:2px dashed rgba(255,255,255,.35);margin:0 18px;position:relative}
+.ticket .perf::before,.ticket .perf::after{content:"";position:absolute;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg)}
+.ticket .perf::before{left:-30px}.ticket .perf::after{right:-30px}
+.ticket .tb{padding:18px 20px;display:flex;align-items:center;gap:16px}
+.ring{position:relative;width:96px;height:96px;flex:none}
+.ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.ring .v b{font-family:var(--f-display);font-size:30px;display:block}
+.ring .v span{font-size:11px;opacity:.85}
+.tstat{flex:1;min-width:0}
+.tstat h2{font-size:21px}
+.tstat p{margin:4px 0 0;opacity:.85;font-size:14px}
+.ahead{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.ahead i{width:14px;height:14px;border-radius:5px;background:rgba(255,255,255,.3)}
+.ahead i.me{background:var(--accent);width:28px}
+.ahead i.ch{background:rgba(255,255,255,.75)}
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.track div{font-size:11.5px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.track div::before{content:"";height:5px;border-radius:5px;background:var(--line)}
+.track div.on{color:var(--ink)}
+.track div.on::before{background:var(--primary)}
+.track div.now::before{background:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--muted)}
+.kv b{text-align:end}
+.notif-card{display:flex;flex-direction:column;gap:10px}
+.notif-st{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.hist{display:flex;flex-direction:column;gap:6px;max-height:170px;overflow:auto}
+.hist div{display:flex;gap:8px;font-size:13px;align-items:baseline}
+.hist time{color:var(--muted);font-size:12px;flex:none}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opts button{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px}
+.opts button[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.state-soon .ticket{background:linear-gradient(160deg,var(--primary),#2a22a8)}
+.done-card{text-align:center;padding:28px 18px}
+.done-card .big{font-size:44px;font-family:var(--f-display);font-weight:800;color:var(--primary)}
+
+/* banners (in-app notifications) */
+.banners{position:absolute;top:8px;left:8px;right:8px;z-index:30;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.cv.standalone .banners{position:fixed;top:calc(env(safe-area-inset-top,0px) + 64px);left:50%;right:auto;transform:translateX(-50%);width:min(440px,calc(100% - 24px))}
+.banner{pointer-events:auto;display:flex;gap:12px;align-items:flex-start;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 12px 32px rgba(10,8,40,.25);border-radius:18px;padding:12px 14px;animation:drop .35s cubic-bezier(.2,1.2,.4,1)}
+.banner .ic{width:36px;height:36px;border-radius:10px;background:var(--primary);display:grid;place-items:center;flex:none;color:var(--accent)}
+.banner b{display:block;font-size:14px}
+.banner p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.banner small{display:block;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+@keyframes drop{from{transform:translateY(-24px);opacity:0}to{transform:none;opacity:1}}
+.called-ov{position:absolute;inset:0;z-index:40;background:var(--primary);color:var(--primary-ink);border-radius:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:12px}
+.cv.standalone .called-ov{position:fixed;border-radius:0;padding-top:calc(24px + env(safe-area-inset-top,0px))}
+.called-ov .pulse{width:150px;height:150px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:64px;box-shadow:0 0 0 0 rgba(255,197,61,.6);animation:ring 1.4s infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(255,197,61,.6)}100%{box-shadow:0 0 0 36px rgba(255,197,61,0)}}
+.called-ov h2{font-size:34px}
+.called-ov p{margin:0;font-size:17px;opacity:.9}
+
+/* ---------- Barber ---------- */
+.bv{display:flex;flex-direction:column;gap:16px}
+.bhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bhead h1{font-size:26px;margin-inline-end:auto}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.stat b{display:block;font-family:var(--f-display);font-size:26px;line-height:1.15}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
+.chairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.chair{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:178px}
+.chair.st-chair{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.chair.st-called{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.chair-h{display:flex;justify-content:space-between;align-items:center}
+.chair-h .lbl{display:flex;gap:6px;align-items:center}
+.chair .who{display:flex;gap:12px;align-items:center}
+.badge{font-family:var(--f-display);font-weight:800;font-size:22px;min-width:52px;height:52px;padding:0 8px;border-radius:14px;display:grid;place-items:center;background:var(--primary);color:var(--accent)}
+.badge.sm{min-width:40px;height:40px;font-size:17px;border-radius:11px}
+.badge.free{background:var(--surface-2);color:var(--muted)}
+.who b{display:block;font-size:16px}
+.who span{font-size:13px;color:var(--muted)}
+.bar{height:6px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--primary);border-radius:6px}
+.bar.over i{background:var(--warn)}
+.chair .acts{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.chair .acts .btn{flex:1}
+.qwrap{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+.qlist{display:flex;flex-direction:column}
+.qrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:0}
+.qrow .info{flex:1;min-width:0}
+.qrow .info b{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.qrow .info span{font-size:13px;color:var(--muted)}
+.qrow .eta{text-align:end;font-size:13px;color:var(--muted);white-space:nowrap}
+.qrow .eta b{display:block;color:var(--ink);font-size:15px}
+.ibtn{border:0;background:var(--surface-2);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted);flex:none}
+.ibtn:hover{color:var(--ink)}
+.qrow.fresh{animation:flash 1.6s}
+@keyframes flash{0%{background:var(--accent)}100%{background:transparent}}
+.side{display:flex;flex-direction:column;gap:16px}
+.srcsw{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.empty{padding:26px 10px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:center}
+.empty svg{width:42px;height:42px;color:var(--primary)}
+.toasts{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline-end:max(16px,env(safe-area-inset-right,0px));z-index:50;display:flex;flex-direction:column;gap:8px;width:min(340px,calc(100% - 32px))}
+.toast{background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 14px;font-weight:600;font-size:14px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow);animation:drop .3s}
+.toast i{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none}
+details.set summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.set summary::-webkit-details-marker{display:none}
+details.set[open] summary{margin-bottom:12px}
+.setg{display:flex;flex-direction:column;gap:12px}
+.stepper{display:flex;gap:6px}
+.stepper button{flex:1;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px;font-weight:800}
+.stepper button[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+
+/* ---------- Screen (TV) ---------- */
+.tv{background:var(--primary);color:var(--primary-ink);border-radius:26px;padding:clamp(18px,4vw,40px);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(16px,3vw,36px);min-height:70vh}
+.tv h2{font-size:clamp(20px,2.4vw,30px);opacity:.9}
+.tv .now{display:grid;gap:14px;align-content:start}
+.tvchair{background:rgba(255,255,255,.1);border-radius:20px;padding:16px 20px;display:flex;align-items:center;gap:18px}
+.tvchair .n{font-family:var(--f-display);font-weight:800;font-size:clamp(54px,8vw,110px);line-height:.9;color:var(--accent);min-width:2.2ch}
+.tvchair .n.free{color:rgba(255,255,255,.35)}
+.tvchair b{font-size:clamp(16px,1.8vw,24px);display:block}
+.tvchair span{opacity:.8}
+.tvchair.called{animation:tvblink 1.2s 4}
+@keyframes tvblink{50%{background:rgba(255,197,61,.35)}}
+.tv .nexts{display:flex;flex-wrap:wrap;gap:10px}
+.tv .nexts span{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,3.4vw,46px);background:rgba(255,255,255,.12);border-radius:14px;padding:6px 16px}
+.tv .side2{display:flex;flex-direction:column;gap:18px}
+.tv .clock{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6vw,84px);line-height:1}
+.tv .cta{margin-top:auto;background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:18px}
+.tv .cta b{font-family:var(--f-display);font-size:clamp(20px,2.2vw,30px);display:block}
+
+/* ---------- Demo ---------- */
+.demo{display:grid;grid-template-columns:400px minmax(0,1fr);gap:24px;align-items:start}
+.phone{width:100%;max-width:390px;margin:0 auto;border:10px solid var(--frame);border-radius:46px;background:var(--bg);height:min(800px,calc(100vh - 120px));min-height:620px;position:sticky;top:84px;overflow:hidden;box-shadow:0 24px 60px rgba(21,20,58,.25)}
+.phone .scr{height:100%;overflow:auto;padding:38px 14px 20px;position:relative}
+.phone .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:110px;height:26px;background:var(--frame);border-radius:20px;z-index:45}
+.phone .cv{position:static}
+.phone .banners{top:42px}
+.phone .called-ov{border-radius:36px}
+.demo-cap{text-align:center;color:var(--muted);font-size:13px;font-weight:600;margin-top:10px}
+.loading{padding:40px 10px;text-align:center;color:var(--muted)}
+
+@media (max-width:1100px){.qwrap{grid-template-columns:1fr}}
+@media (max-width:980px){.demo{grid-template-columns:1fr}.phone{position:relative;top:0}.tv{grid-template-columns:1fr}}
+@media (max-width:640px){.stats{grid-template-columns:1fr 1fr}.brand small{display:none}.hero h1{font-size:23px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.pin{max-width:380px;margin:40px auto;display:flex;flex-direction:column;gap:14px;text-align:center}
+</style>
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div id="app">
+  <header class="top"><div class="top-in">
+    <div class="brand">
+      <img src="icon-192.png" width="40" height="40" alt="" style="display:block;border-radius:11px">
+      <div><b>NOBTK</b><small data-t="tag"></small></div>
+    </div>
+    <span id="modePill" class="pill"><span class="dot"></span><span></span></span>
+    <nav class="seg" id="nav" aria-label="Vues">
+      <button data-view="client"></button><button data-view="barber"></button><button data-view="screen"></button><button data-view="demo"></button>
+    </nav>
+    <button class="lang" id="langBtn" type="button"></button>
+  </div></header>
+  <main><div class="wrap" id="view"></div></main>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+</div>
+
+<script>
+/* ================= i18n ================= */
+const STR={
+fr:{tag:"Ton tour, sans attendre.",nav_client:"Client",nav_barber:"Barbier",nav_screen:"Écran salon",nav_demo:"Démo",
+live:"Synchronisé en direct",local:"Hors ligne (cet appareil)",connecting:"Connexion…",
+open:"Ouvert",paused:"File en pause",waiting:"en attente",wait_est:"attente estimée",min:"min",
+hero_t:"Ta coupe, sans faire la queue.",hero_p:"Prends ton ticket depuis chez toi et viens juste à temps.",
+s1:"Prends ton ticket à distance",s2:"Suis ta place en direct",s3:"On te prévient avant ton tour",
+services:"Services et prix",join_t:"Prendre mon ticket",name:"Ton prénom",name_ph:"ex. Youssef",phone:"Téléphone (optionnel)",
+join_btn:"Rejoindre la file",need_name:"Écris ton prénom pour prendre un ticket.",need_svc:"Choisis un service.",
+paused_msg:"Le salon a mis la file en pause. Réessaie dans quelques minutes.",
+your_no:"Ton numéro",ahead:"devant toi",eta_in:"ton tour dans",
+st_wait:"Tu es dans la file",st_wait_p:"Reste tranquille chez toi. On te prévient.",
+st_soon:"Ton tour approche",st_soon_p:"Prends la route maintenant.",
+st_next:"Tu es le prochain",st_next_p:"Rejoins le salon, ça va être à toi.",
+st_called:"C'est ton tour !",st_called_p:"Présente-toi au fauteuil {c}.",
+st_chair:"Coupe en cours",st_chair_p:"Fauteuil {c}. Bonne coupe !",
+st_done:"Merci et à bientôt",st_done_p:"Ta coupe est terminée. Montant : {p}.",
+st_noshow:"Ticket expiré",st_noshow_p:"Tu n'étais pas là quand on t'a appelé.",
+tr1:"Dans la file",tr2:"Bientôt",tr3:"Appelé",tr4:"Au fauteuil",
+on_way:"Je suis en route",on_way_ok:"Le barbier sait que tu arrives",cancel:"Annuler mon ticket",cancel_sure:"Oui, annuler",
+new_ticket:"Prendre un nouveau ticket",details:"Mon ticket",service:"Service",price:"Prix",joined:"Pris à",chair:"Fauteuil",
+alerts:"Alertes",alerts_on:"Notifications du téléphone activées",alerts_app:"Alertes dans l'app et son activés",alerts_off:"Active les alertes pour être prévenu",
+enable:"Activer les alertes",test:"Tester",warn_me:"Me prévenir quand il reste",history:"Historique",nohist:"Aucune alerte pour l'instant.",
+n_soon_t:"Ton tour approche",n_soon_b:"Plus que {n} devant toi, environ {m} min. Prends la route.",
+n_next_t:"Tu es le prochain",n_next_b:"Rejoins le salon maintenant.",
+n_called_t:"C'est ton tour !",n_called_b:"Le fauteuil {c} t'attend.",
+n_test_t:"Test réussi",n_test_b:"Les alertes fonctionnent. Tu seras prévenu à temps.",
+coming:"J'arrive",
+b_title:"Tableau de bord",b_chairs:"Fauteuils",b_free:"Libre",b_call:"Appeler le suivant",b_start:"Client installé",b_finish:"Terminer",
+b_finish_next:"Terminer et suivant",b_absent:"Absent",b_called_since:"appelé il y a {m} min",b_since:"{m} / ~{d} min",
+b_queue:"File d'attente",b_empty:"Personne dans la file. Les tickets pris dans l'appli apparaissent ici en direct.",
+b_add:"Ajouter un client",b_walkin:"Sur place",b_phone:"Par téléphone",b_app:"Appli",b_onway:"En route",
+b_pause:"Mettre en pause",b_resume:"Reprendre la file",b_served:"Servis aujourd'hui",b_rev:"Chiffre du jour",b_avg:"Durée moyenne",b_noshow:"Absents",
+b_settings:"Réglages",b_shopname:"Nom du salon",b_nchairs:"Fauteuils actifs",b_examples:"Remplir avec des exemples",b_newday:"Nouvelle journée",
+b_newday_sure:"Confirmer : vider la file",b_add_btn:"Ajouter à la file",b_waited:"attend depuis {m} min",b_next_free:"Prochain créneau libre",
+b_toast_new:"Nouveau ticket : #{n} {name}",b_toast_way:"#{n} {name} est en route",b_toast_cancel:"#{n} {name} a annulé",
+b_up:"Monter dans la file",b_remove:"Retirer",b_save:"Enregistrer",saved:"Enregistré",readonly:"Lecture seule : tu ne peux pas modifier cette file.",
+tv_now:"Maintenant",tv_next:"Ensuite",tv_waiting:"en attente",tv_cta:"Pas envie d'attendre ici ?",tv_cta2:"Prends ton ticket sur NOBTK et reviens à l'heure.",tv_new:"Nouveau client : attente ≈ {m} min",
+demo_cap1:"Téléphone du client",demo_cap2:"Le barbier, en direct",dh:"DH",
+mins_ago:"il y a {m} min",now:"maintenant"},
+ar:{tag:"نوبتك، بلا ما تسنى.",nav_client:"الزبون",nav_barber:"الحلاق",nav_screen:"شاشة الصالون",nav_demo:"عرض",
+live:"متزامن مباشرة",local:"عرض على هاد الجهاز",connecting:"كيتصل…",
+open:"مفتوح",paused:"الصف موقوف",waiting:"كيتسناو",wait_est:"وقت الانتظار",min:"دقيقة",
+hero_t:"حلاقتك، بلا صف.",hero_p:"خود نوبتك من الدار و اجي فالوقت ديالك.",
+s1:"خود نوبتك من بعيد",s2:"تبع بلاصتك مباشرة",s3:"غادي نعلموك قبل نوبتك",
+services:"الخدمات و الأثمنة",join_t:"خود نوبتك",name:"سميتك",name_ph:"مثلا يوسف",phone:"التيليفون (اختياري)",
+join_btn:"دخل للصف",need_name:"كتب سميتك باش تاخد النوبة.",need_svc:"ختار الخدمة.",
+paused_msg:"الصالون وقف الصف. عاود من بعد شوية.",
+your_no:"النمرة ديالك",ahead:"قدامك",eta_in:"نوبتك من بعد",
+st_wait:"راك فالصف",st_wait_p:"بقا مرتاح فالدار. غادي نعلموك.",
+st_soon:"نوبتك قربات",st_soon_p:"بدا تجي دابا.",
+st_next:"نتا اللي من بعد",st_next_p:"اجي للصالون، قربات نوبتك.",
+st_called:"وصلات نوبتك!",st_called_p:"سير للكرسي {c}.",
+st_chair:"الحلاقة خدامة",st_chair_p:"الكرسي {c}. بالصحة!",
+st_done:"بالصحة و نتلاقاو",st_done_p:"سالات الحلاقة ديالك. الثمن: {p}.",
+st_noshow:"النوبة سالات",st_noshow_p:"ما كنتيش حاضر ملي عيطو عليك.",
+tr1:"فالصف",tr2:"قريب",tr3:"عيطو عليك",tr4:"فالكرسي",
+on_way:"أنا جاي فالطريق",on_way_ok:"الحلاق عارف بلي جاي",cancel:"لغي النوبة",cancel_sure:"إيه، لغي",
+new_ticket:"خود نوبة جديدة",details:"النوبة ديالي",service:"الخدمة",price:"الثمن",joined:"خديتيها مع",chair:"كرسي",
+alerts:"التنبيهات",alerts_on:"تنبيهات التيليفون مفعلة",alerts_app:"التنبيهات فالتطبيق و الصوت مفعلين",alerts_off:"فعل التنبيهات باش نعلموك",
+enable:"فعل التنبيهات",test:"جرب",warn_me:"علمني ملي يبقا",history:"السجل",nohist:"حتى تنبيه ما زال.",
+n_soon_t:"نوبتك قربات",n_soon_b:"باقي {n} قدامك، تقريبا {m} دقيقة. بدا تجي.",
+n_next_t:"نتا اللي من بعد",n_next_b:"اجي للصالون دابا.",
+n_called_t:"وصلات نوبتك!",n_called_b:"الكرسي {c} كيتسناك.",
+n_test_t:"التجربة نجحات",n_test_b:"التنبيهات خدامة. غادي نعلموك فالوقت.",
+coming:"جاي",
+b_title:"لوحة التحكم",b_chairs:"الكراسي",b_free:"خاوي",b_call:"عيط للي من بعد",b_start:"بدا الحلاقة",b_finish:"سالا",
+b_finish_next:"سالا و اللي من بعد",b_absent:"ما جاش",b_called_since:"تعيط عليه هادي {m} دقيقة",b_since:"{m} / ~{d} دقيقة",
+b_queue:"الصف",b_empty:"حتى واحد ما كيتسنى. النوبات اللي كتاخد من التطبيق كتبان هنا مباشرة.",
+b_add:"زيد زبون",b_walkin:"فالصالون",b_phone:"بالتيليفون",b_app:"التطبيق",b_onway:"فالطريق",
+b_pause:"وقف الصف",b_resume:"رجع الصف",b_served:"تحلقو اليوم",b_rev:"مدخول اليوم",b_avg:"المدة المتوسطة",b_noshow:"ما جاوش",
+b_settings:"الإعدادات",b_shopname:"سمية الصالون",b_nchairs:"الكراسي الخدامين",b_examples:"زيد زبناء تجريبيين",b_newday:"نهار جديد",
+b_newday_sure:"أكد: خوي الصف",b_add_btn:"زيد للصف",b_waited:"كيتسنى هادي {m} دقيقة",b_next_free:"أقرب وقت خاوي",
+b_toast_new:"نوبة جديدة: #{n} {name}",b_toast_way:"#{n} {name} جاي فالطريق",b_toast_cancel:"#{n} {name} لغا النوبة",
+b_up:"طلعو فالصف",b_remove:"حيد",b_save:"سجل",saved:"تسجل",readonly:"قراءة فقط: ما تقدرش تبدل هاد الصف.",
+tv_now:"دابا",tv_next:"من بعد",tv_waiting:"كيتسناو",tv_cta:"ما بغيتيش تسنى هنا؟",tv_cta2:"خود نوبتك على NOBTK و رجع فالوقت.",tv_new:"زبون جديد: الانتظار ≈ {m} دقيقة",
+demo_cap1:"تيليفون الزبون",demo_cap2:"الحلاق، مباشرة",dh:"درهم",
+mins_ago:"هادي {m} دقيقة",now:"دابا"}
+};
+
+Object.assign(STR.fr,{pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
+st_called_p:"Présente-toi au fauteuil {c}.",tr3:"Ton tour",tr4:"Terminé",
+grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé. Le barbier peut te marquer absent.",
+cant_come:"Je ne peux pas venir",n_called_b:"Fauteuil {c}. Tu as {g} min pour te présenter.",
+n_noshow_t:"Tour manqué",st_noshow_p:"Tu n'étais pas là à ton tour.",n_delay_t:"Tour décalé",st_delayed_p:"Tu n'étais pas là à ton tour : le barbier t'a décalé de 2 places. C'est ta dernière chance.",
+strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 absences sur 3. À la prochaine, réservation bloquée {d} jours.",
+strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
+blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
+policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours.",
+b_done:"Terminé",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
+b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",b_delayed_chip:"Décalé",b_strike_chip:"{s}/3 absences",
+b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place.",
+b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
+lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
+Object.assign(STR.ar,{pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
+st_called_p:"سير للكرسي {c}.",tr3:"نوبتك",tr4:"سالات",
+grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات. الحلاق يقدر يحسبك غايب.",
+cant_come:"ما نقدرش نجي",n_called_b:"الكرسي {c}. عندك {g} دقايق باش توصل.",
+n_noshow_t:"فاتتك النوبة",st_noshow_p:"ما كنتيش حاضر فنوبتك.",n_delay_t:"تأخرات نوبتك",st_delayed_p:"ما كنتيش حاضر فنوبتك: الحلاق رجعك جوج بلايص اللور. هادي آخر فرصة.",
+strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غيابات من 3. المرة الجاية يتبلوكا الحجز {d} أيام.",
+strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
+blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
+policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام.",
+b_done:"سالا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
+b_notcome:"ما جاش؟",b_delay:"رجعو جوج بلايص",b_absent_confirm:"غايب",b_delayed_chip:"مأخر",b_strike_chip:"{s}/3 غيابات",
+b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون.",
+b_abs_none:"حتى غياب ما زال. الزبناء اللي تحسبو غايبين كيبانو هنا.",b_blocked:"مبلوكي",b_until:"حتى {d}",b_forgive:"سامحو",
+lv_chair:"فالكرسي",lv_wait:"كيتسناو",lv_you:"بلاصتك",b_grace:"الوقت باش يوصل",b_blockdays:"البلوكاج من بعد 3 غيابات",days:"أيام",phone:"التيليفون (اختياري)"});
+const SERVICES=[
+ {id:"coupe",fr:"Coupe classique",ar:"حلاقة عادية",price:50,min:20},
+ {id:"degrade",fr:"Dégradé",ar:"ديكراديه",price:60,min:25},
+ {id:"barbe",fr:"Barbe",ar:"اللحية",price:30,min:15},
+ {id:"combo",fr:"Coupe + Barbe",ar:"حلاقة + لحية",price:80,min:35},
+ {id:"enfant",fr:"Enfant (−12 ans)",ar:"حلاقة الدراري",price:40,min:15}
+];
+const ls={get(k,d=null){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
+let lang=ls.get("nobtk-lang","fr");
+function t(k,v){let s=(STR[lang]&&STR[lang][k])??STR.fr[k]??k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s}
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const svc=id=>SERVICES.find(s=>s.id===id)||SERVICES[0];
+const svcName=id=>svc(id)[lang]||svc(id).fr;
+const money=n=>lang==="ar"?`${n} ${t("dh")}`:`${n} ${t("dh")}`;
+const mins=ms=>Math.max(0,Math.round(ms/60000));
+const hhmm=ts=>new Date(ts).toLocaleTimeString(lang==="ar"?"ar-MA":"fr-MA",{hour:"2-digit",minute:"2-digit"});
+const ICON={
+ bell:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+ up:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>',
+ x:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+ plus:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+ pause:'<svg class="i" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>',
+ play:'<svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>',
+ car:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5z"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg>',
+ chair:'<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v8H7zM5 11h14v4H5zM12 15v6M8 21h8"/></svg>',
+ users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>'
+};
+
+/* ================= Sound / alerts ================= */
+let actx=null;
+function unlockAudio(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume()}catch{}}
+document.addEventListener("pointerdown",unlockAudio,{passive:true});
+function chime(strong){if(!actx)return;try{const notes=strong?[784,988,1175,1568]:[880,1175];notes.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type="sine";o.frequency.value=f;const t0=actx.currentTime+i*.15;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.28,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+.55);o.connect(g).connect(actx.destination);o.start(t0);o.stop(t0+.6)})}catch{}}
+function sysNotify(title,body){try{if(!("Notification" in window)||Notification.permission!=="granted")return;const o={body,tag:"nobtk",icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200]};if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(r=>r.showNotification(title,o)).catch(()=>{try{new Notification(title,o)}catch{}})}else new Notification(title,o)}catch{}}
+function vibrate(p){try{navigator.vibrate&&navigator.vibrate(p)}catch{}}
+function toast(msg){const box=document.getElementById("toasts");const el=document.createElement("div");el.className="toast";el.innerHTML=`<i></i><span>${esc(msg)}</span>`;box.appendChild(el);while(box.children.length>3)box.firstChild.remove();setTimeout(()=>el.remove(),4200)}
+
+/* ================= Store (live db or local fallback) ================= */
+const DEFAULT_SHOP={name:"Barber Shop Mohammedia",paused:false,chairs:2,grace:5,blockDays:7};
+const MAX_STRIKES=3;
+const Store={mode:"connecting",ready:false,shop:{...DEFAULT_SHOP},tickets:[],clients:[],L:new Set(),readonly:false,
+ on(f){this.L.add(f);return()=>this.L.delete(f)},emit(){this.L.forEach(f=>{try{f()}catch(e){console.error(e)}});updateModePill()},
+ async setTicket(){},async patchTicket(){},async delTicket(){},async patchShop(){},async setClient(){},async delClient(){}};
+function writeFail(e){console.warn(e);if(e&&(e.code==="invalid_argument"||e.code==="permission-denied")){Store.readonly=true;toast(t("readonly"))}else if(e&&e.code==="quota_exceeded"){toast(e.message||"Quota")}}
+
+function startLocal(){
+ const KEY="nobtk-local-v1";let st=ls.get(KEY,null);
+ const fresh=!st;if(!st)st={shop:{...DEFAULT_SHOP},tickets:{},clients:{}};
+ const fix=()=>{if(!st.clients)st.clients={};if(st.shop&&/Gu[ée]liz/.test(st.shop.name||""))st.shop.name=DEFAULT_SHOP.name};fix();
+ let bc=null;try{bc=new BroadcastChannel("nobtk")}catch{}
+ const sync=()=>{Store.shop={...DEFAULT_SHOP,...st.shop};Store.tickets=Object.entries(st.tickets).map(([id,v])=>({id,...v}));Store.clients=Object.entries(st.clients).map(([id,v])=>({id,...v}));Store.emit()};
+ const load=()=>{const s=ls.get(KEY,null);if(s){st=s;fix()}sync()};
+ const save=()=>{ls.set(KEY,st);try{bc&&bc.postMessage(1)}catch{}sync()};
+ if(bc)bc.onmessage=load;window.addEventListener("storage",e=>{if(e.key===KEY)load()});
+ Store.setTicket=async(id,d)=>{st.tickets[id]={...d};save()};
+ Store.patchTicket=async(id,p)=>{if(st.tickets[id]){st.tickets[id]={...st.tickets[id],...p};save()}};
+ Store.delTicket=async id=>{delete st.tickets[id];save()};
+ Store.patchShop=async p=>{st.shop={...st.shop,...p};save()};
+ Store.setClient=async(id,d)=>{st.clients[id]={...d};save()};
+ Store.delClient=async id=>{delete st.clients[id];save()};
+ Store.mode="local";Store.ready=true;load();
+ if(fresh)A.examples();
+}
+function startDb(db,shopId){
+ const base="shops/"+shopId;
+ const col=db.collection(base+"/tickets"),cl=db.collection(base+"/clients"),shopRef=db.doc(base);
+ const got={t:false,s:false,c:false};let fellBack=false,slow=null;
+ const done=()=>{if(fellBack)return;if(got.t&&got.s&&got.c&&!Store.ready){Store.ready=true;clearTimeout(slow)}Store.emit()};
+ const fail=e=>{console.warn("db",e);if(!Store.ready&&!fellBack){fellBack=true;clearTimeout(slow);startLocal()}};
+ slow=setTimeout(()=>{if(!Store.ready&&!fellBack){fellBack=true;startLocal()}},12000);
+ shopRef.onSnapshot(s=>{if(fellBack)return;Store.shop={...DEFAULT_SHOP,...(s.exists?s.data():{})};got.s=true;done()},fail);
+ col.onSnapshot(s=>{if(fellBack)return;Store.tickets=s.docs.map(d=>({id:d.id,...d.data()}));got.t=true;done()},fail);
+ cl.onSnapshot(s=>{if(fellBack)return;Store.clients=s.docs.map(d=>({id:d.id,...d.data()}));got.c=true;done()},fail);
+ Store.setTicket=(id,d)=>col.doc(id).set(d).catch(writeFail);
+ Store.patchTicket=(id,p)=>col.doc(id).update(p).catch(writeFail);
+ Store.delTicket=id=>col.doc(id).delete().catch(writeFail);
+ Store.patchShop=p=>shopRef.set({...Store.shop,...p}).catch(writeFail);
+ Store.setClient=(id,d)=>cl.doc(id).set(d).catch(writeFail);
+ Store.delClient=id=>cl.doc(id).delete().catch(writeFail);
+ Store.mode="live";
+}
+
+/* ================= Derived state ================= */
+function durMin(id){
+ const done=Store.tickets.filter(x=>x.status==="done"&&x.svc===id&&x.startedAt&&x.doneAt);
+ if(done.length>=3){const avg=done.reduce((a,x)=>a+(x.doneAt-x.startedAt),0)/done.length/60000;return Math.max(5,Math.round(avg))}
+ return svc(id).min}
+const inChairSt=x=>x.status==="chair"||x.status==="called";
+function Q(){
+ const all=Store.tickets.slice().sort((a,b)=>a.num-b.num);
+ const chairs=Math.max(1,Math.min(4,+Store.shop.chairs||1));
+ const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(a.pos??a.num)-(b.pos??b.num));
+ const inChair=Array.from({length:chairs},(_,i)=>all.find(x=>inChairSt(x)&&x.chair===i)||null);
+ const now=Date.now();
+ const free=inChair.map(x=>{if(!x)return 0;const d=durMin(x.svc)*60000;return Math.max(60000,(x.startedAt||x.calledAt||now)+d-now)});
+ const eta={},ahead={};
+ waiting.forEach((x,i)=>{let k=0;for(let j=1;j<free.length;j++)if(free[j]<free[k])k=j;eta[x.id]=free[k];ahead[x.id]=i;free[k]+=durMin(x.svc)*60000});
+ const nextFree=Math.min(...free);
+ const done=all.filter(x=>x.status==="done"),noshow=all.filter(x=>x.status==="noshow");
+ return {all,chairs,waiting,inChair,eta,ahead,nextFree,done,noshow};
+}
+const phoneKey=p=>{let d=String(p||"").replace(/\D/g,"");if(d.startsWith("212"))d="0"+d.slice(3);if(d.length===9&&/^[5-7]/.test(d))d="0"+d;return /^0[5-7]\d{8}$/.test(d)?d:null};
+function clientRec(phone){const k=phoneKey(phone);if(!k)return null;const c=Store.clients.find(x=>x.id===k);if(!c)return null;
+ if(c.blockedUntil&&c.blockedUntil<Date.now())return {...c,strikes:0,blockedUntil:null};return c}
+const strikesOf=phone=>(clientRec(phone)||{}).strikes||0;
+const graceMs=()=>(+Store.shop.grace||5)*60000;
+const blockDays=()=>+Store.shop.blockDays||7;
+const dateStr=ts=>new Date(ts).toLocaleDateString(lang==="ar"?"ar-MA":"fr-MA",{weekday:"long",day:"numeric",month:"long"});
+const mmss=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function strikeMsg(s,bu){if(bu&&bu>Date.now())return t("strike_block",{d:dateStr(bu)});if(s>=2)return t("strike_2",{d:blockDays()});if(s===1)return t("strike_1");return""}
+
+/* ================= Actions ================= */
+const newId=()=>"t"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const A={
+ async join({name,phone,svcId,src}){const q=Q();const num=(q.all.reduce((m,x)=>Math.max(m,x.num||0),0))+1;const id=newId();
+  const d={num,pos:num,name:name.trim().slice(0,40),phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0};
+  await Store.setTicket(id,d);await A.fill();return id},
+ // Puts the first person in line into every free chair. Runs after any change that can free a chair.
+ async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id));if(!w)return;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
+ async finish(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;await Store.patchTicket(id,{status:"done",doneAt:Date.now(),startedAt:x.startedAt||Date.now()});await A.fill()},
+ async absent(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;const now=Date.now();const k=phoneKey(x.phone);let s=null,bu=null;
+  if(k){s=strikesOf(x.phone)+1;if(s>=MAX_STRIKES)bu=now+blockDays()*864e5;await Store.setClient(k,{phone:k,name:x.name,strikes:s,lastNoShow:now,blockedUntil:bu})}
+  await Store.patchTicket(id,{status:"noshow",chair:null,noshowAt:now,strike:s,blockedUntil:bu});await A.fill()},
+ async delay(id){const x=Store.tickets.find(y=>y.id===id);const w=Q().waiting;if(!x||!w.length||x.delayed)return;
+  const a=w[Math.min(1,w.length-1)],b=w.length>2?w[2]:null;const pa=a.pos??a.num;const pos=b?(pa+(b.pos??b.num))/2:pa+1;
+  await Store.patchTicket(id,{status:"waiting",chair:null,startedAt:null,pos,delayed:true,onWay:false});await A.fill()},
+ async forgive(k){const c=Store.clients.find(x=>x.id===k);if(!c)return;await Store.setClient(k,{phone:c.phone||k,name:c.name||"",strikes:0,lastNoShow:c.lastNoShow||null,blockedUntil:null})},
+ async cancel(id,byShop){const x=Store.tickets.find(y=>y.id===id);await Store.patchTicket(id,{status:"cancelled",byShop:!!byShop,chair:null});if(x&&inChairSt(x))await A.fill()},
+ async onWay(id){await Store.patchTicket(id,{onWay:true})},
+ async up(id){const w=Q().waiting;const i=w.findIndex(x=>x.id===id);if(i<1)return;const a=w[i],b=w[i-1];const pa=a.pos??a.num,pb=b.pos??b.num;await Store.patchTicket(a.id,{pos:pb});await Store.patchTicket(b.id,{pos:pa})},
+ async examples(){const names=["Youssef","Amine","Hamza","Mehdi","Ayoub","Othmane","Zakaria","Karim"];const svcs=["degrade","combo","coupe","barbe","degrade","enfant"];const srcs=["app","walkin","app","phone","app","app"];
+  const q=Q();let num=q.all.reduce((m,x)=>Math.max(m,x.num||0),0);const now=Date.now();const start=Math.floor(Math.random()*4);
+  const phones=[];for(let i=0;i<5;i++)phones.push("06"+String(61000000+Math.floor(Math.random()*38999999)));
+  // one sample client already has an absence, so the warning badge is visible in the demo
+  await Store.setClient(phones[3],{phone:phones[3],name:names[(start+3)%names.length],strikes:1,lastNoShow:now-3*864e5,blockedUntil:null,ex:true});
+  for(let i=0;i<5;i++){num++;const id=newId()+i;await Store.setTicket(id,{num,pos:num,name:names[(start+i)%names.length],phone:phones[i],svc:svcs[i],src:srcs[i],status:"waiting",ex:true,created:now-(18-i*3)*60000,onWay:i===1,chair:null,etaAtJoin:(i+1)*20*60000})}
+  const n=Q().chairs;for(let c=0;c<n;c++){const qq=Q();if(!qq.inChair[c]&&qq.waiting.length){await Store.patchTicket(qq.waiting[0].id,{status:"chair",chair:c,startedAt:now-(8+c*6)*60000})}}},
+ async newDay(){for(const x of Store.tickets.slice())await Store.delTicket(x.id)}
+};
+
+/* ================= Client view ================= */
+function ClientView(root,key,standalone){
+ root.className="cv"+(standalone?" standalone":"");
+ root.innerHTML=`<div class="banners"></div><div class="cv-body"></div><div class="called-ov" hidden></div>`;
+ const body=root.querySelector(".cv-body"),bannerBox=root.querySelector(".banners"),ov=root.querySelector(".called-ov");
+ const myKey="nobtk-my-"+key;let screen=null,picked=null,cancelArm=false,ovTimer=null;
+ const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"");
+ const hist=id=>ls.get("nobtk-hist-"+key+"-"+id,[]);
+ const addHist=(id,title)=>{const h=hist(id);h.unshift({ts:Date.now(),title});ls.set("nobtk-hist-"+key+"-"+id,h.slice(0,20))};
+ const warnMin=()=>ls.get("nobtk-warn-"+key,20);
+ function banner(title,msg,strong,id){const el=document.createElement("div");el.className="banner";el.innerHTML=`<div class="ic">${ICON.bell}</div><div><small>NOBTK · ${t("now")}</small><b>${esc(title)}</b><p>${esc(msg)}</p></div>`;bannerBox.prepend(el);while(bannerBox.children.length>2)bannerBox.lastChild.remove();setTimeout(()=>el.remove(),7000);chime(strong);vibrate(strong?[300,120,300,120,500]:[200,80,200]);sysNotify(title,msg);if(id)addHist(id,title)}
+ function toTop(){const sc=root.closest(".scr");if(sc)sc.scrollTop=0;else try{window.scrollTo(0,0)}catch{}}
+
+ function renderShop(){
+  body.innerHTML=`
+   <section class="hero"><h1>${t("hero_t")}</h1><p class="shopname"></p>
+    <div class="livebox"><div><b class="num" data-k="w">–</b><span>${t("waiting")}</span></div><div><b class="num" data-k="e">–</b><span>${t("wait_est")}</span></div></div>
+    <div class="lineviz"><div class="lv-row" data-k="line"></div><div class="lv-leg"><span><i style="background:var(--accent)"></i>${t("lv_chair")}</span><span><i style="background:rgba(255,255,255,.3)"></i>${t("lv_wait")}</span><span><i style="border:1.5px dashed var(--accent)"></i>${t("lv_you")}</span></div></div></section>
+   <div class="steps3"><div><i>1</i>${t("s1")}</div><div><i>2</i>${t("s2")}</div><div><i>3</i>${t("s3")}</div></div>
+   <form class="card join" novalidate>
+    <h2 style="font-size:20px">${t("join_t")}</h2>
+    <div class="field"><label class="lbl" for="nm-${key}">${t("name")}</label><input id="nm-${key}" autocomplete="given-name" placeholder="${t("name_ph")}" maxlength="40"></div>
+    <div class="field"><label class="lbl" for="ph-${key}">${t("phone_req")}</label><input id="ph-${key}" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" maxlength="20"></div>
+    <div class="field"><span class="lbl">${t("services")}</span><div class="svc-list" role="radiogroup">
+     ${SERVICES.map(s=>`<button type="button" class="svc" role="radio" aria-checked="${picked===s.id}" data-s="${s.id}"><span class="rad"></span><span class="nm">${esc(s[lang])}<small>~${s.min} ${t("min")}</small></span><span class="pr">${money(s.price)}</span></button>`).join("")}
+    </div></div>
+    <div class="err" hidden></div>
+    <button class="btn acc block" type="submit" style="font-size:16px;padding:15px">${t("join_btn")}</button>
+    <p class="policy" data-k="pol"></p>
+   </form>`;
+  body.querySelectorAll(".svc").forEach(b=>b.onclick=()=>{picked=b.dataset.s;body.querySelectorAll(".svc").forEach(x=>x.setAttribute("aria-checked",x===b))});
+  body.querySelector("form").onsubmit=async e=>{e.preventDefault();unlockAudio();const err=body.querySelector(".err");const name=body.querySelector("#nm-"+key).value;const phone=body.querySelector("#ph-"+key).value;
+   const fail=m=>{err.textContent=m;err.hidden=false};
+   if(Store.shop.paused)return fail(t("paused_msg"));
+   if(!name.trim())return fail(t("need_name"));
+   if(!phoneKey(phone))return fail(t("need_phone"));
+   const c=clientRec(phone);if(c&&c.blockedUntil&&c.blockedUntil>Date.now())return fail(t("blocked_msg",{d:dateStr(c.blockedUntil)}));
+   if(Store.tickets.some(x=>phoneKey(x.phone)===phoneKey(phone)&&(x.status==="waiting"||inChairSt(x))))return fail(t("already"));
+   if(!picked)return fail(t("need_svc"));
+   err.hidden=true;const id=await A.join({name,phone,svcId:picked,src:"app"});ls.set(myKey,id);
+   if(ls.get("nobtk-notif",null)==null)ls.set("nobtk-notif","app");update()};
+ }
+ function updateShop(){const q=Q();body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"));
+  body.querySelector('[data-k="w"]').textContent=q.waiting.length;body.querySelector('[data-k="e"]').textContent=Store.shop.paused?"–":`${mins(q.nextFree)} ${t("min")}`;
+  body.querySelector('[data-k="pol"]').textContent=t("policy_short",{g:+Store.shop.grace||5,d:blockDays()});
+  const W=q.waiting.length,shown=Math.min(W,12);
+  body.querySelector('[data-k="line"]').innerHTML=q.inChair.map(x=>`<i class="${x?"ch":"fr"}"></i>`).join("")+`<span class="sep"></span>`+Array.from({length:shown},()=>"<i></i>").join("")+(W>shown?`<b>+${W-shown}</b>`:"")+(Store.shop.paused?"":`<i class="you"></i>`)}
+
+ function renderTicket(){
+  body.innerHTML=`
+   <section class="ticket"><div class="tt"><div><div class="lbl" style="color:inherit;opacity:.8">${t("your_no")}</div><div class="tno num" data-k="no"></div></div><div class="shop" data-k="shop" style="text-align:end"></div></div>
+    <div class="perf"></div>
+    <div class="tb"><div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,.18)" stroke-width="9" fill="none"/><circle data-k="arc" cx="50" cy="50" r="44" stroke="var(--accent)" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" style="transition:stroke-dashoffset .6s"/></svg><div class="v"><div><b class="num" data-k="eta"></b><span data-k="etal"></span></div></div></div>
+     <div class="tstat"><h2 data-k="st"></h2><p data-k="stp"></p><div class="ahead" data-k="ahead"></div></div></div>
+   </section>
+   <div class="track" data-k="track"><div>${t("tr1")}</div><div>${t("tr2")}</div><div>${t("tr3")}</div><div>${t("tr4")}</div></div>
+   <div class="warnbox" data-k="strike" hidden></div>
+   <div data-k="acts" style="display:flex;flex-direction:column;gap:8px"></div>
+   <section class="card notif-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="font-size:17px">${t("alerts")}</h3><button class="btn ghost sm" data-a="test" type="button">${t("test")}</button></div>
+    <div class="notif-st" data-k="nst"></div>
+    <div><div class="lbl" style="margin-bottom:6px">${t("warn_me")}</div><div class="opts" data-k="warn">${[10,20,30].map(m=>`<button type="button" data-m="${m}">${m} ${t("min")}</button>`).join("")}</div></div>
+    <div><div class="lbl" style="margin-bottom:6px">${t("history")}</div><div class="hist" data-k="hist"></div></div>
+   </section>
+   <section class="card"><h3 style="font-size:17px;margin-bottom:6px">${t("details")}</h3><div data-k="det"></div></section>`;
+  body.querySelector('[data-a="test"]').onclick=()=>{unlockAudio();banner(t("n_test_t"),t("n_test_b"),false,ls.get(myKey));updateTicket()};
+  body.querySelectorAll('[data-k="warn"] button').forEach(b=>b.onclick=()=>{ls.set("nobtk-warn-"+key,+b.dataset.m);updateTicket()});
+ }
+ function stageOf(x,q){if(inChairSt(x))return"called";if(x.status==="done")return"done";if(x.status==="noshow")return"noshow";
+  const a=q.ahead[x.id]??0,e=mins(q.eta[x.id]||0);if(a===0)return"next";if(a<=2||e<=warnMin())return"soon";return"wait"}
+ const RANK={wait:0,soon:1,next:2,called:3,done:4,noshow:5};
+ function graceLeft(x){return (x.startedAt||Date.now())+graceMs()-Date.now()}
+ function renderOverlay(x){
+  const c=(x.chair??0)+1,left=graceLeft(x);
+  ov.innerHTML=`<div class="pulse num">${String(x.num).padStart(2,"0")}</div><h2>${t("st_called")}</h2><p>${t("st_called_p",{c})}</p>
+   <div class="cdbox">${left>0?`<span>${t("grace_left")}</span><b class="num cd">${mmss(left)}</b>`:`<b class="cd-over">${t("grace_over_client")}</b>`}</div>
+   <button class="btn acc" type="button" style="margin-top:6px;min-width:200px;font-size:16px">${t("coming")}</button>
+   <button class="btn ghost sm cantcome" type="button" style="background:rgba(255,255,255,.14);color:inherit">${t("cant_come")}</button>`;
+  ov.querySelector(".btn.acc").onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":""),true);ov.hidden=true;stopOv();if(!x.onWay)A.onWay(x.id)};
+  ov.querySelector(".cantcome").onclick=async()=>{ov.hidden=true;stopOv();await A.cancel(x.id);ls.del(myKey);update()};
+ }
+ function stopOv(){if(ovTimer){clearInterval(ovTimer);ovTimer=null}}
+ function updateTicket(){
+  const id=ls.get(myKey);const x=Store.tickets.find(y=>y.id===id);if(!x)return;const q=Q();const stg=stageOf(x,q);
+  root.classList.toggle("state-soon",stg==="soon"||stg==="next");
+  const $=k=>body.querySelector(`[data-k="${k}"]`);
+  $("no").textContent=String(x.num).padStart(2,"0");$("shop").innerHTML=`${esc(Store.shop.name)}<br><span style="opacity:.75;font-weight:500">${esc(svcName(x.svc))}</span>`;
+  const etaMs=q.eta[x.id]||0,a=q.ahead[x.id]??0,c=(x.chair??0)+1,left=graceLeft(x);
+  const msg={wait:["st_wait","st_wait_p"],soon:["st_soon","st_soon_p"],next:["st_next","st_next_p"],called:["st_called","st_called_p"],done:["st_done","st_done_p"],noshow:["st_noshow","st_noshow_p"]}[stg];
+  $("st").textContent=t(msg[0]);
+  let p=t(msg[1],{c,p:money(svc(x.svc).price)});
+  if(stg==="called")p+=" "+(left>0?t("grace_inline",{m:Math.ceil(left/60000)}):t("grace_over_client"));
+  if(stg==="noshow")p+=" "+(x.strike?strikeMsg(x.strike,x.blockedUntil):"");
+  if(x.delayed&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("st_delayed_p");
+  $("stp").textContent=p;
+  const waitingLike=stg==="wait"||stg==="soon"||stg==="next";
+  if(waitingLike){$("eta").textContent=mins(etaMs);$("etal").textContent=t("min");
+   const total=Math.max(x.etaAtJoin||0,etaMs,60000);$("arc").style.strokeDashoffset=String(276.5*(etaMs/total));
+   $("ahead").innerHTML=`<span style="font-size:13px;font-weight:700;margin-inline-end:4px">${a} ${t("ahead")}</span>`+Array.from({length:Math.min(a,8)},()=>"<i></i>").join("")+`<i class="me"></i>`;
+  }else if(stg==="called"){$("eta").textContent=c;$("etal").textContent=t("chair");$("arc").style.strokeDashoffset="0";$("ahead").innerHTML=""}
+  else{$("eta").textContent=stg==="done"?"✓":"!";$("etal").textContent="";$("arc").style.strokeDashoffset=stg==="done"?"0":"276.5";$("ahead").innerHTML=""}
+  const lvl={wait:0,soon:1,next:1,called:2,done:3,noshow:0}[stg];
+  $("track").querySelectorAll("div").forEach((d,i)=>{d.className=stg==="done"||i<lvl?"on":i===lvl?"on now":""});
+  $("track").hidden=stg==="noshow";
+  // absence warning for the client
+  const rec=clientRec(x.phone),sw=$("strike");
+  if(waitingLike&&rec&&rec.strikes>0){sw.hidden=false;sw.textContent=strikeMsg(rec.strikes,null)+" "+t("cancel_free")}else sw.hidden=true;
+  const acts=$("acts");
+  if(waitingLike){acts.innerHTML=(x.onWay?`<div class="btn ghost block" style="cursor:default;color:var(--ok)">${ICON.car} ${t("on_way_ok")}</div>`:`<button class="btn pri block" data-a="way" type="button">${ICON.car} ${t("on_way")}</button>`)+
+    `<button class="btn ${cancelArm?"danger":"ghost"} block" data-a="cancel" type="button">${cancelArm?t("cancel_sure"):t("cancel")}</button>`;
+   const w=acts.querySelector('[data-a="way"]');if(w)w.onclick=()=>A.onWay(x.id);
+   acts.querySelector('[data-a="cancel"]').onclick=async()=>{if(!cancelArm){cancelArm=true;updateTicket();setTimeout(()=>{cancelArm=false;if(screen==="ticket")updateTicket()},4000);return}cancelArm=false;await A.cancel(x.id);ls.del(myKey);update()};
+  }else if(stg==="done"||stg==="noshow"){const blocked=x.blockedUntil&&x.blockedUntil>Date.now();acts.innerHTML=blocked?"":`<button class="btn acc block" data-a="new" type="button">${t("new_ticket")}</button>`;const nb=acts.querySelector("button");if(nb)nb.onclick=()=>{ls.del(myKey);picked=null;update()}}
+  else acts.innerHTML="";
+  if(stg==="noshow"&&x.blockedUntil&&x.blockedUntil>Date.now()){acts.innerHTML=`<div class="warnbox bad">${esc(t("blocked_msg",{d:dateStr(x.blockedUntil)}))}</div><button class="btn ghost block" data-a="ok" type="button">OK</button>`;acts.querySelector('[data-a="ok"]').onclick=()=>{ls.del(myKey);update()}}
+  // alerts
+  const nState=ls.get("nobtk-notif",null);
+  $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
+  if(nState!=="system"&&"Notification" in window){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
+  $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===warnMin()));
+  $("det").innerHTML=`<div class="kv"><span>${t("service")}</span><b>${esc(svcName(x.svc))}</b></div><div class="kv"><span>${t("price")}</span><b>${money(svc(x.svc).price)}</b></div><div class="kv"><span>${t("joined")}</span><b class="num">${hhmm(x.created)}</b></div>`;
+  // fire each alert once
+  const fk=firedKey(x),fired=ls.get(fk,-1),r=RANK[stg];
+  if(x.delayed&&fired<0&&waitingLike){ls.set(fk,r);banner(t("n_delay_t"),t("st_delayed_p"),true,x.id)}
+  else if(r>fired){ls.set(fk,r);
+   if(stg==="soon")banner(t("n_soon_t"),t("n_soon_b",{n:a,m:mins(etaMs)}),false,x.id);
+   if(stg==="next")banner(t("n_next_t"),t("n_next_b"),false,x.id);
+   if(stg==="called")banner(t("n_called_t"),t("n_called_b",{c,g:+Store.shop.grace||5}),true,x.id);
+   if(stg==="noshow")banner(t("n_noshow_t"),x.strike?strikeMsg(x.strike,x.blockedUntil):t("st_noshow_p"),true,x.id);
+  }
+  const h=hist(x.id);$("hist").innerHTML=h.length?h.map(e=>`<div><time class="num">${hhmm(e.ts)}</time><span>${esc(e.title)}</span></div>`).join(""):`<span class="muted" style="font-size:13px">${t("nohist")}</span>`;
+  // full-screen "your turn" with countdown
+  const dismissed=ls.get("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":""),false);
+  if(stg==="called"&&!dismissed){if(ov.hidden||!ovTimer){ov.hidden=false;renderOverlay(x);stopOv();ovTimer=setInterval(()=>{const l=graceLeft(x);const cd=ov.querySelector(".cd");if(cd&&l>0)cd.textContent=mmss(l);else if(l<=0){renderOverlay(x);stopOv()}},1000)}}
+  else{ov.hidden=true;stopOv()}
+ }
+ function update(){
+  if(!Store.ready){if(screen!=="load"){body.innerHTML=`<div class="loading">${t("connecting")}</div>`;screen="load"}return}
+  const id=ls.get(myKey);const x=id&&Store.tickets.find(y=>y.id===id);
+  if(id&&!x){ls.del(myKey)}
+  if(x&&x.status!=="cancelled"){if(screen!=="ticket"){renderTicket();screen="ticket";toTop()}updateTicket()}
+  else{if(x)ls.del(myKey);ov.hidden=true;stopOv();if(screen!=="shop"){const was=screen;renderShop();screen="shop";if(was&&was!=="load")toTop()}updateShop()}
+ }
+ const off=Store.on(update);const iv=setInterval(update,15000);update();
+ return{destroy(){off();clearInterval(iv);stopOv()}};
+}
+
+/* ================= Barber view ================= */
+function BarberView(root){
+ root.className="bv";let src="walkin",dayArm=false,seen=null,noshowArm=null;
+ root.innerHTML=`
+  <div class="bhead"><h1 data-k="title"></h1><span class="pill" data-k="state"></span><button class="btn ghost sm" data-a="pause" type="button"></button></div>
+  <div class="stats" data-k="stats"></div>
+  <section><div class="lbl" style="margin-bottom:8px">${t("b_chairs")}</div><div class="chairs" data-k="chairs"></div></section>
+  <div class="qwrap">
+   <section class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:10px;flex-wrap:wrap"><h2 style="font-size:19px">${t("b_queue")} <span class="muted num" data-k="qn"></span></h2><span class="muted" style="font-size:13px" data-k="nf"></span></div><div class="qlist" data-k="q"></div></section>
+   <div class="side">
+    <form class="card setg" data-k="add" novalidate><h3 style="font-size:17px">${t("b_add")}</h3>
+     <div class="srcsw">${["walkin","phone"].map(s=>`<button type="button" class="btn ghost sm" data-src="${s}">${t(s==="walkin"?"b_walkin":"b_phone")}</button>`).join("")}</div>
+     <div class="field"><label class="lbl" for="b-nm">${t("name")}</label><input id="b-nm" maxlength="40" placeholder="${t("name_ph")}"></div>
+     <div class="field"><label class="lbl" for="b-ph">${t("phone")}</label><input id="b-ph" type="tel" inputmode="tel" maxlength="20" placeholder="06 12 34 56 78"></div>
+     <div class="field"><label class="lbl" for="b-svc">${t("service")}</label><select id="b-svc">${SERVICES.map(s=>`<option value="${s.id}">${esc(s[lang])} · ${money(s.price)}</option>`).join("")}</select></div>
+     <div class="err" data-k="adderr" hidden></div>
+     <button class="btn pri" type="submit">${ICON.plus} ${t("b_add_btn")}</button></form>
+    <section class="card setg"><h3 style="font-size:17px">${t("b_abs_t")}</h3><p class="muted" style="margin:0;font-size:13px" data-k="rule"></p><div class="qlist" data-k="abs"></div></section>
+    <details class="card set"><summary>${t("b_settings")}<span class="muted">⌄</span></summary><div class="setg">
+     <div class="field"><label class="lbl" for="b-shop">${t("b_shopname")}</label><div style="display:flex;gap:6px"><input id="b-shop" maxlength="40"><button class="btn ghost sm" type="button" data-a="saveName">${t("b_save")}</button></div></div>
+     <div class="field"><span class="lbl">${t("b_nchairs")}</span><div class="stepper" data-k="nch">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
+     <div class="field"><span class="lbl">${t("b_grace")}</span><div class="stepper" data-k="grace">${[3,5,10].map(n=>`<button type="button" data-n="${n}">${n} ${t("min")}</button>`).join("")}</div></div>
+     <div class="field"><span class="lbl">${t("b_blockdays")}</span><div class="stepper" data-k="bdays">${[3,7,14].map(n=>`<button type="button" data-n="${n}">${n} ${t("days")}</button>`).join("")}</div></div>
+     <button class="btn ghost" type="button" data-a="ex">${t("b_examples")}</button>
+     <button class="btn ghost" type="button" data-a="day">${t("b_newday")}</button>
+    </div></details>
+   </div></div>`;
+ const $=k=>root.querySelector(`[data-k="${k}"]`);
+ const setSrc=s=>{src=s;root.querySelectorAll("[data-src]").forEach(b=>{b.className="btn sm "+(b.dataset.src===s?"pri":"ghost")})};setSrc(src);
+ root.querySelectorAll("[data-src]").forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
+ $("add").onsubmit=async e=>{e.preventDefault();const nm=root.querySelector("#b-nm"),ph=root.querySelector("#b-ph"),er=$("adderr");if(!nm.value.trim()){nm.focus();return}
+  if(ph.value.trim()&&!phoneKey(ph.value)){er.textContent=t("need_phone");er.hidden=false;return}er.hidden=true;
+  await A.join({name:nm.value,phone:ph.value,svcId:root.querySelector("#b-svc").value,src});nm.value="";ph.value=""};
+ root.querySelector('[data-a="pause"]').onclick=()=>Store.patchShop({paused:!Store.shop.paused});
+ root.querySelector('[data-a="saveName"]').onclick=async()=>{const v=root.querySelector("#b-shop").value.trim();if(v){await Store.patchShop({name:v});toast(t("saved"))}};
+ $("nch").querySelectorAll("button").forEach(b=>b.onclick=async()=>{await Store.patchShop({chairs:+b.dataset.n});await A.fill()});
+ $("grace").querySelectorAll("button").forEach(b=>b.onclick=()=>Store.patchShop({grace:+b.dataset.n}));
+ $("bdays").querySelectorAll("button").forEach(b=>b.onclick=()=>Store.patchShop({blockDays:+b.dataset.n}));
+ root.querySelector('[data-a="ex"]').onclick=()=>A.examples();
+ const dayBtn=root.querySelector('[data-a="day"]');
+ dayBtn.onclick=async()=>{if(!dayArm){dayArm=true;dayBtn.className="btn danger";dayBtn.textContent=t("b_newday_sure");setTimeout(()=>{dayArm=false;dayBtn.className="btn ghost";dayBtn.textContent=t("b_newday")},4000);return}dayArm=false;dayBtn.className="btn ghost";dayBtn.textContent=t("b_newday");await A.newDay()};
+ let nameInit=false;
+ const strikeChip=phone=>{const r=clientRec(phone);if(!r||!r.strikes)return"";return `<span class="chip bad">${t("b_strike_chip",{s:r.strikes})}</span>`};
+ function update(){
+  if(!Store.ready){$("q").innerHTML=`<div class="loading">${t("connecting")}</div>`;return}
+  const q=Q(),now=Date.now();
+  const cur={};Store.tickets.forEach(x=>cur[x.id]={s:x.status,w:x.onWay});
+  const fresh=new Set();
+  if(seen){Store.tickets.forEach(x=>{const p=seen[x.id];
+   if(!p&&(x.status==="waiting"||inChairSt(x))){fresh.add(x.id);if(x.src==="app"&&!x.ex){toast(t("b_toast_new",{n:x.num,name:x.name}));chime(false)}}
+   else if(p){if(!p.w&&x.onWay&&x.status!=="done"){toast(t("b_toast_way",{n:x.num,name:x.name}))}
+    if(p.s!=="cancelled"&&x.status==="cancelled"&&!x.byShop){toast(t("b_toast_cancel",{n:x.num,name:x.name}))}}})}
+  seen=cur;
+  $("title").textContent=Store.shop.name;if(!nameInit){root.querySelector("#b-shop").value=Store.shop.name;nameInit=true}
+  $("state").className="pill "+(Store.shop.paused?"paused":"live");$("state").innerHTML=`<span class="dot"></span>${Store.shop.paused?t("paused"):t("open")}`;
+  root.querySelector('[data-a="pause"]').innerHTML=Store.shop.paused?`${ICON.play} ${t("b_resume")}`:`${ICON.pause} ${t("b_pause")}`;
+  const rev=q.done.reduce((s,x)=>s+svc(x.svc).price,0);
+  const durs=q.done.filter(x=>x.startedAt&&x.doneAt).map(x=>(x.doneAt-x.startedAt)/60000);
+  const avg=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
+  $("stats").innerHTML=`<div class="stat"><b class="num">${q.done.length}</b><span>${t("b_served")}</span></div><div class="stat"><b class="num">${money(rev)}</b><span>${t("b_rev")}</span></div><div class="stat"><b class="num">${avg==null?"–":avg+" "+t("min")}</b><span>${t("b_avg")}</span></div><div class="stat"><b class="num">${q.noshow.length}</b><span>${t("b_noshow")}</span></div>`;
+  $("chairs").innerHTML=q.inChair.map((x,i)=>{
+   if(!x)return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span><span class="chip">${t("b_free")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("b_free")}</b><span>${t("b_auto")}</span></div></div>${q.waiting.length?`<div class="acts"><button class="btn acc" data-fill="1" type="button">${t("b_fill")}</button></div>`:""}</div>`;
+   const el=mins(now-(x.startedAt||now)),d=durMin(x.svc),pct=Math.min(100,el/d*100);
+   const gl=(x.startedAt||now)+graceMs()-now;
+   const gchip=gl>0?`<span class="chip ph num">${t("b_grace_left",{t:mmss(gl)})}</span>`:"";
+   const arm=noshowArm===x.id;
+   return `<div class="chair st-chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span>${gchip||`<span class="chip app">${t("tr3")}</span>`}</div>
+    <div class="who"><div class="badge num">${x.num}</div><div style="min-width:0"><b>${esc(x.name)} ${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${money(svc(x.svc).price)}${x.onWay?" · "+t("b_onway"):""}</span></div></div>
+    <div><div class="bar ${el>d?"over":""}"><i style="width:${pct}%"></i></div><div class="muted num" style="font-size:12.5px;margin-top:4px">${t("b_since",{m:el,d})}</div></div>
+    <div class="acts"><button class="btn okb" data-fin="${x.id}" type="button" style="flex-basis:100%">${t("b_done")}</button>
+     ${arm?`<button class="btn ghost sm" data-delay="${x.id}" type="button" ${x.delayed||!q.waiting.length?"disabled":""}>${t("b_delay")}</button><button class="btn danger sm" data-abs="${x.id}" type="button">${t("b_absent_confirm")}</button>`
+      :`<button class="btn ghost sm" data-nsarm="${x.id}" type="button">${t("b_notcome")}</button>`}</div></div>`}).join("");
+  $("qn").textContent=q.waiting.length?`· ${q.waiting.length}`:"";
+  $("nf").textContent=Store.shop.paused?t("paused"):`${t("b_next_free")} ≈ ${mins(q.nextFree)} ${t("min")}`;
+  $("q").innerHTML=q.waiting.length?q.waiting.map((x,i)=>{const srcChip=x.src==="app"?`<span class="chip app">${t("b_app")}</span>`:x.src==="phone"?`<span class="chip ph">${t("b_phone")}</span>`:`<span class="chip">${t("b_walkin")}</span>`;
+    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div><div class="info"><b>${esc(x.name)} ${srcChip}${x.onWay?`<span class="chip way">${t("b_onway")}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
+     <button class="ibtn" data-up="${x.id}" ${i===0?"disabled style='opacity:.3'":""} title="${t("b_up")}" aria-label="${t("b_up")}" type="button">${ICON.up}</button><button class="ibtn" data-rm="${x.id}" title="${t("b_remove")}" aria-label="${t("b_remove")}" type="button">${ICON.x}</button></div>`}).join("")
+   :`<div class="empty">${ICON.users}<div>${t("b_empty")}</div><button class="btn ghost sm" data-a="ex2" type="button">${t("b_examples")}</button></div>`;
+  // absences list
+  $("rule").textContent=t("b_rule",{g:+Store.shop.grace||5,d:blockDays()});
+  const abs=Store.clients.map(c=>({...c,...(clientRec(c.id)||{})})).filter(c=>c.strikes>0).sort((a,b)=>(b.strikes-a.strikes)||((b.lastNoShow||0)-(a.lastNoShow||0)));
+  $("abs").innerHTML=abs.length?abs.map(c=>{const blocked=c.blockedUntil&&c.blockedUntil>now;return `<div class="qrow"><div class="info"><b>${esc(c.name||c.id)} <span class="chip ${blocked?"bad":"ph"}">${blocked?t("b_blocked"):t("b_strike_chip",{s:c.strikes})}</span></b><span class="num">${esc(c.id)}${blocked?" · "+t("b_until",{d:dateStr(c.blockedUntil)}):""}</span></div><button class="btn ghost sm" data-forgive="${esc(c.id)}" type="button">${t("b_forgive")}</button></div>`}).join("")
+   :`<div class="muted" style="font-size:13px;padding:6px 0">${t("b_abs_none")}</div>`;
+  $("nch").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===q.chairs));
+  $("grace").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===(+Store.shop.grace||5)));
+  $("bdays").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===blockDays()));
+  root.querySelectorAll("[data-fill]").forEach(b=>b.onclick=()=>A.fill());
+  root.querySelectorAll("[data-fin]").forEach(b=>b.onclick=()=>{noshowArm=null;A.finish(b.dataset.fin)});
+  root.querySelectorAll("[data-nsarm]").forEach(b=>b.onclick=()=>{noshowArm=b.dataset.nsarm;update();setTimeout(()=>{if(noshowArm===b.dataset.nsarm){noshowArm=null;update()}},8000)});
+  root.querySelectorAll("[data-abs]").forEach(b=>b.onclick=()=>{noshowArm=null;A.absent(b.dataset.abs)});
+  root.querySelectorAll("[data-delay]").forEach(b=>b.onclick=()=>{noshowArm=null;A.delay(b.dataset.delay)});
+  root.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>A.up(b.dataset.up));
+  root.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>A.cancel(b.dataset.rm,true));
+  root.querySelectorAll("[data-forgive]").forEach(b=>b.onclick=()=>A.forgive(b.dataset.forgive));
+  const ex2=root.querySelector('[data-a="ex2"]');if(ex2)ex2.onclick=()=>A.examples();
+ }
+ const off=Store.on(update);const iv=setInterval(update,5000);update();
+ return{destroy(){off();clearInterval(iv)}};
+}
+
+/* ================= Screen (TV) ================= */
+function ScreenView(root){
+ let lastCalled={};
+ function update(){
+  if(!Store.ready){root.innerHTML=`<div class="loading">${t("connecting")}</div>`;return}
+  const q=Q();const blink=new Set();
+  q.inChair.forEach((x,i)=>{if(x&&lastCalled[i]!==undefined&&lastCalled[i]!==x.id){blink.add(i);chime(true)}lastCalled[i]=x?x.id:null});
+  root.innerHTML=`<div class="tv"><div class="now"><h2>${t("tv_now")}</h2>
+   ${q.inChair.map((x,i)=>`<div class="tvchair ${blink.has(i)?"called":""}"><div class="n num ${x?"":"free"}">${x?String(x.num).padStart(2,"0"):"–"}</div><div><b>${t("chair")} ${i+1}</b><span>${x?esc(x.name):t("b_free")}</span></div></div>`).join("")}
+   <h2 style="margin-top:8px">${t("tv_next")}</h2><div class="nexts">${q.waiting.slice(0,6).map(x=>`<span class="num">${String(x.num).padStart(2,"0")}</span>`).join("")||`<span style="opacity:.5">–</span>`}</div></div>
+   <div class="side2"><div><div class="clock num" data-clock>${hhmm(Date.now())}</div><div style="opacity:.85;margin-top:6px;font-weight:600">${esc(Store.shop.name)}</div></div>
+    <div style="font-size:clamp(18px,2vw,24px);font-weight:700"><span class="num">${q.waiting.length}</span> ${t("tv_waiting")}<br><span style="opacity:.85;font-weight:500">${Store.shop.paused?t("paused"):t("tv_new",{m:mins(q.nextFree)})}</span></div>
+    <div class="cta"><b>${t("tv_cta")}</b><span>${t("tv_cta2")}</span></div></div></div>`;
+ }
+ const off=Store.on(update);const iv=setInterval(update,15000);update();
+ return{destroy(){off();clearInterval(iv)}};
+}
+
+/* ================= Demo ================= */
+function DemoView(root){
+ root.innerHTML=`<div class="demo"><div><div class="phone"><div class="notch"></div><div class="scr"><div data-k="c"></div></div></div><div class="demo-cap">${t("demo_cap1")}</div></div><div><div class="lbl" style="margin-bottom:10px">${t("demo_cap2")}</div><div data-k="b"></div></div></div>`;
+ const c=ClientView(root.querySelector('[data-k="c"]'),"demo",false);const b=BarberView(root.querySelector('[data-k="b"]'));
+ return{destroy(){c.destroy();b.destroy()}};
+}
+
+/* ================= Shell ================= */
+const viewEl=document.getElementById("view");let current=null,currentName=null;
+const VIEWS=["client","barber","screen","demo"];
+function pinOk(){const p=(window.NOBTK_CONFIG||{}).barberPin;return !p||ls.get("nobtk-pin")===p}
+function PinView(root,next){root.className="pin card";root.innerHTML=`<h2 style="font-size:22px">${t("pin_t")}</h2><p class="muted" style="margin:0">${t("pin_p")}</p><input id="pin-in" class="lang" type="password" inputmode="numeric" maxlength="8" style="font-size:24px;text-align:center;padding:12px"><div class="err" hidden></div><button class="btn pri" type="button">${t("pin_btn")}</button>`;
+ const go=()=>{const v=root.querySelector("#pin-in").value.trim();if(v===(window.NOBTK_CONFIG||{}).barberPin){ls.set("nobtk-pin",v);mount(next)}else{const e=root.querySelector(".err");e.textContent=t("pin_bad");e.hidden=false}};
+ root.querySelector("button").onclick=go;root.querySelector("#pin-in").onkeydown=e=>{if(e.key==="Enter")go()};return{destroy(){}}}
+function mount(name){if(!VIEWS.includes(name))name="client";
+ if(current)current.destroy();viewEl.innerHTML="";currentName=name;
+ const host=document.createElement("div");viewEl.appendChild(host);
+ current=(name!=="client"&&!pinOk())?PinView(host,name):name==="client"?ClientView(host,"main",true):name==="barber"?BarberView(host):name==="screen"?ScreenView(host):DemoView(host);
+ document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===name));
+}
+function applyLang(){const app=document.getElementById("app");app.setAttribute("dir",lang==="ar"?"rtl":"ltr");app.setAttribute("lang",lang);
+ document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
+ document.querySelectorAll("#nav button").forEach(b=>b.textContent=t("nav_"+b.dataset.view));
+ document.getElementById("langBtn").textContent=lang==="ar"?"FR":"العربية";updateModePill()}
+function updateModePill(){const p=document.getElementById("modePill");if(!p)return;p.className="pill"+(Store.mode==="live"?" live":"");p.lastElementChild.textContent=Store.mode==="live"?t("live"):Store.mode==="local"?t("local"):t("connecting")}
+document.getElementById("nav").onclick=e=>{const b=e.target.closest("button");if(!b)return;location.hash=b.dataset.view};
+document.getElementById("langBtn").onclick=()=>{lang=lang==="ar"?"fr":"ar";ls.set("nobtk-lang",lang);applyLang();mount(currentName)};
+window.addEventListener("hashchange",()=>mount(location.hash.slice(1)));
+applyLang();mount(location.hash.slice(1));
+(function(){const C=window.NOBTK_CONFIG||{};let db=null;
+ try{if(C.firebase&&window.firebase){firebase.initializeApp(C.firebase);db=firebase.firestore()}}catch(e){console.warn(e)}
+ if(db)startDb(db,C.shopId||"salon-1");else startLocal();updateModePill()})();
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})})}
+</script>
+</body>
+</html>
