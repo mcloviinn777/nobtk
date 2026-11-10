@@ -10,10 +10,25 @@ android {
         applicationId 'ma.nobtk.app'
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
-        // The barber app opens the barber dashboard of the NOBTK website.
-        buildConfigField 'String', 'START_URL', '"https://mcloviinn777.github.io/nobtk/index.html#barber"'
+        versionCode 2
+        versionName '1.1'
+    }
+
+    // Two apps from the same code: the barber app and the owner's admin app.
+    flavorDimensions 'app'
+    productFlavors {
+        barber {
+            dimension 'app'
+            applicationId 'ma.nobtk.app'
+            resValue 'string', 'app_name', 'NOBTK'
+            buildConfigField 'String', 'START_URL', '"https://mcloviinn777.github.io/nobtk/index.html#barber"'
+        }
+        admin {
+            dimension 'app'
+            applicationId 'ma.nobtk.admin'
+            resValue 'string', 'app_name', 'NOBTK Admin'
+            buildConfigField 'String', 'START_URL', '"https://mcloviinn777.github.io/nobtk/admin.html"'
+        }
     }
 
     buildFeatures {

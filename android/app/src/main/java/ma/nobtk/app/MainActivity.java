@@ -1,6 +1,16 @@
 package ma.nobtk.app;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.webkit.JavascriptInterface;
+import android.widget.Toast;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -60,8 +70,53 @@ public class MainActivity extends Activity {
             }
         });
 
+        // Lets the page save PDFs it builds (sign-up forms) into the phone's Downloads folder.
+        web.addJavascriptInterface(new FileBridge(), "NobtkAndroid");
+        // Plain file links (the blank PDF form) open in the phone's browser, which downloads them.
+        web.setDownloadListener((url, ua, cd, mime, len) -> {
+            try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception ignored) { }
+        });
+
         if (savedInstanceState != null) web.restoreState(savedInstanceState);
         else web.loadUrl(BuildConfig.START_URL);
+    }
+
+    private class FileBridge {
+        @JavascriptInterface
+        public void saveFile(String name, String base64, String mime) {
+            String safe = name.replaceAll("[^A-Za-z0-9._-]", "_");
+            try {
+                byte[] data = Base64.decode(base64, Base64.DEFAULT);
+                Uri saved;
+                if (Build.VERSION.SDK_INT >= 29) {
+                    ContentValues v = new ContentValues();
+                    v.put(MediaStore.Downloads.DISPLAY_NAME, safe);
+                    v.put(MediaStore.Downloads.MIME_TYPE, mime);
+                    v.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+                    saved = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, v);
+                    try (OutputStream out = getContentResolver().openOutputStream(saved)) { out.write(data); }
+                } else {
+                    File dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                    File f = new File(dir, safe);
+                    try (FileOutputStream out = new FileOutputStream(f)) { out.write(data); }
+                    saved = null;
+                }
+                final Uri open = saved;
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "PDF enregistré dans Téléchargements : " + safe, Toast.LENGTH_LONG).show();
+                    if (open != null) {
+                        try {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setDataAndType(open, mime);
+                            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            startActivity(i);
+                        } catch (Exception ignored) { }
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Le PDF n'a pas pu être enregistré.", Toast.LENGTH_LONG).show());
+            }
+        }
     }
 
     @Override

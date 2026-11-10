@@ -56,7 +56,9 @@
       let y = 0;
       pdf.addImage(data, "JPEG", 0, 0, pw, ih);
       while (ih - y > ph + 1) { y += ph; pdf.addPage(); pdf.addImage(data, "JPEG", 0, -y, pw, ih); }
-      pdf.save("NOBTK-inscription-" + slug(d.shop) + ".pdf");
+      const name = "NOBTK-inscription-" + slug(d.shop) + ".pdf";
+      if (window.NobtkAndroid && window.NobtkAndroid.saveFile) window.NobtkAndroid.saveFile(name, pdf.output("datauristring").split(",")[1], "application/pdf");
+      else pdf.save(name);
     } finally { wrap.remove(); }
   };
 })();

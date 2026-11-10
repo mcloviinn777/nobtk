@@ -28,24 +28,31 @@ jobs:
 
       - name: Build the APK
         working-directory: android
-        run: gradle assembleDebug --no-daemon --stacktrace
+        run: gradle assembleBarberDebug assembleAdminDebug --no-daemon --stacktrace
 
-      - name: Rename the APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk NOBTK.apk
+      - name: Rename the APKs
+        run: |
+          cp android/app/build/outputs/apk/barber/debug/app-barber-debug.apk NOBTK.apk
+          cp android/app/build/outputs/apk/admin/debug/app-admin-debug.apk NOBTK-Admin.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: NOBTK-apk
-          path: NOBTK.apk
+          path: |
+            NOBTK.apk
+            NOBTK-Admin.apk
 
       - name: Publish the APK as a download
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
-          name: NOBTK pour le barbier (APK)
+          name: NOBTK (applications Android)
           make_latest: true
-          files: NOBTK.apk
+          files: |
+            NOBTK.apk
+            NOBTK-Admin.apk
           body: |
-            Application NOBTK pour le barbier (Android).
-            Télécharge **NOBTK.apk** ci-dessous sur le téléphone du barbier, puis ouvre le fichier pour l'installer.
+            **NOBTK.apk** : l'application du barbier (tableau du salon). À installer sur le téléphone du barbier.
+            **NOBTK-Admin.apk** : ton tableau de bord privé (inscriptions, revenus, salons). À installer seulement sur ton téléphone.
+            Ouvre le fichier téléchargé pour l'installer.
             Android demandera d'autoriser l'installation depuis cette source : c'est normal pour une appli hors Play Store.

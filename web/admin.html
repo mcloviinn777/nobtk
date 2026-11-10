@@ -6,7 +6,10 @@
 <title>Admin · NOBTK</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#15143A">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="icon-admin-192.png">
+<link rel="manifest" href="admin.webmanifest">
+<link rel="apple-touch-icon" href="icon-admin-192.png">
+<meta name="apple-mobile-web-app-title" content="NOBTK Admin">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
 :root{--bg:#F2F1FA;--surface:#FFFFFF;--surface-2:#E9E8F6;--ink:#15143A;--muted:#5D5C86;--line:#DEDDF0;--primary:#3A31D2;--primary-soft:#E4E2FF;--accent:#FFC53D;--accent-ink:#2B1E00;--ok:#0E6B4D;--ok-soft:#DDF4EA;--warn:#8A5300;--warn-soft:#FFF0D6;--bad:#B42332;--bad-soft:#FDE3E5}
@@ -76,6 +79,7 @@ details.more summary{cursor:pointer;color:var(--primary);font-weight:700;font-si
 <main id="main"><div class="empty">Chargement…</div></main>
 
 <script>
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 const C = window.NOBTK_CONFIG || {};
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
