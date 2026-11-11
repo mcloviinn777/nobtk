@@ -221,14 +221,24 @@ $("form").onsubmit = async (e) => {
   $("main").innerHTML = `<section class="card done">
     <div class="ok"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
     <h1 style="font-size:30px">Merci ${esc(d.owner.split(" ")[0])} !</h1>
-    <p class="muted" style="margin:0;max-width:46ch">${saved ? "Ton inscription est bien reçue." : "Ton inscription est prête."} On t'écrit sur WhatsApp au ${esc(d.phone)} pour activer ${esc(d.shop)}. Tes 2 mois gratuits commencent le jour de l'activation.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-      <button class="btn acc" type="button" id="pdfDone">Télécharger mon inscription (PDF)</button>
-      <a class="btn ghost" href="${waLink(d)}" target="_blank" rel="noopener" style="text-decoration:none">${saved ? "Nous écrire sur WhatsApp" : "Envoyer mon inscription sur WhatsApp"}</a>
+    <p class="muted" style="margin:0;max-width:46ch">${saved ? "Ton inscription est bien reçue." : "Ton inscription est prête."} Tes 2 mois gratuits commencent le jour de l'activation.</p>
+    <div style="background:var(--primary-soft);color:var(--primary);border-radius:14px;padding:14px 16px;max-width:46ch;font-weight:600;text-align:left">Ton <b>identifiant</b> et ton <b>code salon</b> arrivent sur WhatsApp au ${esc(d.phone)} dès que NOBTK active ton salon.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:420px">
+      <button class="btn acc" type="button" id="pdfShare">Envoyer mon inscription (PDF) à NOBTK</button>
+      <button class="btn ghost" type="button" id="pdfDone">Télécharger le PDF sur mon téléphone</button>
+      <a class="btn ghost" href="${waLink(d)}" target="_blank" rel="noopener" style="text-decoration:none">Écrire à NOBTK sur WhatsApp</a>
     </div>
     <div class="err" id="err" hidden></div>
   </section>`;
   $("pdfDone").onclick = () => downloadPdf(d, $("pdfDone"));
+  $("pdfShare").onclick = async () => {
+    const b = $("pdfShare"), l = b.textContent; b.disabled = true; b.textContent = "Préparation du PDF…";
+    let r = "";
+    try { r = await window.NOBTK_PDF(d, { share: true, text: "Salam NOBTK, voici l'inscription de " + d.shop + ". WhatsApp : 06 34 36 44 22" }); } catch (x) { console.warn(x); }
+    b.disabled = false; b.textContent = l;
+    // phones that can't attach files: the PDF is downloaded, then WhatsApp opens so the barber can attach it
+    if (r === "saved") window.open(waLink(d), "_blank");
+  };
   window.scrollTo(0, 0);
 };
 </script>

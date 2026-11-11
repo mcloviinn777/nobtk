@@ -325,6 +325,9 @@ function dashboard(db) {
           <button class="btn sm ${shopDocs[id] && shopDocs[id].active === false ? "pri" : "danger"}" id="pf-active" type="button">${shopDocs[id] && shopDocs[id].active === false ? "Réactiver le salon" : "Suspendre le salon"}</button>
         </div>
       </div>
+      ${p.accessSentAt ? "" : `<div class="card" id="pf-access-banner" style="margin-top:14px;background:var(--primary);color:#fff;border-color:var(--primary);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+        <div><b style="font-size:18px">Envoie ses accès au barbier</b><div style="color:#D9D6FF;font-size:14px">Identifiant <b style="color:#FFC53D">${esc(id)}</b> · Code <b style="color:#FFC53D">${esc(p.pin || "")}</b> · l'appli, le lien client et l'explication, en un seul message.</div></div>
+        <button class="btn" id="pf-send-top" type="button" style="background:#25D366;color:#fff">Envoyer les accès sur WhatsApp</button></div>`}
       <div id="pf-live"></div>
       <div class="pf-grid">
         <section class="card"><h3>Abonnement</h3>
@@ -344,7 +347,7 @@ function dashboard(db) {
           <div class="li"><span>Lien client (QR code)<small style="word-break:break-all">${esc(client)}</small></span><a href="${esc(client)}" target="_blank" rel="noopener">Ouvrir</a></div>
           <div class="li"><span>Tableau du barbier<small style="word-break:break-all">${esc(barber)}</small></span><a href="${esc(barber)}" target="_blank" rel="noopener">Ouvrir</a></div>
           <div class="li"><span>Écran TV<small style="word-break:break-all">${esc(tv)}</small></span><a href="${esc(tv)}" target="_blank" rel="noopener">Ouvrir</a></div>
-          <button class="btn ghost sm" id="pf-qr" type="button" style="margin-top:10px">Affiche QR code pour la vitrine</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn sm" id="pf-send" type="button" style="background:#25D366;color:#fff">Envoyer les accès sur WhatsApp</button><button class="btn ghost sm" id="pf-qr" type="button">Affiche QR code pour la vitrine</button></div>
           <p class="muted" style="font-size:12.5px;margin:10px 0 0">Avec l'appli barbier (APK) : à l'ouverture, le barbier tape l'identifiant et le code.</p>
         </section>
         <section class="card"><h3>Informations</h3>
@@ -368,7 +371,7 @@ function dashboard(db) {
           <button class="btn pri sm" id="pf-notes-save" type="button" style="margin-top:10px">Enregistrer</button></section>
       </div>`;
     $("back").onclick = () => { pid = null; mountedPid = null; render(); };
-    $("pf-pdf").onclick = async () => { const b = $("pf-pdf"); b.disabled = true; try { await window.NOBTK_PDF({ ...P(), createdAt: P().activatedAt, trialEnds: P().trialEnds }); } catch (e) { console.warn(e); } b.disabled = false; };
+    $("pf-pdf").onclick = async () => { const b = $("pf-pdf"); b.disabled = true; try { await window.NOBTK_PDF({ ...P(), createdAt: P().activatedAt, trialEnds: P().trialEnds }, { share: true }); } catch (e) { console.warn(e); } b.disabled = false; };
     $("pf-active").onclick = async () => { const off = !(shopDocs[id] && shopDocs[id].active === false); await saveShop({ active: !off }); await save({ status: off ? "suspendu" : (P().status === "suspendu" ? "payant" : P().status), history: [...(P().history || []), { at: Date.now(), type: off ? "suspension" : "reprise", text: off ? "Salon suspendu : les clients ne peuvent plus prendre de ticket" : "Salon réactivé" }] }); mountedPid = null; render(); };
     $("pf-sub-save").onclick = async (e) => { const st = $("pf-status").value; const prev = P().status;
       await save({ status: st, billing: $("pf-billing").value, price: +$("pf-price").value || 0, trialEnds: $("pf-trial").value || null, nextPayment: $("pf-next").value || null,
@@ -380,8 +383,10 @@ function dashboard(db) {
       await save({ status: "payant", nextPayment: next, lastPayment: isoDay(new Date()), history: [...(p0.history || []), { at: Date.now(), type: "paiement", amount, text: "Paiement reçu : " + fmt(amount) + " DH" }] });
       if (shopDocs[id] && shopDocs[id].active === false) await saveShop({ active: true });
       $("pf-next").value = next; $("pf-status").value = "payant"; flash(e.target, true); };
-    $("pf-newpin").onclick = async () => { const pin = newPin(); await saveShop({ pinHash: await sha(id + ":" + pin) }); await save({ pin, history: [...(P().history || []), { at: Date.now(), type: "code", text: "Nouveau code barbier" }] }); $("pf-pin").textContent = pin; };
+    $("pf-newpin").onclick = async () => { const pin = newPin(); await saveShop({ pinHash: await sha(id + ":" + pin) }); await save({ pin, history: [...(P().history || []), { at: Date.now(), type: "code", text: "Nouveau code barbier" }] }); $("pf-pin").textContent = pin; const b = $("pf-send"); if (b) { b.textContent = "Envoyer le nouveau code sur WhatsApp"; } };
     $("pf-qr").onclick = () => { qrFor = id; setTab("qr"); };
+    $("pf-send").onclick = (e) => sendAccess(e.target);
+    if ($("pf-send-top")) $("pf-send-top").onclick = (e) => sendAccess(e.target);
     $("pf-info-save").onclick = async (e) => { const d = { shop: $("pf-shop").value.trim(), owner: $("pf-owner").value.trim(), phone: $("pf-phone").value.trim(), email: $("pf-email").value.trim(), city: $("pf-city").value.trim(), address: $("pf-address").value.trim(), chairs: Math.max(1, +$("pf-chairs").value || 1), barbers: Math.max(1, +$("pf-barbers").value || 1) };
       await save(d); await saveShop({ name: d.shop, city: d.city, chairs: Math.min(4, d.chairs) }); $("pf-name").textContent = d.shop; flash(e.target, true); };
     $("pf-svc-add").onclick = () => { $("pf-svcs").insertAdjacentHTML("beforeend", svcRow({ id: "s" + Date.now().toString(36), name: "", price: "", minutes: 20 })); bindSvcDel(); };
@@ -394,6 +399,23 @@ function dashboard(db) {
     $("pf-notes-save").onclick = async (e) => { await save({ notes: $("pf-notes").value }); flash(e.target, true); };
     loadDays(id);
     updateProfileLive();
+  }
+  // WhatsApp message with everything the barber needs to start
+  function accessMsg(p) {
+    const id = p.id, client = base + "index.html?s=" + encodeURIComponent(id);
+    return `سلام ${p.owner || ""}، الصالون ديالك تفعل فـ NOBTK.\n\n` +
+      `Salam ${p.owner || ""}, ton salon *${p.shop}* est activé sur NOBTK. 2 mois gratuits jusqu'au ${dateStr(p.trialEnds)}.\n\n` +
+      `*1. Installe l'appli barbier* (fichier NOBTK.apk) :\nhttps://github.com/mcloviinn777/nobtk/releases/latest\n\n` +
+      `*2. Ouvre-la et tape :*\nIdentifiant du salon : *${id}*\nCode du salon : *${p.pin}*\n(ou ouvre directement : ${client}#barber )\n\n` +
+      `*3. Le lien pour tes clients :*\n${client}\nJe t'envoie aussi l'affiche avec le QR code pour ta vitrine.\n\n` +
+      `Garde ton code pour toi. Une question ? Réponds à ce message.\nNOBTK · 06 34 36 44 22`;
+  }
+  async function sendAccess(btn) {
+    const p = P(); if (!p) return;
+    if (!p.phone) { btn.textContent = "Ajoute d'abord son téléphone"; setTimeout(() => btn.textContent = "Envoyer les accès sur WhatsApp", 2500); return; }
+    window.open(wa(p.phone) + "?text=" + encodeURIComponent(accessMsg(p)), "_blank");
+    await save({ accessSentAt: Date.now(), history: [...(p.history || []), { at: Date.now(), type: "acces", text: "Accès envoyés sur WhatsApp" }] });
+    const bn = $("pf-access-banner"); if (bn) bn.remove();
   }
   function svcRow(s) { return `<div class="sv" data-id="${esc(s.id)}"><input aria-label="Service" value="${esc(s.name)}" placeholder="Service"><input aria-label="Prix" type="number" value="${esc(s.price)}" placeholder="DH"><input aria-label="Durée" type="number" value="${esc(s.minutes || s.min || 20)}" placeholder="min"><button class="ibtn" data-del-svc type="button" aria-label="Retirer">×</button></div>`; }
 
@@ -465,7 +487,7 @@ function dashboard(db) {
     v.querySelectorAll("[data-pdf]").forEach((b) => b.onclick = async () => {
       const x = signups.find((y) => y.id === b.dataset.pdf); if (!x) return;
       const l = b.textContent; b.disabled = true; b.textContent = "Création…";
-      try { await window.NOBTK_PDF(x); } catch (e) { console.warn(e); }
+      try { await window.NOBTK_PDF(x, { share: true }); } catch (e) { console.warn(e); }
       b.disabled = false; b.textContent = l;
     });
     v.querySelectorAll("[data-del]").forEach((b) => b.onclick = () => {

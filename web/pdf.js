@@ -39,7 +39,9 @@
     </div>`;
   }
 
-  window.NOBTK_PDF = async function (d) {
+  // opts.share: open the phone's share sheet (WhatsApp, email…) with the PDF attached when the phone supports it.
+  window.NOBTK_PDF = async function (d, opts) {
+    opts = opts || {};
     if (!window.html2canvas || !window.jspdf) throw new Error("pdf-lib-missing");
     const wrap = document.createElement("div");
     wrap.style.cssText = "position:fixed;left:-10000px;top:0;z-index:-1";
@@ -57,8 +59,14 @@
       pdf.addImage(data, "JPEG", 0, 0, pw, ih);
       while (ih - y > ph + 1) { y += ph; pdf.addPage(); pdf.addImage(data, "JPEG", 0, -y, pw, ih); }
       const name = "NOBTK-inscription-" + slug(d.shop) + ".pdf";
-      if (window.NobtkAndroid && window.NobtkAndroid.saveFile) window.NobtkAndroid.saveFile(name, pdf.output("datauristring").split(",")[1], "application/pdf");
-      else pdf.save(name);
+      if (opts.share && navigator.canShare) {
+        try {
+          const file = new File([pdf.output("blob")], name, { type: "application/pdf" });
+          if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Inscription NOBTK · " + (d.shop || ""), text: opts.text || "" }); return "shared"; }
+        } catch (e) { if (e && e.name === "AbortError") return "cancelled"; }
+      }
+      if (window.NobtkAndroid && window.NobtkAndroid.saveFile) { window.NobtkAndroid.saveFile(name, pdf.output("datauristring").split(",")[1], "application/pdf"); return "saved"; }
+      pdf.save(name); return "saved";
     } finally { wrap.remove(); }
   };
 })();
