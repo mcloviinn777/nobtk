@@ -232,6 +232,19 @@ svg.i{width:18px;height:18px;flex:none}
 .bar.over i{background:var(--warn)}
 .chair .acts{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
 .chair .acts .btn{flex:1}
+.chair .acts .btn.okb{min-height:60px;font-size:19px}
+.fdock{position:sticky;bottom:0;z-index:30;margin:0 -2px;padding:14px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to bottom,transparent,var(--bg) 22%);display:flex;flex-direction:column;gap:8px}
+.fdock:empty{display:none}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.fbtn{border:0;border-radius:18px;background:var(--ok);color:#fff;min-height:84px;padding:10px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 8px 22px rgba(10,120,70,.28);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .15s}
+.fbtn:active{transform:scale(.97);filter:brightness(.92)}
+.fbtn b{font-family:var(--f-display);font-size:24px;font-weight:800;display:flex;align-items:center;gap:8px;line-height:1.1}
+.fbtn span{font-size:13px;opacity:.92;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fbtn i{font-style:normal;font-size:12px;opacity:.8}
+.fbtn[disabled]{opacity:.55}
+.fundo{display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--bg);border-radius:14px;padding:8px 8px 8px 14px;font-weight:600;font-size:14px}
+.fundo span{flex:1;min-width:0}
+.fundo button{border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:800;padding:12px 18px;font-size:15px}
 .qwrap{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
 .qlist{display:flex;flex-direction:column}
 .qrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
@@ -408,7 +421,7 @@ strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 
 strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
 blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
 policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours. Priorité aux clients présents au salon.",
-b_done:"Terminé",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
+b_done:"Terminé",fin_sub:"Fauteuil {c} · N°{n} {name}",fin_next:"Ensuite : N°{n}",fin_nonext:"Personne après",undo_msg:"N°{n} {name} terminé",undo:"Annuler",undone:"Annulé : N°{n} est revenu au fauteuil {c}",remote_t:"Bouton Terminé à distance",remote_h:"Un petit bouton Bluetooth (télécommande selfie) ou le bouton volume + du téléphone tape Terminé pour le fauteuil choisi. Volume − annule. Sur ordinateur : touches 1 à 4.",remote_off:"Non",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
 b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",b_delayed_chip:"Décalé",b_strike_chip:"{s}/3 absences",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place. Priorité aux clients présents : si le client n'est pas là à la fin du délai et qu'un autre attend au salon, celui-ci passe automatiquement.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
@@ -422,7 +435,7 @@ strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غ
 strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
 blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
 policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام. الأولوية للكليان اللي فالصالون.",
-b_done:"سالا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
+b_done:"سالا",fin_sub:"الكرسي {c} · رقم {n} {name}",fin_next:"من بعد: رقم {n}",fin_nonext:"ما كاين حتى واحد من بعد",undo_msg:"رقم {n} {name} سالا",undo:"رجع",undone:"ترجع: رقم {n} رجع للكرسي {c}",remote_t:"بوطون سالا من بعيد",remote_h:"بوطون بلوتوث صغير (تيليكوموند ديال السيلفي) ولا بوطون الصوت + فالتيليفون كيدير سالا للكرسي اللي ختاريتي. الصوت − كيرجع. فالكمبيوتر: الأزرار 1 حتى 4.",remote_off:"لا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
 b_notcome:"ما جاش؟",b_delay:"رجعو جوج بلايص",b_absent_confirm:"غايب",b_delayed_chip:"مأخر",b_strike_chip:"{s}/3 غيابات",
 b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون. الأولوية للي فالصالون: إلا ما وصلش فالوقت و كاين واحد كيتسنى فالصالون، كيدوز هو أوتوماتيكيا.",
 b_abs_none:"حتى غياب ما زال. الزبناء اللي تحسبو غايبين كيبانو هنا.",b_blocked:"مبلوكي",b_until:"حتى {d}",b_forgive:"سامحو",
@@ -551,6 +564,8 @@ const A={
  // Puts the first person in line into every free chair. Runs after any change that can free a chair.
  async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id));if(!w)return;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
  async finish(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;await Store.patchTicket(id,{status:"done",doneAt:Date.now(),startedAt:x.startedAt||Date.now()});await A.fill()},
+ // Undo a Terminé tapped by mistake: the client goes back to his chair, and whoever was placed there goes back to the head of the line.
+ async undoFinish(id,chair,nextId){if(nextId)await Store.patchTicket(nextId,{status:"waiting",chair:null,startedAt:null});await Store.patchTicket(id,{status:"chair",chair,doneAt:null})},
  async absent(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;const now=Date.now();const k=phoneKey(x.phone);let s=null,bu=null;
   if(k){s=strikesOf(x.phone)+1;if(s>=MAX_STRIKES)bu=now+blockDays()*864e5;await Store.setClient(k,{phone:k,name:x.name,strikes:s,lastNoShow:now,blockedUntil:bu})}
   await Store.patchTicket(id,{status:"noshow",chair:null,noshowAt:now,strike:s,blockedUntil:bu});await A.fill()},
@@ -779,10 +794,12 @@ function BarberView(root){
      <div class="field"><span class="lbl">${t("b_nchairs")}</span><div class="stepper" data-k="nch">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("b_grace")}</span><div class="stepper" data-k="grace">${[3,5,10].map(n=>`<button type="button" data-n="${n}">${n} ${t("min")}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("b_blockdays")}</span><div class="stepper" data-k="bdays">${[3,7,14].map(n=>`<button type="button" data-n="${n}">${n} ${t("days")}</button>`).join("")}</div></div>
+     <div class="field"><span class="lbl">${t("remote_t")}</span><div class="stepper" data-k="remote">${[0,1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n?t("chair")+" "+n:t("remote_off")}</button>`).join("")}</div><span class="muted" style="font-size:12.5px">${t("remote_h")}</span></div>
      <button class="btn ghost" type="button" data-a="ex">${t("b_examples")}</button>
      <button class="btn ghost" type="button" data-a="day">${t("b_newday")}</button>
     </div></details>
-   </div></div>`;
+   </div></div>
+  <div class="fdock" data-k="dock"></div>`;
  const $=k=>root.querySelector(`[data-k="${k}"]`);
  const setSrc=s=>{src=s;root.querySelectorAll("[data-src]").forEach(b=>{b.className="btn sm "+(b.dataset.src===s?"pri":"ghost")})};setSrc(src);
  root.querySelectorAll("[data-src]").forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
@@ -797,7 +814,36 @@ function BarberView(root){
  root.querySelector('[data-a="ex"]').onclick=()=>A.examples();
  const dayBtn=root.querySelector('[data-a="day"]');
  dayBtn.onclick=async()=>{if(!dayArm){dayArm=true;dayBtn.className="btn danger";dayBtn.textContent=t("b_newday_sure");setTimeout(()=>{dayArm=false;dayBtn.className="btn ghost";dayBtn.textContent=t("b_newday")},4000);return}dayArm=false;dayBtn.className="btn ghost";dayBtn.textContent=t("b_newday");await A.newDay()};
- let nameInit=false;
+ let nameInit=false,undo=null,undoT=null,dockHtml="";const locks=new Set();
+ const remoteKey="nobtk-remote-"+SHOP_ID;let remote=+ls.get(remoteKey,0)||0;
+ const native=()=>window.NobtkAndroid&&window.NobtkAndroid.setRemote;
+ const setRemote=n=>{remote=n;ls.set(remoteKey,n);try{if(native())window.NobtkAndroid.setRemote(!!n)}catch{}};
+ setRemote(remote);
+ async function finishId(id){
+  if(!id||locks.has(id))return;const x=Store.tickets.find(y=>y.id===id);if(!x||!inChairSt(x))return;
+  const ck="c"+x.chair;if(locks.has(ck))return;
+  locks.add(id);locks.add(ck);setTimeout(()=>{locks.delete(id);locks.delete(ck)},2500);noshowArm=null;
+  vibrate(70);chime(false);
+  const chair=x.chair;await A.finish(id);const nx=Q().inChair[chair];
+  undo={id,num:x.num,name:x.name,chair,nextId:nx?nx.id:null};clearTimeout(undoT);undoT=setTimeout(()=>{undo=null;update()},8000);update()}
+ const finishChair=i=>{const x=Q().inChair[i];if(x)finishId(x.id)};
+ async function undoLast(){if(!undo)return;const u=undo;undo=null;clearTimeout(undoT);locks.delete(u.id);locks.delete("c"+u.chair);vibrate([40,60,40]);await A.undoFinish(u.id,u.chair,u.nextId);toast(t("undone",{n:u.num,c:u.chair+1}));update()}
+ // the big always-visible Terminé bar (rebuilt only when it changes, so a tap is never lost)
+ function renderDock(q){
+  const occ=q.inChair.map((x,i)=>x?{x,i}:null).filter(Boolean);const nx=q.waiting[0];
+  const h=(undo?`<div class="fundo"><span>✓ ${esc(t("undo_msg",{n:undo.num,name:undo.name}))}</span><button type="button" data-undo="1">${t("undo")}</button></div>`:"")+
+   (occ.length?`<div class="fgrid">${occ.map(({x,i})=>{return `<button class="fbtn" type="button" data-fin="${x.id}"><b>✓ ${t("b_done")}</b><span>${esc(t("fin_sub",{c:i+1,n:x.num,name:x.name}))}</span><i>${nx?esc(t("fin_next",{n:nx.num})):t("fin_nonext")}</i></button>`}).join("")}</div>`:"");
+  if(h!==dockHtml){dockHtml=h;$("dock").innerHTML=h}}
+ root.addEventListener("click",e=>{const f=e.target.closest("[data-fin]");if(f){e.preventDefault();finishId(f.dataset.fin);return}if(e.target.closest("[data-undo]"))undoLast()});
+ $("remote").querySelectorAll("button").forEach(b=>b.onclick=()=>{setRemote(+b.dataset.n);update()});
+ // Bluetooth button, volume keys (from the Android app) and keyboard
+ const onKey=k=>{if(k==="undo")return undoLast();const c=remote||1;if(k==="fin")return finishChair(c-1);if(/^[1-4]$/.test(k))return finishChair(+k-1)};
+ window.NOBTK_KEY=k=>{onKey(k==="down"?"undo":"fin")};
+ const kd=e=>{const tg=e.target;if(tg&&/^(INPUT|SELECT|TEXTAREA)$/.test(tg.tagName))return;if(e.repeat)return;
+  if(/^[1-4]$/.test(e.key)){e.preventDefault();onKey(e.key)}
+  else if(remote&&["Enter"," ","AudioVolumeUp","MediaPlayPause","PageDown","ArrowRight"].includes(e.key)){e.preventDefault();onKey("fin")}
+  else if(remote&&["AudioVolumeDown","PageUp","ArrowLeft","Backspace"].includes(e.key)){e.preventDefault();onKey("undo")}};
+ document.addEventListener("keydown",kd);
  const strikeChip=phone=>{const r=clientRec(phone);if(!r||!r.strikes)return"";return `<span class="chip bad">${t("b_strike_chip",{s:r.strikes})}</span>`};
  function update(){
   if(!Store.ready){$("q").innerHTML=`<div class="loading">${t("connecting")}</div>`;return}
@@ -845,7 +891,8 @@ function BarberView(root){
   $("grace").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===(+Store.shop.grace||5)));
   $("bdays").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===blockDays()));
   root.querySelectorAll("[data-fill]").forEach(b=>b.onclick=()=>A.fill());
-  root.querySelectorAll("[data-fin]").forEach(b=>b.onclick=()=>{noshowArm=null;A.finish(b.dataset.fin)});
+  renderDock(q);
+  $("remote").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===remote));
   root.querySelectorAll("[data-nsarm]").forEach(b=>b.onclick=()=>{noshowArm=b.dataset.nsarm;update();setTimeout(()=>{if(noshowArm===b.dataset.nsarm){noshowArm=null;update()}},8000)});
   root.querySelectorAll("[data-abs]").forEach(b=>b.onclick=()=>{noshowArm=null;A.absent(b.dataset.abs)});
   root.querySelectorAll("[data-delay]").forEach(b=>b.onclick=()=>{noshowArm=null;A.delay(b.dataset.delay)});
@@ -859,7 +906,7 @@ function BarberView(root){
  // tells the owner's dashboard that this shop is working right now
  const beat=()=>{if(Store.mode==="live"&&Store.ready&&Store.shopExists&&!Store.readonly)Store.patchShop({lastSeen:Date.now()})};
  const hb=setInterval(beat,60000);const hb0=setTimeout(beat,3000);
- return{destroy(){off();clearInterval(iv);clearInterval(hb);clearTimeout(hb0)}};
+ return{destroy(){off();clearInterval(iv);clearInterval(hb);clearTimeout(hb0);clearTimeout(undoT);document.removeEventListener("keydown",kd);if(window.NOBTK_KEY)delete window.NOBTK_KEY;try{if(native())window.NobtkAndroid.setRemote(false)}catch{}}};
 }
 
 /* ================= Screen (TV) ================= */

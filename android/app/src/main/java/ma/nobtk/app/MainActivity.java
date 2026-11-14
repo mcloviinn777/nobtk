@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -29,6 +30,8 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
 
     private WebView web;
+    // When the barber turns on "Bouton Terminé à distance", volume + / a Bluetooth selfie button taps Terminé and volume - undoes.
+    private volatile boolean remote = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,24 @@ public class MainActivity extends Activity {
         else web.loadUrl(BuildConfig.START_URL);
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        int k = e.getKeyCode();
+        boolean up = k == KeyEvent.KEYCODE_VOLUME_UP || k == KeyEvent.KEYCODE_ENTER || k == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || k == KeyEvent.KEYCODE_CAMERA;
+        boolean down = k == KeyEvent.KEYCODE_VOLUME_DOWN;
+        if (remote && web != null && (up || down)) {
+            if (e.getAction() == KeyEvent.ACTION_DOWN && e.getRepeatCount() == 0) {
+                web.evaluateJavascript("window.NOBTK_KEY&&window.NOBTK_KEY('" + (up ? "up" : "down") + "')", null);
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(e);
+    }
+
     private class FileBridge {
+        @JavascriptInterface
+        public void setRemote(boolean on) { remote = on; }
+
         @JavascriptInterface
         public void saveFile(String name, String base64, String mime) {
             String safe = name.replaceAll("[^A-Za-z0-9._-]", "_");
