@@ -251,6 +251,9 @@ svg.i{width:18px;height:18px;flex:none}
 .ios ol{margin:0;padding-inline-start:20px;font-size:14.5px;display:flex;flex-direction:column;gap:4px}
 .ios .shr{display:inline-flex;vertical-align:-4px;color:#0A84FF}
 .ios .x{position:absolute;top:6px;inset-inline-end:8px;border:0;background:none;font-size:22px;color:var(--muted);padding:4px 8px}
+.stepper{flex-wrap:wrap;max-width:100%}
+.filebtn{position:relative;overflow:hidden;cursor:pointer}
+.filebtn input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
 .fdock{position:sticky;bottom:0;z-index:30;margin:0 -2px;padding:14px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to bottom,transparent,var(--bg) 22%);display:flex;flex-direction:column;gap:8px}
 .fdock:empty{display:none}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
@@ -657,7 +660,7 @@ function ClientView(root,key,standalone){
     <h2 style="font-size:20px">${t("join_t")}</h2>
     <div class="field"><label class="lbl" for="nm-${key}">${t("name")}</label><input id="nm-${key}" autocomplete="given-name" placeholder="${t("name_ph")}" maxlength="40"></div>
     <div class="field"><label class="lbl" for="ph-${key}">${t("phone_req")}</label><input id="ph-${key}" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" maxlength="20"></div>
-    <div class="field"><span class="lbl">${t("ph_t")}</span><div class="mephoto"><span class="ph" data-k="myph"></span><div style="flex:1;min-width:0"><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn ghost sm" data-a="phadd"></button><button type="button" class="btn ghost sm" data-a="phdel" hidden>${t("ph_del")}</button></div><small>${t("ph_h")}</small></div></div></div>
+    <div class="field"><span class="lbl">${t("ph_t")}</span><div class="mephoto"><span class="ph" data-k="myph"></span><div style="flex:1;min-width:0"><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn"><span data-k="phlbl"></span><input type="file" accept="image/*" data-a="phadd"></label><button type="button" class="btn ghost sm" data-a="phdel" hidden>${t("ph_del")}</button></div><small>${t("ph_h")}</small></div></div></div>
     <div class="field"><span class="lbl">${t("services")}</span><div class="svc-list" role="radiogroup">
      ${SERVICES_L().map(s=>`<button type="button" class="svc" role="radio" aria-checked="${picked===s.id}" data-s="${s.id}"><span class="rad"></span><span class="nm">${esc(s[lang])}<small>~${s.min} ${t("min")}</small></span><span class="pr">${money(s.price)}</span></button>`).join("")}
     </div></div>
@@ -671,8 +674,8 @@ function ClientView(root,key,standalone){
     <span style="flex:1;min-width:0"><b style="display:block">${t("pro_t")}</b><span class="muted" style="font-size:13px">${t("pro_p")}</span></span>
     <span style="color:var(--primary);font-weight:800">→</span></a>`;
   body.querySelectorAll("[data-tr]").forEach(b=>b.onclick=()=>{travelPick=+b.dataset.tr;ls.set("nobtk-travel-"+key,travelPick);body.querySelectorAll("[data-tr]").forEach(x=>x.setAttribute("aria-pressed",x===b));updateShop()});
-  const drawMe=()=>{const u=ls.get("nobtk-myphoto",null),ok=okPhoto(u);const ph=body.querySelector('[data-k="myph"]');ph.innerHTML=ok?`<img class="ph" src="${u}" alt="">`:ICON.users;body.querySelector('[data-a="phadd"]').textContent=ok?t("ph_chg"):t("ph_add");body.querySelector('[data-a="phdel"]').hidden=!ok};drawMe();
-  body.querySelector('[data-a="phadd"]').onclick=async()=>{try{const u=await window.NOBTK_PICK(160,.75);if(u){ls.set("nobtk-myphoto",u);drawMe()}}catch(e){toast(t("photo_err"))}};
+  const drawMe=()=>{const u=ls.get("nobtk-myphoto",null),ok=okPhoto(u);const ph=body.querySelector('[data-k="myph"]');ph.innerHTML=ok?`<img class="ph" src="${u}" alt="">`:ICON.users;body.querySelector('[data-k="phlbl"]').textContent=ok?t("ph_chg"):t("ph_add");body.querySelector('[data-a="phdel"]').hidden=!ok};drawMe();
+  body.querySelector('[data-a="phadd"]').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;try{const u=await window.NOBTK_IMG(f,160,.75);ls.set("nobtk-myphoto",u);drawMe()}catch(x){toast(t("photo_err"))}};
   body.querySelector('[data-a="phdel"]').onclick=()=>{ls.del("nobtk-myphoto");drawMe()};
   body.querySelectorAll(".svc").forEach(b=>b.onclick=()=>{picked=b.dataset.s;body.querySelectorAll(".svc").forEach(x=>x.setAttribute("aria-checked",x===b))});
   body.querySelector("form").onsubmit=async e=>{e.preventDefault();unlockAudio();const err=body.querySelector(".err");const name=body.querySelector("#nm-"+key).value;const phone=body.querySelector("#ph-"+key).value;
@@ -833,11 +836,11 @@ function BarberView(root){
     <section class="card setg"><h3 style="font-size:17px">${t("b_abs_t")}</h3><p class="muted" style="margin:0;font-size:13px" data-k="rule"></p><div class="qlist" data-k="abs"></div></section>
     <details class="card set"><summary>${t("b_settings")}<span class="muted">⌄</span></summary><div class="setg">
      <div class="field"><label class="lbl" for="b-shop">${t("b_shopname")}</label><div style="display:flex;gap:6px"><input id="b-shop" maxlength="40"><button class="btn ghost sm" type="button" data-a="saveName">${t("b_save")}</button></div></div>
-     <div class="field"><span class="lbl">${t("b_photo")}</span><div class="shopphoto"><span data-k="sph"></span><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" type="button" data-a="sphadd">${t("b_photo_add")}</button><button class="btn ghost sm" type="button" data-a="sphdel" hidden>${t("ph_del")}</button></div></div><span class="muted" style="font-size:12.5px">${t("b_photo_h")}</span></div>
+     <div class="field"><span class="lbl">${t("b_photo")}</span><div class="shopphoto"><span data-k="sph"></span><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn">${t("b_photo_add")}<input type="file" accept="image/*" data-a="sphadd"></label><button class="btn ghost sm" type="button" data-a="sphdel" hidden>${t("ph_del")}</button></div></div><span class="muted" style="font-size:12.5px">${t("b_photo_h")}</span></div>
      <div class="field"><span class="lbl">${t("b_nchairs")}</span><div class="stepper" data-k="nch">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("b_grace")}</span><div class="stepper" data-k="grace">${[3,5,10].map(n=>`<button type="button" data-n="${n}">${n} ${t("min")}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("b_blockdays")}</span><div class="stepper" data-k="bdays">${[3,7,14].map(n=>`<button type="button" data-n="${n}">${n} ${t("days")}</button>`).join("")}</div></div>
-     <div class="field"><span class="lbl">${t("remote_t")}</span><div class="stepper" data-k="remote">${[0,1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n?t("chair")+" "+n:t("remote_off")}</button>`).join("")}</div><span class="muted" style="font-size:12.5px">${t(IOS?"remote_h_ios":"remote_h")}</span></div>
+     <div class="field"><span class="lbl">${t("remote_t")}</span><div class="stepper" data-k="remote">${[0,1,2,3,4].map(n=>`<button type="button" data-n="${n}" aria-label="${n?t("chair")+" "+n:t("remote_off")}">${n?"F"+n:t("remote_off")}</button>`).join("")}</div><span class="muted" style="font-size:12.5px">${t(IOS?"remote_h_ios":"remote_h")}</span></div>
      <button class="btn ghost" type="button" data-a="ex">${t("b_examples")}</button>
      <button class="btn ghost" type="button" data-a="day">${t("b_newday")}</button>
     </div></details>
@@ -852,7 +855,7 @@ function BarberView(root){
   await A.join({name:nm.value,phone:ph.value,svcId:root.querySelector("#b-svc").value,src});nm.value="";ph.value=""};
  root.querySelector('[data-a="pause"]').onclick=()=>Store.patchShop({paused:!Store.shop.paused});
  root.querySelector('[data-a="saveName"]').onclick=async()=>{const v=root.querySelector("#b-shop").value.trim();if(v){await Store.patchShop({name:v});toast(t("saved"))}};
- root.querySelector('[data-a="sphadd"]').onclick=async()=>{try{const u=await window.NOBTK_PICK(320,.8);if(u){await Store.patchShop({photo:u});toast(t("b_photo_saved"))}}catch(e){toast(t("photo_err"))}};
+ root.querySelector('[data-a="sphadd"]').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;try{const u=await window.NOBTK_IMG(f,320,.8);await Store.patchShop({photo:u});toast(t("b_photo_saved"))}catch(x){toast(t("photo_err"))}};
  root.querySelector('[data-a="sphdel"]').onclick=()=>Store.patchShop({photo:""});
  $("nch").querySelectorAll("button").forEach(b=>b.onclick=async()=>{await Store.patchShop({chairs:+b.dataset.n});await A.fill()});
  $("grace").querySelectorAll("button").forEach(b=>b.onclick=()=>Store.patchShop({grace:+b.dataset.n}));
@@ -902,7 +905,7 @@ function BarberView(root){
     if(p.s!=="cancelled"&&x.status==="cancelled"&&!x.byShop){toast(t("b_toast_cancel",{n:x.num,name:x.name}))}}})}
   seen=cur;
   q.inChair.forEach(x=>{if(x&&!isHere(x)&&!bumping.has(x.id)&&now-(x.startedAt||now)>graceMs()){const nx=q.waiting.find(isHere);if(nx){bumping.add(x.id);toast(t("b_toast_bump",{n:x.num,name:x.name,m:nx.num}));A.bump(x.id)}}});
-  {const ok=okPhoto(Store.shop.photo),box=$("sph"),k=ok?Store.shop.photo.length+Store.shop.photo.slice(-24):"none";if(box.dataset.k!==k){box.dataset.k=k;box.innerHTML=ok?`<img src="${Store.shop.photo}" alt="">`:`<span class="ini">${esc((Store.shop.name||"?").charAt(0).toUpperCase())}</span>`;root.querySelector('[data-a="sphdel"]').hidden=!ok}}
+  {const ok=okPhoto(Store.shop.photo),box=$("sph"),k=ok?Store.shop.photo.length+Store.shop.photo.slice(-24):"none";if(box&&box.dataset.ph!==k){box.dataset.ph=k;box.innerHTML=ok?`<img src="${Store.shop.photo}" alt="">`:`<span class="ini">${esc((Store.shop.name||"?").charAt(0).toUpperCase())}</span>`;root.querySelector('[data-a="sphdel"]').hidden=!ok}}
   $("title").textContent=Store.shop.name;if(!nameInit){root.querySelector("#b-shop").value=Store.shop.name;nameInit=true}
   $("state").className="pill "+(Store.shop.paused?"paused":"live");$("state").innerHTML=`<span class="dot"></span>${Store.shop.paused?t("paused"):t("open")}`;
   root.querySelector('[data-a="pause"]').innerHTML=Store.shop.paused?`${ICON.play} ${t("b_resume")}`:`${ICON.pause} ${t("b_pause")}`;

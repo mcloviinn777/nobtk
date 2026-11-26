@@ -316,6 +316,8 @@ function dashboard(db) {
   const P = () => profiles.find((p) => p.id === pid);
   const save = (data) => db.collection("shopProfiles").doc(pid).set(data, { merge: true });
   const saveShop = (data) => db.doc("shops/" + pid).set(data, { merge: true });
+  // feedback on a photo button without removing its hidden file input
+  const say = (inp, txt) => { const tn = inp.parentElement.firstChild; tn.nodeValue = txt; setTimeout(() => { tn.nodeValue = "Photo"; }, 1600); };
   const flash = (btn, ok) => { const l = btn.dataset.l || btn.textContent; btn.dataset.l = l; btn.textContent = ok ? "Enregistré" : "Erreur"; setTimeout(() => { btn.textContent = l; }, 1600); };
   const fieldRow = (id, label, val, type = "text") => `<label class="pf"><span>${label}</span><input id="${id}" type="${type}" value="${esc(val ?? "")}"></label>`;
 
@@ -336,7 +338,7 @@ function dashboard(db) {
         <button class="btn ghost sm" id="back" type="button">← Tous les salons</button>
       </div>
       <div class="card pf-head">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span id="pf-photo">${shopAv(id, p.shop, 76)}</span><button class="btn ghost sm" id="pf-photo-btn" type="button" style="padding:6px 10px;font-size:12.5px">Photo</button></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span id="pf-photo">${shopAv(id, p.shop, 76)}</span><label class="btn ghost sm" style="position:relative;overflow:hidden;padding:6px 10px;font-size:12.5px;cursor:pointer">Photo<input type="file" accept="image/*" id="pf-photo-btn" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer"></label></div>
         <div style="flex:1;min-width:0"><h2 style="font-size:26px" id="pf-name">${esc(p.shop)}</h2><div class="muted">${esc(p.city)} · ${esc(p.owner || "propriétaire non renseigné")} · identifiant <code>${esc(id)}</code></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" id="pf-chips"></div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           ${p.phone ? `<a class="btn ghost sm" href="${esc(wa(p.phone))}" target="_blank" rel="noopener" style="text-decoration:none">WhatsApp</a>` : ""}
@@ -406,7 +408,7 @@ function dashboard(db) {
     $("pf-newpin").onclick = async () => { const pin = newPin(); await saveShop({ pinHash: await sha(id + ":" + pin) }); await save({ pin, history: [...(P().history || []), { at: Date.now(), type: "code", text: "Nouveau code barbier" }] }); $("pf-pin").textContent = pin; const b = $("pf-send"); if (b) { b.textContent = "Envoyer le nouveau code sur WhatsApp"; } };
     $("pf-qr").onclick = () => { qrFor = id; setTab("qr"); };
     $("pf-listed").onchange = (e) => saveShop({ listed: e.target.checked });
-    $("pf-photo-btn").onclick = async (e) => { try { const u = await window.NOBTK_PICK(320, 0.8); if (u) { await saveShop({ photo: u }); $("pf-photo").innerHTML = `<img src="${u}" alt="" style="width:76px;height:76px;border-radius:19px;object-fit:cover">`; flash(e.target, true); } } catch (x) { flash(e.target, false); } };
+    $("pf-photo-btn").onchange = async (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return; try { const u = await window.NOBTK_IMG(f, 320, 0.8); { await saveShop({ photo: u }); $("pf-photo").innerHTML = `<img src="${u}" alt="" style="width:76px;height:76px;border-radius:19px;object-fit:cover">`; say(e.target, "Enregistré"); } } catch (x) { say(e.target, "Erreur"); } };
     $("pf-send").onclick = (e) => sendAccess(e.target);
     if ($("pf-send-top")) $("pf-send-top").onclick = (e) => sendAccess(e.target);
     $("pf-info-save").onclick = async (e) => { const d = { shop: $("pf-shop").value.trim(), owner: $("pf-owner").value.trim(), phone: $("pf-phone").value.trim(), email: $("pf-email").value.trim(), city: $("pf-city").value.trim(), address: $("pf-address").value.trim(), chairs: Math.max(1, +$("pf-chairs").value || 1), barbers: Math.max(1, +$("pf-barbers").value || 1) };
