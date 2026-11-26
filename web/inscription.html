@@ -50,7 +50,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
 .done{text-align:center;align-items:center;padding:36px 22px}
 .done .ok{width:72px;height:72px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center}
 .muted{color:var(--muted)}
-@media (max-width:560px){.svc-row{grid-template-columns:minmax(0,1fr) 84px 44px}.svc-row .dur{display:none}.day{grid-template-columns:1fr 1fr}.day label.chk{grid-column:1/-1}}
+@media (max-width:560px){.svc-row{grid-template-columns:minmax(0,1fr) 84px 44px}.svc-row .dur{display:none}.day{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.day input[type=time]{min-width:0;width:100%}.day label.chk{grid-column:1/-1}}
 </style>
 <script src="config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
