@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity {
     private WebView web;
     // When the barber turns on "Bouton Terminé à distance", volume + / a Bluetooth selfie button taps Terminé and volume - undoes.
     private volatile boolean remote = false;
+    // Photo picker for <input type="file">: salon photo and client photo.
+    private static final int PICK_FILE = 7;
+    private ValueCallback<Uri[]> pickCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,27 @@ public class MainActivity extends Activity {
             }
         });
 
+        // Without this, tapping "Choisir une photo" does nothing inside an Android WebView.
+        web.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                if (pickCallback != null) pickCallback.onReceiveValue(null);
+                pickCallback = callback;
+                Intent pick = new Intent(Intent.ACTION_GET_CONTENT);
+                pick.addCategory(Intent.CATEGORY_OPENABLE);
+                pick.setType("image/*");
+                try {
+                    startActivityForResult(Intent.createChooser(pick, "Choisir une photo"), PICK_FILE);
+                } catch (Exception e) {
+                    pickCallback = null;
+                    callback.onReceiveValue(null);
+                    Toast.makeText(MainActivity.this, "Impossible d'ouvrir les photos.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                return true;
+            }
+        });
+
         // Lets the page save PDFs it builds (sign-up forms) into the phone's Downloads folder.
         web.addJavascriptInterface(new FileBridge(), "NobtkAndroid");
         // Plain file links (the blank PDF form) open in the phone's browser, which downloads them.
@@ -82,6 +108,20 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState != null) web.restoreState(savedInstanceState);
         else web.loadUrl(BuildConfig.START_URL);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_FILE) {
+            if (pickCallback != null) {
+                Uri[] result = null;
+                if (resultCode == RESULT_OK && data != null && data.getData() != null) result = new Uri[]{ data.getData() };
+                pickCallback.onReceiveValue(result);
+                pickCallback = null;
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
