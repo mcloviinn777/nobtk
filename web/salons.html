@@ -118,7 +118,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,Tajawal,
   $("q").oninput=function(e){q=e.target.value;render()};
   $("cities").onclick=function(e){var b=e.target.closest("button");if(!b)return;city=b.dataset.c;render()};
   $("lang").onclick=function(){lang=lang==="ar"?"fr":"ar";ls.set("nobtk-lang",lang);render()};
-  document.addEventListener("click",function(e){var a=e.target.closest(".shop");if(a)ls.set("nobtk-shop",a.dataset.id)});
+  document.addEventListener("click",function(e){var a=e.target.closest(".shop");if(a){ls.set("nobtk-shop",a.dataset.id);if(ls.get("nobtk-role",null)!=="barber")ls.set("nobtk-role","client")}});
   render();
   try{
     var C=window.NOBTK_CONFIG||{};

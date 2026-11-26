@@ -1,6 +1,16 @@
 package ma.nobtk.app;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.pm.PackageManager;
+import android.view.View;
+import android.view.WindowInsets;
+import android.widget.FrameLayout;
+import android.window.OnBackInvokedDispatcher;
 import android.content.ContentValues;
 import android.os.Build;
 import android.os.Environment;
@@ -37,16 +47,43 @@ public class MainActivity extends Activity {
     // Photo picker for <input type="file">: salon photo and client photo.
     private static final int PICK_FILE = 7;
     private ValueCallback<Uri[]> pickCallback;
+    private static final int ASK_NOTIF = 8;
+    private static final String CHANNEL = "nobtk_alerts";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().setStatusBarColor(Color.parseColor("#3A31D2"));
 
+        // Android 15+ draws apps edge to edge: keep the page out from under the status bar,
+        // the navigation bar and the keyboard by padding the frame around the WebView.
+        FrameLayout frame = new FrameLayout(this);
+        frame.setBackgroundColor(Color.parseColor("#3A31D2"));
         web = new WebView(this);
         web.setBackgroundColor(Color.parseColor("#F2F1FA"));
-        setContentView(web);
+        frame.addView(web, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        setContentView(frame);
+        if (Build.VERSION.SDK_INT < 35) getWindow().setStatusBarColor(Color.parseColor("#3A31D2"));
+        frame.setOnApplyWindowInsetsListener((v, insets) -> {
+            int l, t, r, b;
+            if (Build.VERSION.SDK_INT >= 30) {
+                android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+                android.graphics.Insets ime = insets.getInsets(WindowInsets.Type.ime());
+                l = bars.left; t = bars.top; r = bars.right; b = Math.max(bars.bottom, ime.bottom);
+            } else {
+                l = insets.getSystemWindowInsetLeft(); t = insets.getSystemWindowInsetTop();
+                r = insets.getSystemWindowInsetRight(); b = insets.getSystemWindowInsetBottom();
+            }
+            v.setPadding(l, t, r, b);
+            return insets;
+        });
+
+        // Back gesture / back button: go back inside NOBTK first, then leave the app.
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, () -> {
+                if (web.canGoBack()) web.goBack(); else finish();
+            });
+        }
 
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -142,6 +179,49 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void setRemote(boolean on) { remote = on; }
 
+        // Phone notifications for clients ("ton tour arrive"), since a WebView has no Notification API.
+        @JavascriptInterface
+        public String notifyPermission() {
+            if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return "default";
+            NotificationManager nm = getSystemService(NotificationManager.class);
+            return (nm != null && !nm.areNotificationsEnabled()) ? "denied" : "granted";
+        }
+
+        @JavascriptInterface
+        public void requestNotify() {
+            runOnUiThread(() -> {
+                if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{ Manifest.permission.POST_NOTIFICATIONS }, ASK_NOTIF);
+                } else {
+                    tellPage(notifyPermission());
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void notify(String title, String body) {
+            try {
+                NotificationManager nm = getSystemService(NotificationManager.class);
+                if (nm == null) return;
+                Notification.Builder b;
+                if (Build.VERSION.SDK_INT >= 26) {
+                    NotificationChannel ch = new NotificationChannel(CHANNEL, "Alertes de la file", NotificationManager.IMPORTANCE_HIGH);
+                    ch.setDescription("Préviens quand ton tour approche");
+                    ch.enableVibration(true);
+                    nm.createNotificationChannel(ch);
+                    b = new Notification.Builder(MainActivity.this, CHANNEL);
+                } else {
+                    b = new Notification.Builder(MainActivity.this).setPriority(Notification.PRIORITY_HIGH).setDefaults(Notification.DEFAULT_ALL);
+                }
+                Intent open = new Intent(MainActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pi = PendingIntent.getActivity(MainActivity.this, 0, open, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                b.setSmallIcon(R.drawable.ic_stat_nobtk).setContentTitle(title).setContentText(body)
+                    .setStyle(new Notification.BigTextStyle().bigText(body))
+                    .setColor(Color.parseColor("#3A31D2")).setAutoCancel(true).setContentIntent(pi);
+                nm.notify(1, b.build());
+            } catch (Exception ignored) { }
+        }
+
         @JavascriptInterface
         public void saveFile(String name, String base64, String mime) {
             String safe = name.replaceAll("[^A-Za-z0-9._-]", "_");
@@ -179,12 +259,26 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void tellPage(String state) {
+        if (web != null) web.evaluateJavascript("window.NOBTK_NOTIF&&window.NOBTK_NOTIF('" + state + "')", null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        if (requestCode == ASK_NOTIF) {
+            tellPage(results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied");
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         web.saveState(outState);
     }
 
+    // Back button on Android 12 and older.
     @Override
     public void onBackPressed() {
         if (web.canGoBack()) web.goBack();

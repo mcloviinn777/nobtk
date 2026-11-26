@@ -497,7 +497,10 @@ let actx=null;
 function unlockAudio(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume()}catch{}}
 document.addEventListener("pointerdown",unlockAudio,{passive:true});
 function chime(strong){if(!actx)return;try{const notes=strong?[784,988,1175,1568]:[880,1175];notes.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type="sine";o.frequency.value=f;const t0=actx.currentTime+i*.15;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.28,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+.55);o.connect(g).connect(actx.destination);o.start(t0);o.stop(t0+.6)})}catch{}}
-function sysNotify(title,body){try{if(!("Notification" in window)||Notification.permission!=="granted")return;const o={body,tag:"nobtk",icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200]};if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(r=>r.showNotification(title,o)).catch(()=>{try{new Notification(title,o)}catch{}})}else new Notification(title,o)}catch{}}
+// Inside the NOBTK Android app the page has no Notification API: the app shows the alert itself.
+const AN=!!(window.NobtkAndroid&&window.NobtkAndroid.notify);
+function askAndroidNotify(){return new Promise(res=>{window.NOBTK_NOTIF=st=>{window.NOBTK_NOTIF=null;res(st)};try{window.NobtkAndroid.requestNotify()}catch(e){res("denied")}})}
+function sysNotify(title,body){if(AN){try{if(window.NobtkAndroid.notifyPermission()==="granted")window.NobtkAndroid.notify(title,body)}catch{}return}try{if(!("Notification" in window)||Notification.permission!=="granted")return;const o={body,tag:"nobtk",icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200]};if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(r=>r.showNotification(title,o)).catch(()=>{try{new Notification(title,o)}catch{}})}else new Notification(title,o)}catch{}}
 function vibrate(p){try{navigator.vibrate&&navigator.vibrate(p)}catch{}}
 // iPhone / iPad: Safari can only alert and stay awake when NOBTK is added to the Home Screen
 const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
@@ -783,7 +786,7 @@ function ClientView(root,key,standalone){
   const nState=ls.get("nobtk-notif",null);
   {const box=$("ios");if(box&&!box.dataset.done){box.dataset.done=1;const c=iosCard("client");if(c){box.style.marginTop="10px";box.appendChild(c)}}}
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
-  if(nState!=="system"&&"Notification" in window){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
+  if(nState!=="system"&&(AN||"Notification" in window)){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=AN?await askAndroidNotify():await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
   $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===travelOf(x)));
   $("tnote").textContent=(travelOf(x)===0?t("travel_note0"):t("travel_note",{m:warnMin(x)}))+(isHere(x)?"":" "+t("prio_note"));
   $("det").innerHTML=`<div class="kv"><span>${t("service")}</span><b>${esc(svcName(x.svc))}</b></div><div class="kv"><span>${t("price")}</span><b>${money(svc(x.svc).price)}</b></div><div class="kv"><span>${t("joined")}</span><b class="num">${hhmm(x.created)}</b></div>`;
@@ -1000,8 +1003,8 @@ function PinView(root,next){root.className="pin card";root.innerHTML=`<h2 style=
  <div class="err" hidden></div><button class="btn pri" type="button">${t("pin_btn")}</button>`;
  const err=m=>{const e=root.querySelector(".err");e.textContent=m;e.hidden=false};
  const tryPin=async v=>{const h=Store.shop.pinHash;
-  if(h){let x="";try{x=await sha(SHOP_ID+":"+v)}catch(e){}if(x===h){ls.set("nobtk-pinhash-"+SHOP_ID,x);mount(next)}else err(t("pin_bad"));return}
-  if(PILOT&&v===NC.barberPin){ls.set("nobtk-pin",v);mount(next)}else err(t("pin_bad"))};
+  if(h){let x="";try{x=await sha(SHOP_ID+":"+v)}catch(e){}if(x===h){ls.set("nobtk-pinhash-"+SHOP_ID,x);ls.set("nobtk-shop",SHOP_ID);ls.set("nobtk-role","barber");mount(next)}else err(t("pin_bad"));return}
+  if(PILOT&&v===NC.barberPin){ls.set("nobtk-pin",v);ls.set("nobtk-role","barber");mount(next)}else err(t("pin_bad"))};
  const go=()=>{const id=root.querySelector("#shop-in").value.trim().toLowerCase();const v=root.querySelector("#pin-in").value.trim();if(!v)return err(t("pin_bad"));
   if(id&&id!==SHOP_ID){ls.set("nobtk-shop",id);ls.set("nobtk-pinpending",v);location.search="?s="+encodeURIComponent(id);return}
   if(!Store.ready){root.querySelector("button").textContent=t("connecting");return}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NOBTK</title>
+<meta name="theme-color" content="#3A31D2">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Manrope:wght@500;700;800&family=Tajawal:wght@500;700&display=swap">
+<style>
+:root{--bg:#F2F1FA;--surface:#fff;--ink:#15143A;--muted:#5D5C86;--line:#DEDDF0;--primary:#3A31D2;--accent:#FFC53D;--accent-ink:#2B1E00}
+@media (prefers-color-scheme:dark){:root{--bg:#0C0B20;--surface:#16153A;--ink:#F1F0FF;--muted:#A09FC9;--line:#2B2A58}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Manrope,Tajawal,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:0 auto;min-height:100vh;padding:28px 16px 32px;display:flex;flex-direction:column;gap:18px}
+.hero{background:var(--primary);color:#fff;border-radius:28px;padding:32px 22px 26px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.hero img{width:84px;height:84px;border-radius:22px}
+.hero h1{margin:4px 0 0;font-family:"Bricolage Grotesque",Manrope,sans-serif;font-size:40px;letter-spacing:2px;line-height:1}
+.hero p{margin:0;color:#D9D6FF;font-size:17px}
+.hero .ar{font-family:Tajawal,sans-serif;color:var(--accent);font-weight:700;direction:rtl}
+.q{font-weight:800;font-size:19px;margin:6px 2px 0}
+.choice{display:flex;align-items:center;gap:16px;background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:18px;text-decoration:none;color:inherit;min-height:92px}
+.choice:active{transform:scale(.99)}
+.choice .ic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;flex:none}
+.choice.c .ic{background:var(--accent);color:var(--accent-ink)}
+.choice.b .ic{background:var(--primary);color:#fff}
+.choice b{display:block;font-size:19px}
+.choice span{display:block;color:var(--muted);font-size:14.5px;margin-top:2px}
+.choice small{display:block;font-family:Tajawal,sans-serif;direction:rtl;text-align:start;color:var(--muted);font-size:14px;margin-top:2px}
+.foot{margin-top:auto;text-align:center;font-size:13.5px;color:var(--muted);line-height:1.7}
+.foot a{color:var(--primary);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<script>
+// Start screen of the NOBTK app: returning users go straight to their screen.
+(function(){
+  function get(k){try{var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)}catch(e){return null}}
+  var role=get("nobtk-role"),shop=get("nobtk-shop"),pin=get("nobtk-pin");
+  var hasPin=!!pin;try{for(var i=0;i<localStorage.length;i++){if(String(localStorage.key(i)).indexOf("nobtk-pinhash-")===0)hasPin=true}}catch(e){}
+  if(role==="barber"||(!role&&hasPin)){location.replace("index.html"+(shop?"?s="+encodeURIComponent(shop):"")+"#barber");return}
+  if(shop){location.replace("index.html?s="+encodeURIComponent(shop)+"#client");return}
+})();
+</script>
+<div class="wrap">
+  <section class="hero">
+    <img src="icon-192.png" alt="">
+    <h1>NOBTK</h1>
+    <p>Ton tour, sans attendre.</p>
+    <p class="ar">نوبتك، بلا ما تسنى</p>
+  </section>
+  <div class="q">Tu es…</div>
+  <a class="choice c" href="salons.html" onclick="try{localStorage.setItem('nobtk-role',JSON.stringify('client'))}catch(e){}">
+    <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+    <div><b>Client</b><span>Trouve ton salon et prends ton tour.</span><small>كليان: لقا الصالون وخود نوبتك</small></div>
+  </a>
+  <a class="choice b" href="index.html#barber" onclick="try{localStorage.setItem('nobtk-role',JSON.stringify('barber'))}catch(e){}">
+    <span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9"/><path d="M14.5 14.5 20 20"/><path d="M8.1 8.1 12 12"/></svg></span>
+    <div><b>Barbier</b><span>Gère la file de ton salon.</span><small>حلاق: سير الصف ديال الصالون</small></div>
+  </a>
+  <p class="foot">Pas encore de code salon ? <a href="inscription.html">Inscrire mon salon</a><br><a href="confidentialite.html">Confidentialité</a></p>
+</div>
+</body>
+</html>

@@ -24,16 +24,17 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.9"
+          gradle-version: "8.13"
 
       - name: Build the APK
         working-directory: android
-        run: gradle assembleBarberDebug assembleAdminDebug --no-daemon --stacktrace
+        run: gradle assembleBarberDebug assembleAdminDebug bundleBarberRelease --no-daemon --stacktrace
 
       - name: Rename the APKs
         run: |
           cp android/app/build/outputs/apk/barber/debug/app-barber-debug.apk NOBTK.apk
           cp android/app/build/outputs/apk/admin/debug/app-admin-debug.apk NOBTK-Admin.apk
+          cp android/app/build/outputs/bundle/barberRelease/app-barber-release.aab NOBTK-play-unsigned.aab
 
       - uses: actions/upload-artifact@v4
         with:
@@ -41,6 +42,7 @@ jobs:
           path: |
             NOBTK.apk
             NOBTK-Admin.apk
+            NOBTK-play-unsigned.aab
 
       - name: Publish the APK as a download
         uses: softprops/action-gh-release@v2
@@ -51,8 +53,10 @@ jobs:
           files: |
             NOBTK.apk
             NOBTK-Admin.apk
+            NOBTK-play-unsigned.aab
           body: |
             **NOBTK.apk** : l'application du barbier (tableau du salon). À installer sur le téléphone du barbier.
             **NOBTK-Admin.apk** : ton tableau de bord privé (inscriptions, revenus, salons). À installer seulement sur ton téléphone.
             Ouvre le fichier téléchargé pour l'installer.
             Android demandera d'autoriser l'installation depuis cette source : c'est normal pour une appli hors Play Store.
+            **NOBTK-play-unsigned.aab** : fichier de travail pour Google Play (pas à installer). Il doit être signé avec la clé d'importation avant l'envoi.
