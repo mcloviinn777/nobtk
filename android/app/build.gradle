@@ -31,11 +31,25 @@ android {
         }
     }
 
+    // Fixed test key: every new APK installs over the previous one (no need to uninstall).
+    // Test builds only; the Play Store version will use its own private upload key.
+    signingConfigs {
+        test {
+            storeFile file('nobtk-test.keystore')
+            storePassword 'nobtktest'
+            keyAlias 'nobtk'
+            keyPassword 'nobtktest'
+        }
+    }
+
     buildFeatures {
         buildConfig true
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.test
+        }
         release {
             minifyEnabled false
         }
