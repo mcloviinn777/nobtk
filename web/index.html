@@ -6,7 +6,11 @@
 <title>NOBTK</title>
 <meta name="theme-color" content="#3A31D2">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NOBTK">
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
@@ -233,6 +237,11 @@ svg.i{width:18px;height:18px;flex:none}
 .chair .acts{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
 .chair .acts .btn{flex:1}
 .chair .acts .btn.okb{min-height:60px;font-size:19px}
+.ios{background:var(--surface);border:1.5px solid var(--primary);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;position:relative}
+.ios b{font-size:16px}.ios p{margin:0;font-size:14px;color:var(--muted)}
+.ios ol{margin:0;padding-inline-start:20px;font-size:14.5px;display:flex;flex-direction:column;gap:4px}
+.ios .shr{display:inline-flex;vertical-align:-4px;color:#0A84FF}
+.ios .x{position:absolute;top:6px;inset-inline-end:8px;border:0;background:none;font-size:22px;color:var(--muted);padding:4px 8px}
 .fdock{position:sticky;bottom:0;z-index:30;margin:0 -2px;padding:14px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to bottom,transparent,var(--bg) 22%);display:flex;flex-direction:column;gap:8px}
 .fdock:empty{display:none}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
@@ -421,7 +430,7 @@ strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 
 strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
 blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
 policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours. Priorité aux clients présents au salon.",
-b_done:"Terminé",fin_sub:"Fauteuil {c} · N°{n} {name}",fin_next:"Ensuite : N°{n}",fin_nonext:"Personne après",undo_msg:"N°{n} {name} terminé",undo:"Annuler",undone:"Annulé : N°{n} est revenu au fauteuil {c}",remote_t:"Bouton Terminé à distance",remote_h:"Un petit bouton Bluetooth (télécommande selfie) ou le bouton volume + du téléphone tape Terminé pour le fauteuil choisi. Volume − annule. Sur ordinateur : touches 1 à 4.",remote_off:"Non",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
+b_done:"Terminé",ios_t:"Installe NOBTK sur ton iPhone",ios_c:"Sur iPhone, les alertes n'arrivent que si NOBTK est ajouté à l'écran d'accueil (iOS 16.4 ou plus récent). Sinon, garde cette page ouverte.",ios_b:"Ajoute NOBTK à l'écran d'accueil : il s'ouvre comme une appli, et l'écran reste allumé.",ios_1:"Touche le bouton Partager {i} en bas de Safari",ios_2:"Choisis « Sur l'écran d'accueil »",ios_3:"Touche « Ajouter », puis ouvre NOBTK depuis l'icône",ios_4:"Dans l'appli, active les alertes",fin_sub:"Fauteuil {c} · N°{n} {name}",fin_next:"Ensuite : N°{n}",fin_nonext:"Personne après",undo_msg:"N°{n} {name} terminé",undo:"Annuler",undone:"Annulé : N°{n} est revenu au fauteuil {c}",remote_t:"Bouton Terminé à distance",remote_h:"Un petit bouton Bluetooth (télécommande selfie) ou le bouton volume + du téléphone tape Terminé pour le fauteuil choisi. Volume − annule. Sur ordinateur : touches 1 à 4.",remote_off:"Non",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
 b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",b_delayed_chip:"Décalé",b_strike_chip:"{s}/3 absences",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place. Priorité aux clients présents : si le client n'est pas là à la fin du délai et qu'un autre attend au salon, celui-ci passe automatiquement.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
@@ -435,7 +444,7 @@ strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غ
 strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
 blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
 policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام. الأولوية للكليان اللي فالصالون.",
-b_done:"سالا",fin_sub:"الكرسي {c} · رقم {n} {name}",fin_next:"من بعد: رقم {n}",fin_nonext:"ما كاين حتى واحد من بعد",undo_msg:"رقم {n} {name} سالا",undo:"رجع",undone:"ترجع: رقم {n} رجع للكرسي {c}",remote_t:"بوطون سالا من بعيد",remote_h:"بوطون بلوتوث صغير (تيليكوموند ديال السيلفي) ولا بوطون الصوت + فالتيليفون كيدير سالا للكرسي اللي ختاريتي. الصوت − كيرجع. فالكمبيوتر: الأزرار 1 حتى 4.",remote_off:"لا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
+b_done:"سالا",ios_t:"ثبت NOBTK فالآيفون ديالك",ios_c:"فالآيفون، التنبيهات كيوصلو غير إلا زدتي NOBTK للشاشة الرئيسية (iOS 16.4 ولا جديد). ولا خلي هاد الصفحة محلولة.",ios_b:"زيد NOBTK للشاشة الرئيسية: كيتحل بحال تطبيق، والشاشة كتبقى شاعلة.",ios_1:"ورك على بوطون المشاركة {i} لتحت فـ Safari",ios_2:"ختار « Sur l'écran d'accueil »",ios_3:"ورك « Ajouter »، ومن بعد حل NOBTK من الأيقونة",ios_4:"فالتطبيق، شعل التنبيهات",fin_sub:"الكرسي {c} · رقم {n} {name}",fin_next:"من بعد: رقم {n}",fin_nonext:"ما كاين حتى واحد من بعد",undo_msg:"رقم {n} {name} سالا",undo:"رجع",undone:"ترجع: رقم {n} رجع للكرسي {c}",remote_t:"بوطون سالا من بعيد",remote_h:"بوطون بلوتوث صغير (تيليكوموند ديال السيلفي) ولا بوطون الصوت + فالتيليفون كيدير سالا للكرسي اللي ختاريتي. الصوت − كيرجع. فالكمبيوتر: الأزرار 1 حتى 4.",remote_off:"لا",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
 b_notcome:"ما جاش؟",b_delay:"رجعو جوج بلايص",b_absent_confirm:"غايب",b_delayed_chip:"مأخر",b_strike_chip:"{s}/3 غيابات",
 b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون. الأولوية للي فالصالون: إلا ما وصلش فالوقت و كاين واحد كيتسنى فالصالون، كيدوز هو أوتوماتيكيا.",
 b_abs_none:"حتى غياب ما زال. الزبناء اللي تحسبو غايبين كيبانو هنا.",b_blocked:"مبلوكي",b_until:"حتى {d}",b_forgive:"سامحو",
@@ -477,6 +486,17 @@ document.addEventListener("pointerdown",unlockAudio,{passive:true});
 function chime(strong){if(!actx)return;try{const notes=strong?[784,988,1175,1568]:[880,1175];notes.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type="sine";o.frequency.value=f;const t0=actx.currentTime+i*.15;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.28,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+.55);o.connect(g).connect(actx.destination);o.start(t0);o.stop(t0+.6)})}catch{}}
 function sysNotify(title,body){try{if(!("Notification" in window)||Notification.permission!=="granted")return;const o={body,tag:"nobtk",icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200]};if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(r=>r.showNotification(title,o)).catch(()=>{try{new Notification(title,o)}catch{}})}else new Notification(title,o)}catch{}}
 function vibrate(p){try{navigator.vibrate&&navigator.vibrate(p)}catch{}}
+// iPhone / iPad: Safari can only alert and stay awake when NOBTK is added to the Home Screen
+const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const STANDALONE=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+const SHARE_I=`<span class="shr"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></span>`;
+function iosCard(kind){if(!IOS||STANDALONE||ls.get("nobtk-ios-x-"+kind,false))return null;const el=document.createElement("div");el.className="ios";
+ el.innerHTML=`<button class="x" type="button" aria-label="OK">×</button><b>${t("ios_t")}</b><p>${t(kind==="client"?"ios_c":"ios_b")}</p><ol><li>${t("ios_1",{i:SHARE_I})}</li><li>${t("ios_2")}</li><li>${t("ios_3")}</li>${kind==="client"?`<li>${t("ios_4")}</li>`:""}</ol>`;
+ el.querySelector(".x").onclick=()=>{ls.set("nobtk-ios-x-"+kind,true);el.remove()};return el}
+// keeps the screen on (barber dashboard), where the browser allows it
+function keepAwake(){let lock=null;const get=async()=>{try{if(navigator.wakeLock&&document.visibilityState==="visible"&&!lock){lock=await navigator.wakeLock.request("screen");lock.addEventListener("release",()=>{lock=null})}}catch{}};
+ const vis=()=>get();document.addEventListener("visibilitychange",vis);document.addEventListener("click",vis,{once:true});get();
+ return()=>{document.removeEventListener("visibilitychange",vis);try{lock&&lock.release()}catch{}}}
 function toast(msg){const box=document.getElementById("toasts");const el=document.createElement("div");el.className="toast";el.innerHTML=`<i></i><span>${esc(msg)}</span>`;box.appendChild(el);while(box.children.length>3)box.firstChild.remove();setTimeout(()=>el.remove(),4200)}
 
 /* ================= Store (live db or local fallback) ================= */
@@ -602,7 +622,10 @@ function ClientView(root,key,standalone){
  root.className="cv"+(standalone?" standalone":"");
  root.innerHTML=`<div class="banners"></div><div class="cv-body"></div><div class="called-ov" hidden></div>`;
  const body=root.querySelector(".cv-body"),bannerBox=root.querySelector(".banners"),ov=root.querySelector(".called-ov");
- const myKey="nobtk-my-"+key;let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10);
+ const myKey="nobtk-my-"+key;
+ const setT=id=>{try{const u=new URL(location.href);if(id)u.searchParams.set("t",id);else u.searchParams.delete("t");if(!u.searchParams.get("s")&&!PILOT)u.searchParams.set("s",SHOP_ID);history.replaceState(null,"",u)}catch{}};
+ const setMine=id=>{ls.set(myKey,id);setT(id)},clearMine=()=>{clearMine();setT(null)};
+ {const tq=new URLSearchParams(location.search).get("t");if(tq&&!ls.get(myKey))ls.set(myKey,tq)}let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10);
  const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:"");
  const hist=id=>ls.get("nobtk-hist-"+key+"-"+id,[]);
  const addHist=(id,title)=>{const h=hist(id);h.unshift({ts:Date.now(),title});ls.set("nobtk-hist-"+key+"-"+id,h.slice(0,20))};
@@ -643,7 +666,7 @@ function ClientView(root,key,standalone){
    const c=clientRec(phone);if(c&&c.blockedUntil&&c.blockedUntil>Date.now())return fail(t("blocked_msg",{d:dateStr(c.blockedUntil)}));
    if(Store.tickets.some(x=>phoneKey(x.phone)===phoneKey(phone)&&(x.status==="waiting"||inChairSt(x))))return fail(t("already"));
    if(!picked)return fail(t("need_svc"));
-   err.hidden=true;const id=await A.join({name,phone,svcId:picked,src:"app",travel:travelPick});ls.set(myKey,id);
+   err.hidden=true;const id=await A.join({name,phone,svcId:picked,src:"app",travel:travelPick});setMine(id);
    if(ls.get("nobtk-notif",null)==null)ls.set("nobtk-notif","app");update()};
  }
  function updateShop(){const q=Q();body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"));
@@ -665,7 +688,7 @@ function ClientView(root,key,standalone){
    <div data-k="acts" style="display:flex;flex-direction:column;gap:8px"></div>
    <section class="card" data-k="lineCard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px"><h3 style="font-size:17px">${t("lq_t")}</h3><span class="pill live"><span class="dot"></span>${t("lq_live")}</span></div><div class="lq" data-k="lineList"></div></section>
    <section class="card notif-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h3 style="font-size:17px">${t("alerts")}</h3><button class="btn ghost sm" data-a="test" type="button">${t("test")}</button></div>
-    <div class="notif-st" data-k="nst"></div>
+    <div class="notif-st" data-k="nst"></div><div data-k="ios"></div>
     <div><div class="lbl" style="margin-bottom:6px">${t("travel_lbl")}</div><div class="opts" data-k="warn">${[0,5,10,15,20,30].map(m=>`<button type="button" data-m="${m}">${m===0?t("travel_0"):m===30?"30+ "+t("min"):m+" "+t("min")}</button>`).join("")}</div><p class="muted" data-k="tnote" style="margin:8px 0 0;font-size:13px"></p></div>
     <div><div class="lbl" style="margin-bottom:6px">${t("history")}</div><div class="hist" data-k="hist"></div></div>
    </section>
@@ -686,7 +709,7 @@ function ClientView(root,key,standalone){
    <button class="btn ghost sm cantcome" type="button" style="background:rgba(255,255,255,.14);color:inherit">${t("cant_come")}</button>`;
   const oh=ov.querySelector(".ovhere");if(oh)oh.onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:""),true);ov.hidden=true;stopOv();A.here(x.id)};
   ov.querySelector(".btn.acc").onclick=()=>{ls.set("nobtk-ov-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:""),true);ov.hidden=true;stopOv();if(!x.onWay)A.onWay(x.id)};
-  ov.querySelector(".cantcome").onclick=async()=>{ov.hidden=true;stopOv();await A.cancel(x.id);ls.del(myKey);update()};
+  ov.querySelector(".cantcome").onclick=async()=>{ov.hidden=true;stopOv();await A.cancel(x.id);clearMine();update()};
  }
  function stopOv(){if(ovTimer){clearInterval(ovTimer);ovTimer=null}}
  function updateTicket(){
@@ -722,11 +745,11 @@ function ClientView(root,key,standalone){
     `<button class="btn ${cancelArm?"danger":"ghost"} block" data-a="cancel" type="button">${cancelArm?t("cancel_sure"):t("cancel")}</button>`;
    const w=acts.querySelector('[data-a="way"]');if(w)w.onclick=()=>A.onWay(x.id);
    const hb=acts.querySelector('[data-a="here"]');if(hb)hb.onclick=()=>A.here(x.id);
-   acts.querySelector('[data-a="cancel"]').onclick=async()=>{if(!cancelArm){cancelArm=true;updateTicket();setTimeout(()=>{cancelArm=false;if(screen==="ticket")updateTicket()},4000);return}cancelArm=false;await A.cancel(x.id);ls.del(myKey);update()};
-  }else if(stg==="done"||stg==="noshow"){const blocked=x.blockedUntil&&x.blockedUntil>Date.now();acts.innerHTML=blocked?"":`<button class="btn acc block" data-a="new" type="button">${t("new_ticket")}</button>`;const nb=acts.querySelector("button");if(nb)nb.onclick=()=>{ls.del(myKey);picked=null;update()}}
+   acts.querySelector('[data-a="cancel"]').onclick=async()=>{if(!cancelArm){cancelArm=true;updateTicket();setTimeout(()=>{cancelArm=false;if(screen==="ticket")updateTicket()},4000);return}cancelArm=false;await A.cancel(x.id);clearMine();update()};
+  }else if(stg==="done"||stg==="noshow"){const blocked=x.blockedUntil&&x.blockedUntil>Date.now();acts.innerHTML=blocked?"":`<button class="btn acc block" data-a="new" type="button">${t("new_ticket")}</button>`;const nb=acts.querySelector("button");if(nb)nb.onclick=()=>{clearMine();picked=null;update()}}
   else if(stg==="called"&&!isHere(x)){acts.innerHTML=hereBtn;acts.querySelector('[data-a="here"]').onclick=()=>A.here(x.id)}
   else acts.innerHTML="";
-  if(stg==="noshow"&&x.blockedUntil&&x.blockedUntil>Date.now()){acts.innerHTML=`<div class="warnbox bad">${esc(t("blocked_msg",{d:dateStr(x.blockedUntil)}))}</div><button class="btn ghost block" data-a="ok" type="button">OK</button>`;acts.querySelector('[data-a="ok"]').onclick=()=>{ls.del(myKey);update()}}
+  if(stg==="noshow"&&x.blockedUntil&&x.blockedUntil>Date.now()){acts.innerHTML=`<div class="warnbox bad">${esc(t("blocked_msg",{d:dateStr(x.blockedUntil)}))}</div><button class="btn ghost block" data-a="ok" type="button">OK</button>`;acts.querySelector('[data-a="ok"]').onclick=()=>{clearMine();update()}}
   // whole line, live: chairs then waiting list, own ticket highlighted
   const lc=$("lineCard"); lc.hidden=stg==="done"||stg==="noshow";
   if(!lc.hidden){const num=n=>String(n).padStart(2,"0");let h="";
@@ -738,6 +761,7 @@ function ClientView(root,key,standalone){
    $("lineList").innerHTML=h}
   // alerts
   const nState=ls.get("nobtk-notif",null);
+  {const box=$("ios");if(box&&!box.dataset.done){box.dataset.done=1;const c=iosCard("client");if(c){box.style.marginTop="10px";box.appendChild(c)}}}
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
   if(nState!=="system"&&"Notification" in window){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
   $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===travelOf(x)));
@@ -765,7 +789,7 @@ function ClientView(root,key,standalone){
   const id=ls.get(myKey);const x=id&&Store.tickets.find(y=>y.id===id);
   if(id&&!x){ls.del(myKey)}
   if(x&&x.status!=="cancelled"){if(screen!=="ticket"){renderTicket();screen="ticket";toTop()}updateTicket()}
-  else{if(x)ls.del(myKey);ov.hidden=true;stopOv();if(screen!=="shop"){const was=screen;renderShop();screen="shop";if(was&&was!=="load")toTop()}updateShop()}
+  else{if(x)clearMine();ov.hidden=true;stopOv();if(screen!=="shop"){const was=screen;renderShop();screen="shop";if(was&&was!=="load")toTop()}updateShop()}
  }
  const off=Store.on(update);const iv=setInterval(update,15000);update();
  return{destroy(){off();clearInterval(iv);stopOv()}};
@@ -776,6 +800,7 @@ function BarberView(root){
  root.className="bv";let src="walkin",dayArm=false,seen=null,noshowArm=null;const bumping=new Set();
  root.innerHTML=`
   <div class="bhead"><h1 data-k="title"></h1><span class="pill" data-k="state"></span><button class="btn ghost sm" data-a="pause" type="button"></button></div>
+  <div data-k="iosb"></div>
   <div class="stats" data-k="stats"></div>
   <section><div class="lbl" style="margin-bottom:8px">${t("b_chairs")}</div><div class="chairs" data-k="chairs"></div></section>
   <div class="qwrap">
@@ -801,6 +826,7 @@ function BarberView(root){
    </div></div>
   <div class="fdock" data-k="dock"></div>`;
  const $=k=>root.querySelector(`[data-k="${k}"]`);
+ {const c=iosCard("barber");if(c)$("iosb").appendChild(c)}const wake=keepAwake();
  const setSrc=s=>{src=s;root.querySelectorAll("[data-src]").forEach(b=>{b.className="btn sm "+(b.dataset.src===s?"pri":"ghost")})};setSrc(src);
  root.querySelectorAll("[data-src]").forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
  $("add").onsubmit=async e=>{e.preventDefault();const nm=root.querySelector("#b-nm"),ph=root.querySelector("#b-ph"),er=$("adderr");if(!nm.value.trim()){nm.focus();return}
@@ -906,7 +932,7 @@ function BarberView(root){
  // tells the owner's dashboard that this shop is working right now
  const beat=()=>{if(Store.mode==="live"&&Store.ready&&Store.shopExists&&!Store.readonly)Store.patchShop({lastSeen:Date.now()})};
  const hb=setInterval(beat,60000);const hb0=setTimeout(beat,3000);
- return{destroy(){off();clearInterval(iv);clearInterval(hb);clearTimeout(hb0);clearTimeout(undoT);document.removeEventListener("keydown",kd);if(window.NOBTK_KEY)delete window.NOBTK_KEY;try{if(native())window.NobtkAndroid.setRemote(false)}catch{}}};
+ return{destroy(){off();wake();clearInterval(iv);clearInterval(hb);clearTimeout(hb0);clearTimeout(undoT);document.removeEventListener("keydown",kd);if(window.NOBTK_KEY)delete window.NOBTK_KEY;try{if(native())window.NobtkAndroid.setRemote(false)}catch{}}};
 }
 
 /* ================= Screen (TV) ================= */

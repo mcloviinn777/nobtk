@@ -8,7 +8,9 @@
 <meta name="theme-color" content="#15143A">
 <link rel="icon" href="icon-admin-192.png">
 <link rel="manifest" href="admin.webmanifest">
-<link rel="apple-touch-icon" href="icon-admin-192.png">
+<link rel="apple-touch-icon" href="icon-admin-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="NOBTK Admin">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
@@ -104,6 +106,15 @@ code{background:var(--surface-2);padding:2px 6px;border-radius:6px}
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; const b = document.getElementById("install"); if (b) b.hidden = false; });
+// iPhone has no install prompt: the button shows how to add the dashboard to the Home Screen
+const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const STANDALONE = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+if (IOS && !STANDALONE) document.addEventListener("DOMContentLoaded", () => { const b = document.getElementById("install"); if (b) b.hidden = false; });
+document.addEventListener("click", (e) => { if (e.target && e.target.id === "install" && IOS && !installEvt) {
+  let box = document.getElementById("ios-help"); if (box) { box.remove(); return; }
+  box = document.createElement("div"); box.id = "ios-help"; box.className = "card"; box.style.cssText = "margin:12px auto;max-width:560px;border:1.5px solid var(--primary)";
+  box.innerHTML = "<b>Installer sur iPhone</b><ol style='margin:8px 0 0;padding-left:20px;line-height:1.7'><li>Touche le bouton Partager (carré avec une flèche) en bas de Safari</li><li>Choisis « Sur l'écran d'accueil »</li><li>Touche « Ajouter » : NOBTK Admin apparaît avec les autres applis</li></ol>";
+  document.getElementById("main").prepend(box); } });
 window.addEventListener("appinstalled", () => { const b = document.getElementById("install"); if (b) b.hidden = true; });
 document.addEventListener("click", async (e) => { if (e.target && e.target.id === "install" && installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (x) {} installEvt = null; e.target.hidden = true; } });
 
