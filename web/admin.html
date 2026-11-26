@@ -97,6 +97,7 @@ code{background:var(--surface-2);padding:2px 6px;border-radius:6px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="pdf.js"></script>
+<script src="photo.js"></script>
 </head>
 <body>
 <header class="top"><div class="top-in"><img src="icon-192.png" width="34" height="34" alt=""><b>NOBTK</b><span class="tag">ADMIN</span><button class="btn sm" id="install" hidden style="margin-left:auto;background:var(--accent);color:var(--accent-ink)">Installer l'application</button><span style="margin-left:auto;font-size:13px;opacity:.8" id="who"></span><button class="btn ghost sm" id="logout" hidden>Se déconnecter</button></div></header>
@@ -276,10 +277,10 @@ function dashboard(db) {
       <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px"><h2 style="font-size:20px">Salons (${profiles.length})</h2><span class="muted" style="font-size:13px">Pour ajouter un salon : Inscriptions › Détails › Activer le salon</span></div>
         <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Salon</th><th>Maintenant</th><th>Abonnement</th><th style="text-align:right">Aujourd'hui</th><th style="text-align:right">Attente</th><th></th></tr></thead><tbody>
         ${profiles.length ? profiles.slice().sort((a, b) => String(a.shop).localeCompare(String(b.shop))).map((p) => { const t = today(p.id); const end = toD(p.status === "essai" ? p.trialEnds : p.nextPayment);
-          return `<tr><td><b>${esc(p.shop)}</b><div class="muted" style="font-size:12.5px">${esc(p.city)} · ${esc(p.owner)}</div></td><td>${liveChip(p.id)}</td><td>${subChip(p.status)}<div class="muted" style="font-size:12px">${end ? (p.status === "essai" ? "fin d'essai " : "prochain paiement ") + dateStr(end) : ""}</div></td><td style="text-align:right"><b>${t.served}</b> servis<div class="muted" style="font-size:12px">${fmt(t.revenue)} DH</div></td><td style="text-align:right"><b>${t.waiting}</b></td><td style="text-align:right"><button class="btn ghost sm" data-open="${esc(p.id)}" type="button">Profil</button></td></tr>`; }).join("")
+          return `<tr><td><div style="display:flex;gap:10px;align-items:center">${shopAv(p.id, p.shop, 40)}<div><b>${esc(p.shop)}</b><div class="muted" style="font-size:12.5px">${esc(p.city)} · ${esc(p.owner)}</div></div></div></td><td>${liveChip(p.id)}</td><td>${subChip(p.status)}<div class="muted" style="font-size:12px">${end ? (p.status === "essai" ? "fin d'essai " : "prochain paiement ") + dateStr(end) : ""}</div></td><td style="text-align:right"><b>${t.served}</b> servis<div class="muted" style="font-size:12px">${fmt(t.revenue)} DH</div></td><td style="text-align:right"><b>${t.waiting}</b></td><td style="text-align:right"><button class="btn ghost sm" data-open="${esc(p.id)}" type="button">Profil</button></td></tr>`; }).join("")
           : `<tr><td colspan="6" class="empty">Aucun salon activé pour l'instant.</td></tr>`}
         </tbody></table></div></div>`;
-    bindOpen(v);
+    bindOpen(v); syncPublic();
     const ip = $("importPilot"); if (ip) ip.onclick = () => importPilot(ip);
   }
 
@@ -302,7 +303,7 @@ function dashboard(db) {
       while (taken.has(id)) id = slugify(x.shop) + "-" + n++;
       const pin = newPin(), now = Date.now(), trialEnds = isoDay(addMonths(now, 2));
       const services = (x.services || []).filter((s) => s.name).map((s, i) => ({ id: "s" + (i + 1), name: s.name, price: +s.price || 0, minutes: +s.minutes || 20 }));
-      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: Math.max(1, Math.min(4, x.chairs || 1)), grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", active: true, pinHash: await sha(id + ":" + pin) });
+      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: Math.max(1, Math.min(4, x.chairs || 1)), grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", address: x.address || "", active: true, pinHash: await sha(id + ":" + pin) });
       await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: x.shop, owner: x.owner || "", phone: x.phone || "", email: x.email || "", city: x.city || "", address: x.address || "", chairs: x.chairs || 1, barbers: x.barbers || 1,
         services, hours: x.hours || [], plan: x.plan || ((x.chairs || 1) <= 1 ? "solo" : "salon"), billing: x.billing || "month", price: x.price || priceFor(x.chairs || 1, x.billing), status: "essai", trialEnds, nextPayment: trialEnds,
         pin, notes: "", signupId: x.id, source: x.source || "", createdAt: now, activatedAt: now, history: [{ at: now, type: "activation", text: "Salon activé, essai gratuit de 2 mois" }] });
@@ -318,6 +319,12 @@ function dashboard(db) {
   const flash = (btn, ok) => { const l = btn.dataset.l || btn.textContent; btn.dataset.l = l; btn.textContent = ok ? "Enregistré" : "Erreur"; setTimeout(() => { btn.textContent = l; }, 1600); };
   const fieldRow = (id, label, val, type = "text") => `<label class="pf"><span>${label}</span><input id="${id}" type="${type}" value="${esc(val ?? "")}"></label>`;
 
+  const okPhoto = (u) => typeof u === "string" && /^data:image\/(jpeg|png|webp);base64,/.test(u) && u.length < 300000;
+  const shopAv = (id, name, size) => { const ph = (shopDocs[id] || {}).photo; return okPhoto(ph) ? `<img src="${ph}" alt="" style="width:${size}px;height:${size}px;border-radius:${Math.round(size / 4)}px;object-fit:cover;flex:none">` : `<span style="width:${size}px;height:${size}px;border-radius:${Math.round(size / 4)}px;background:var(--primary);color:var(--accent);display:inline-grid;place-items:center;font-weight:800;font-size:${Math.round(size / 2.6)}px;flex:none">${esc(String(name || "?").trim().charAt(0).toUpperCase())}</span>`; };
+  // city and address are copied to the public salon document so clients can find the salon in "Trouve ton salon"
+  const synced = new Set();
+  function syncPublic() { profiles.forEach((p) => { const sd = shopDocs[p.id]; if (!sd || synced.has(p.id)) return; synced.add(p.id);
+    if ((sd.city || "") !== (p.city || "") || (sd.address || "") !== (p.address || "")) db.doc("shops/" + p.id).set({ city: p.city || "", address: p.address || "" }, { merge: true }).catch(() => {}); }); }
   function renderProfile(v) {
     const p = P(); if (!p) { v.innerHTML = `<div class="card empty">Chargement du profil…</div>`; return; }
     mountedPid = pid; const id = p.id;
@@ -329,6 +336,7 @@ function dashboard(db) {
         <button class="btn ghost sm" id="back" type="button">← Tous les salons</button>
       </div>
       <div class="card pf-head">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span id="pf-photo">${shopAv(id, p.shop, 76)}</span><button class="btn ghost sm" id="pf-photo-btn" type="button" style="padding:6px 10px;font-size:12.5px">Photo</button></div>
         <div style="flex:1;min-width:0"><h2 style="font-size:26px" id="pf-name">${esc(p.shop)}</h2><div class="muted">${esc(p.city)} · ${esc(p.owner || "propriétaire non renseigné")} · identifiant <code>${esc(id)}</code></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" id="pf-chips"></div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           ${p.phone ? `<a class="btn ghost sm" href="${esc(wa(p.phone))}" target="_blank" rel="noopener" style="text-decoration:none">WhatsApp</a>` : ""}
@@ -366,6 +374,7 @@ function dashboard(db) {
             ${fieldRow("pf-shop", "Nom du salon", p.shop)}${fieldRow("pf-owner", "Propriétaire", p.owner)}
             ${fieldRow("pf-phone", "Téléphone", p.phone, "tel")}${fieldRow("pf-email", "Email", p.email, "email")}
             ${fieldRow("pf-city", "Ville", p.city)}${fieldRow("pf-address", "Adresse", p.address)}
+            <label class="pf" style="display:flex;align-items:center;gap:10px;flex-direction:row"><input id="pf-listed" type="checkbox" style="width:22px;height:22px" ${(shopDocs[id] || {}).listed === false ? "" : "checked"}><span style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)">Visible dans « Trouve ton salon » (décoche pour un salon de démo)</span></label>
             ${fieldRow("pf-chairs", "Fauteuils", p.chairs, "number")}${fieldRow("pf-barbers", "Barbiers", p.barbers, "number")}
           </div>
           <button class="btn pri sm" id="pf-info-save" type="button" style="margin-top:12px">Enregistrer</button>
@@ -396,10 +405,12 @@ function dashboard(db) {
       $("pf-next").value = next; $("pf-status").value = "payant"; flash(e.target, true); };
     $("pf-newpin").onclick = async () => { const pin = newPin(); await saveShop({ pinHash: await sha(id + ":" + pin) }); await save({ pin, history: [...(P().history || []), { at: Date.now(), type: "code", text: "Nouveau code barbier" }] }); $("pf-pin").textContent = pin; const b = $("pf-send"); if (b) { b.textContent = "Envoyer le nouveau code sur WhatsApp"; } };
     $("pf-qr").onclick = () => { qrFor = id; setTab("qr"); };
+    $("pf-listed").onchange = (e) => saveShop({ listed: e.target.checked });
+    $("pf-photo-btn").onclick = async (e) => { try { const u = await window.NOBTK_PICK(320, 0.8); if (u) { await saveShop({ photo: u }); $("pf-photo").innerHTML = `<img src="${u}" alt="" style="width:76px;height:76px;border-radius:19px;object-fit:cover">`; flash(e.target, true); } } catch (x) { flash(e.target, false); } };
     $("pf-send").onclick = (e) => sendAccess(e.target);
     if ($("pf-send-top")) $("pf-send-top").onclick = (e) => sendAccess(e.target);
     $("pf-info-save").onclick = async (e) => { const d = { shop: $("pf-shop").value.trim(), owner: $("pf-owner").value.trim(), phone: $("pf-phone").value.trim(), email: $("pf-email").value.trim(), city: $("pf-city").value.trim(), address: $("pf-address").value.trim(), chairs: Math.max(1, +$("pf-chairs").value || 1), barbers: Math.max(1, +$("pf-barbers").value || 1) };
-      await save(d); await saveShop({ name: d.shop, city: d.city, chairs: Math.min(4, d.chairs) }); $("pf-name").textContent = d.shop; flash(e.target, true); };
+      await save(d); await saveShop({ name: d.shop, city: d.city, address: d.address, chairs: Math.min(4, d.chairs), listed: $("pf-listed").checked }); $("pf-name").textContent = d.shop; flash(e.target, true); };
     $("pf-svc-add").onclick = () => { $("pf-svcs").insertAdjacentHTML("beforeend", svcRow({ id: "s" + Date.now().toString(36), name: "", price: "", minutes: 20 })); bindSvcDel(); };
     const bindSvcDel = () => document.querySelectorAll("#pf-svcs [data-del-svc]").forEach((b) => b.onclick = () => b.closest(".sv").remove());
     bindSvcDel();

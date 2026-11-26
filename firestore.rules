@@ -7,12 +7,18 @@ service cloud.firestore {
     match /shops/{shopId} {
       allow read: if true;
       allow create, delete: if request.auth != null;
+      // The barber can also set the salon photo: a small image (under ~300 KB) stored in the document itself.
       allow update: if request.auth != null
-        || request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen']);
+        || (request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen', 'photo'])
+            && (!('photo' in request.resource.data)
+                || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000)));
 
+      // Tickets may carry the client's optional photo (small, under ~60 KB).
       match /tickets/{ticketId} {
-        allow read, create, update, delete: if true;
+        allow read, delete: if true;
+        allow create, update: if !('photo' in request.resource.data)
+          || (request.resource.data.photo is string && request.resource.data.photo.size() < 60000);
       }
       match /clients/{phone} {
         allow read, create, update: if true;
