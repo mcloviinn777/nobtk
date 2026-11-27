@@ -7,10 +7,12 @@ service cloud.firestore {
     match /shops/{shopId} {
       allow read: if true;
       allow create, delete: if request.auth != null;
-      // The barber can also set the salon photo: a small image (under ~300 KB) stored in the document itself.
+      // The barber also sets the salon photo (a small image, under ~300 KB), his services and prices, hours,
+      // barbers' names, the learned pace of cuts and whether daily revenue is kept.
       allow update: if request.auth != null
         || (request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen', 'photo'])
+             .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen', 'photo',
+                      'services', 'hours', 'barbers', 'pace', 'noRevenue'])
             && (!('photo' in request.resource.data)
                 || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000)));
 

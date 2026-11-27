@@ -254,6 +254,16 @@ svg.i{width:18px;height:18px;flex:none}
 .stepper{flex-wrap:wrap;max-width:100%}
 .filebtn{position:relative;overflow:hidden;cursor:pointer}
 .filebtn input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.netbar{position:fixed;top:0;left:0;right:0;z-index:200;transform:translateY(-110%);transition:transform .25s;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;font-size:14px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;justify-content:center;text-align:center}
+.netbar span{flex-basis:100%;font-size:12.5px;opacity:.9}
+.netbar.off{transform:none;background:#B42332;color:#fff}.netbar.back{transform:none;background:var(--ok);color:#fff}
+.prefs{display:flex;flex-wrap:wrap;gap:8px}.prefs button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 12px;font:inherit;font-weight:700;text-align:start;display:flex;flex-direction:column;min-width:120px;flex:1}
+.prefs button small{font-weight:500;color:var(--muted);font-size:12px}.prefs button[aria-pressed=true]{border-color:var(--primary);background:var(--primary);color:#fff}.prefs button[aria-pressed=true] small{color:#D9D6FF}
+.svced{display:flex;flex-direction:column;gap:6px}.svced .r{display:grid;grid-template-columns:minmax(0,1fr) 64px 58px 32px;gap:6px;align-items:center}.svced input{min-width:0;padding:8px}.svced small{grid-column:1/-1;color:var(--muted);font-size:11.5px;margin-top:-3px}
+.hrs .r{display:grid;grid-template-columns:96px minmax(0,1fr) minmax(0,1fr);gap:6px;align-items:center;margin-bottom:4px}.hrs label{display:flex;gap:6px;align-items:center;font-size:13.5px;font-weight:600}.hrs input[type=time]{min-width:0;padding:6px}
+.share{display:flex;gap:8px;flex-wrap:wrap}.share .btn{flex:1;min-width:110px}
+.phdet summary{cursor:pointer;color:var(--primary);font-weight:700;font-size:14px;list-style:none}.phdet summary::-webkit-details-marker{display:none}.phdet[open] summary{margin-bottom:8px}
+.revh{cursor:pointer}
 .fdock{position:sticky;bottom:0;z-index:30;margin:0 -2px;padding:14px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to bottom,transparent,var(--bg) 22%);display:flex;flex-direction:column;gap:8px}
 .fdock:empty{display:none}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
@@ -371,8 +381,8 @@ your_no:"Ton numéro",ahead:"devant toi",eta_in:"ton tour dans",
 st_wait:"Tu es dans la file",st_wait_p:"Reste tranquille chez toi. On te prévient.",
 st_soon:"Ton tour approche",st_soon_p:"Prends la route maintenant.",
 st_next:"Tu es le prochain",st_next_p:"Personne n'attend devant toi. Le prochain fauteuil libre est pour toi.",
-st_called:"C'est ton tour !",st_called_p:"Présente-toi au fauteuil {c}.",
-st_chair:"Coupe en cours",st_chair_p:"Fauteuil {c}. Bonne coupe !",
+st_called:"C'est ton tour !",st_called_p:"C'est ton tour : {c}.",
+st_chair:"Coupe en cours",st_chair_p:"{c}. Bonne coupe !",
 st_done:"Merci et à bientôt",st_done_p:"Ta coupe est terminée. Montant : {p}.",
 st_noshow:"Ticket expiré",st_noshow_p:"Tu n'étais pas là quand on t'a appelé.",
 tr1:"Dans la file",tr2:"Bientôt",tr3:"Appelé",tr4:"Au fauteuil",
@@ -382,7 +392,7 @@ alerts:"Alertes",alerts_on:"Notifications du téléphone activées",alerts_app:"
 enable:"Activer les alertes",test:"Tester",warn_me:"Me prévenir quand il reste",history:"Historique",nohist:"Aucune alerte pour l'instant.",
 n_soon_t:"Ton tour approche",n_soon_b:"Plus que {n} devant toi, environ {m} min. Prends la route.",
 n_next_t:"Tu es le prochain",n_next_b:"Rejoins le salon maintenant.",
-n_called_t:"C'est ton tour !",n_called_b:"Le fauteuil {c} t'attend.",
+n_called_t:"C'est ton tour !",n_called_b:"{c} t'attend.",
 n_test_t:"Test réussi",n_test_b:"Les alertes fonctionnent. Tu seras prévenu à temps.",
 coming:"J'arrive",
 b_title:"Tableau de bord",b_chairs:"Fauteuils",b_free:"Libre",b_call:"Appeler le suivant",b_start:"Client installé",b_finish:"Terminer",
@@ -409,8 +419,8 @@ your_no:"النمرة ديالك",ahead:"قدامك",eta_in:"نوبتك من ب�
 st_wait:"راك فالصف",st_wait_p:"بقا مرتاح فالدار. غادي نعلموك.",
 st_soon:"نوبتك قربات",st_soon_p:"بدا تجي دابا.",
 st_next:"نتا اللي من بعد",st_next_p:"حتى واحد ما كيتسنى قدامك. أول كرسي يخوا ديالك.",
-st_called:"وصلات نوبتك!",st_called_p:"سير للكرسي {c}.",
-st_chair:"الحلاقة خدامة",st_chair_p:"الكرسي {c}. بالصحة!",
+st_called:"وصلات نوبتك!",st_called_p:"نوبتك: {c}.",
+st_chair:"الحلاقة خدامة",st_chair_p:"{c}. بالصحة!",
 st_done:"بالصحة و نتلاقاو",st_done_p:"سالات الحلاقة ديالك. الثمن: {p}.",
 st_noshow:"النوبة سالات",st_noshow_p:"ما كنتيش حاضر ملي عيطو عليك.",
 tr1:"فالصف",tr2:"قريب",tr3:"عيطو عليك",tr4:"فالكرسي",
@@ -420,7 +430,7 @@ alerts:"التنبيهات",alerts_on:"تنبيهات التيليفون مفع�
 enable:"فعل التنبيهات",test:"جرب",warn_me:"علمني ملي يبقا",history:"السجل",nohist:"حتى تنبيه ما زال.",
 n_soon_t:"نوبتك قربات",n_soon_b:"باقي {n} قدامك، تقريبا {m} دقيقة. بدا تجي.",
 n_next_t:"نتا اللي من بعد",n_next_b:"اجي للصالون دابا.",
-n_called_t:"وصلات نوبتك!",n_called_b:"الكرسي {c} كيتسناك.",
+n_called_t:"وصلات نوبتك!",n_called_b:"{c} كيتسناك.",
 n_test_t:"التجربة نجحات",n_test_b:"التنبيهات خدامة. غادي نعلموك فالوقت.",
 coming:"جاي",
 b_title:"لوحة التحكم",b_chairs:"الكراسي",b_free:"خاوي",b_call:"عيط للي من بعد",b_start:"بدا الحلاقة",b_finish:"سالا",
@@ -438,29 +448,43 @@ mins_ago:"هادي {m} دقيقة",now:"دابا"}
 };
 
 Object.assign(STR.fr,{pin_shop:"Identifiant du salon",pin_code:"Code du salon",shop_off:"Ce salon n'utilise pas NOBTK en ce moment.",shop_missing:"Salon introuvable. Vérifie le lien ou scanne le QR code du salon.",pro_t:"Vous êtes barbier ?",pro_p:"Inscrivez votre salon sur NOBTK : 2 mois gratuits.",here_btn:"Je suis au salon",here_ok:"Le barbier sait que tu es au salon",prio_note:"Priorité aux clients présents au salon : en arrivant, appuie sur « Je suis au salon ».",n_bump_t:"Ton tour est passé à un client présent",n_bump_b:"Tu n'étais pas au salon à temps. Tu restes en tête : présente-toi et appuie sur « Je suis au salon ».",lq_here:"au salon",b_here:"Arrivé",b_not_here:"pas encore là",b_toast_bump:"#{n} {name} n'est pas là : #{m}, présent au salon, passe avant",travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
-st_called_p:"Présente-toi au fauteuil {c}.",tr3:"Ton tour",tr4:"Terminé",
+st_called_p:"C'est ton tour : {c}.",tr3:"Ton tour",tr4:"Terminé",
 grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé : un client présent au salon peut passer avant toi.",
-cant_come:"Je ne peux pas venir",n_called_b:"Fauteuil {c}. Tu as {g} min pour te présenter.",
+cant_come:"Je ne peux pas venir",n_called_b:"{c} t'attend. Tu as {g} min pour te présenter.",
 n_noshow_t:"Tour manqué",st_noshow_p:"Tu n'étais pas là à ton tour.",n_delay_t:"Tour décalé",st_delayed_p:"Tu n'étais pas là à ton tour : le barbier t'a décalé de 2 places. C'est ta dernière chance.",
 strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 absences sur 3. À la prochaine, réservation bloquée {d} jours.",
 strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
 blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
 policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours. Priorité aux clients présents au salon.",
-b_done:"Terminé",chg_shop:"Changer de salon",ph_t:"Ta photo (optionnel)",ph_h:"Pour que ton barbier te reconnaisse quand c'est ton tour.",ph_add:"Ajouter une photo",ph_chg:"Changer",ph_del:"Retirer",photo_err:"Cette photo n'a pas pu être lue. Essaie une autre.",b_photo:"Photo du salon",b_photo_h:"Tes clients la voient dans la liste des salons et sur leur ticket.",b_photo_add:"Choisir une photo",b_photo_saved:"Photo enregistrée",ios_t:"Installe NOBTK sur ton iPhone",ios_c:"Sur iPhone, les alertes n'arrivent que si NOBTK est ajouté à l'écran d'accueil (iOS 16.4 ou plus récent). Sinon, garde cette page ouverte.",ios_b:"Ajoute NOBTK à l'écran d'accueil : il s'ouvre comme une appli, et l'écran reste allumé.",ios_1:"Touche le bouton Partager {i} en bas de Safari",ios_2:"Choisis « Sur l'écran d'accueil »",ios_3:"Touche « Ajouter », puis ouvre NOBTK depuis l'icône",ios_4:"Dans l'appli, active les alertes",fin_sub:"Fauteuil {c} · N°{n} {name}",fin_next:"Ensuite : N°{n}",fin_nonext:"Personne après",undo_msg:"N°{n} {name} terminé",undo:"Annuler",undone:"Annulé : N°{n} est revenu au fauteuil {c}",remote_t:"Bouton Terminé à distance",remote_h:"Un petit bouton Bluetooth (télécommande selfie) ou le bouton volume + du téléphone tape Terminé pour le fauteuil choisi. Volume − annule. Sur ordinateur : touches 1 à 4.",remote_off:"Non",remote_h_ios:"Sur iPhone, le bouton volume ne peut pas être utilisé. Prends une petite télécommande Bluetooth de type « page turner » ou « télécommande de présentation » (elle envoie Entrée ou les flèches) : elle tape Terminé, la flèche gauche annule.",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
+b_done:"Terminé",anon:"Client",b_plus1:"+1 sur place",b_plus1_h:"Un client sans nom, ajouté en un geste.",b_plus1_ok:"N°{n} ajouté",pref_t:"Ton coiffeur",pref_any:"Le premier libre",pref_any_s:"le plus rapide",b_pref:"Coiffeur",b_pref_chip:"→ {b}",with_b:"avec {b}",
+b_barbers:"Coiffeurs (un par fauteuil)",b_barbers_h:"Les clients pourront choisir leur coiffeur.",b_svcs:"Services et prix",b_svc_name:"Service",b_svc_price:"Prix",b_svc_min:"Durée",b_svc_add:"+ Ajouter un service",b_svc_real:"réel aujourd'hui : {m} min",b_hours:"Horaires",b_closed:"Fermé",
+days7:"Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi,Dimanche",today_h:"Aujourd'hui {a} – {b}",today_closed:"Fermé aujourd'hui",
+net_off:"Pas de connexion",net_off_p:"Tes actions sont gardées sur ce téléphone et partiront dès que le réseau revient.",net_wait:"{n} action(s) en attente",net_back:"Connexion revenue : tout est envoyé",
+b_rev_hide:"Masquer le chiffre sur cet écran",b_rev_noonline:"Ne pas enregistrer le chiffre en ligne",b_rev_noonline_h:"Le total de la journée n'est plus gardé dans les résumés.",b_rev_show:"Afficher",
+b_noblame:"Pas d'avertissement pour N°{n} : son alerte n'a peut-être pas été reçue.",st_noshow_nob:"Pas d'avertissement cette fois : ton alerte n'a peut-être pas fonctionné. Active les alertes pour la prochaine fois.",
+share_t:"Fais venir tes clients",share_p:"Envoie le lien de ton salon. Tes clients prennent leur tour sans t'appeler.",share_wa:"WhatsApp",share_copy:"Copier le lien",share_more:"Partager…",share_copied:"Lien copié : colle-le dans ta bio Instagram ou ta story.",share_msg:"Prends ton tour chez {s} sans attendre :",
+ph_more:"+ Ajouter ta photo (facultatif)",auto_day:"Nouvelle journée : la file d'hier est rangée.",chg_shop:"Changer de salon",ph_t:"Ta photo (optionnel)",ph_h:"Pour que ton barbier te reconnaisse quand c'est ton tour.",ph_add:"Ajouter une photo",ph_chg:"Changer",ph_del:"Retirer",photo_err:"Cette photo n'a pas pu être lue. Essaie une autre.",b_photo:"Photo du salon",b_photo_h:"Tes clients la voient dans la liste des salons et sur leur ticket.",b_photo_add:"Choisir une photo",b_photo_saved:"Photo enregistrée",ios_t:"Installe NOBTK sur ton iPhone",ios_c:"Sur iPhone, les alertes n'arrivent que si NOBTK est ajouté à l'écran d'accueil (iOS 16.4 ou plus récent). Sinon, garde cette page ouverte.",ios_b:"Ajoute NOBTK à l'écran d'accueil : il s'ouvre comme une appli, et l'écran reste allumé.",ios_1:"Touche le bouton Partager {i} en bas de Safari",ios_2:"Choisis « Sur l'écran d'accueil »",ios_3:"Touche « Ajouter », puis ouvre NOBTK depuis l'icône",ios_4:"Dans l'appli, active les alertes",fin_sub:"{c} · N°{n} {name}",fin_next:"Ensuite : N°{n}",fin_nonext:"Personne après",undo_msg:"N°{n} {name} terminé",undo:"Annuler",undone:"Annulé : N°{n} est revenu chez {c}",remote_t:"Bouton Terminé à distance",remote_h:"Un petit bouton Bluetooth (télécommande selfie) ou le bouton volume + du téléphone tape Terminé pour le fauteuil choisi. Volume − annule. Sur ordinateur : touches 1 à 4.",remote_off:"Non",remote_h_ios:"Sur iPhone, le bouton volume ne peut pas être utilisé. Prends une petite télécommande Bluetooth de type « page turner » ou « télécommande de présentation » (elle envoie Entrée ou les flèches) : elle tape Terminé, la flèche gauche annule.",b_auto:"Le prochain client passe ici automatiquement.",b_fill:"Placer le suivant",b_grace_left:"arrivée {t}",
 b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",b_delayed_chip:"Décalé",b_strike_chip:"{s}/3 absences",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place. Priorité aux clients présents : si le client n'est pas là à la fin du délai et qu'un autre attend au salon, celui-ci passe automatiquement.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
 lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
 Object.assign(STR.ar,{pin_shop:"المعرف ديال الصالون",pin_code:"الكود ديال الصالون",shop_off:"هاد الصالون ما خدامش بـ NOBTK دابا.",shop_missing:"ما لقيناش الصالون. شوف الرابط ولا سكاني QR ديال الصالون.",pro_t:"نتا حلاق؟",pro_p:"سجل الصالون ديالك فـ NOBTK: جوج شهور فابور.",here_btn:"أنا فالصالون",here_ok:"الحلاق عارف بلي راك فالصالون",prio_note:"الأولوية للكليان اللي فالصالون: ملي توصل، كليكي على «أنا فالصالون».",n_bump_t:"نوبتك دازت لكليان اللي كان فالصالون",n_bump_b:"ما كنتيش فالصالون فالوقت. باقي نتا الأول: اجي و كليكي على «أنا فالصالون».",lq_here:"فالصالون",b_here:"وصل",b_not_here:"مازال ما وصل",b_toast_bump:"#{n} {name} ما وصلش: #{m} اللي فالصالون دوز قبلو",travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
-st_called_p:"سير للكرسي {c}.",tr3:"نوبتك",tr4:"سالات",
+st_called_p:"نوبتك: {c}.",tr3:"نوبتك",tr4:"سالات",
 grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات: كليان اللي فالصالون يقدر يدوز قبلك.",
-cant_come:"ما نقدرش نجي",n_called_b:"الكرسي {c}. عندك {g} دقايق باش توصل.",
+cant_come:"ما نقدرش نجي",n_called_b:"{c} كيتسناك. عندك {g} دقايق باش توصل.",
 n_noshow_t:"فاتتك النوبة",st_noshow_p:"ما كنتيش حاضر فنوبتك.",n_delay_t:"تأخرات نوبتك",st_delayed_p:"ما كنتيش حاضر فنوبتك: الحلاق رجعك جوج بلايص اللور. هادي آخر فرصة.",
 strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غيابات من 3. المرة الجاية يتبلوكا الحجز {d} أيام.",
 strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
 blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
 policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام. الأولوية للكليان اللي فالصالون.",
-b_done:"سالا",chg_shop:"بدل الصالون",ph_t:"التصويرة ديالك (اختياري)",ph_h:"باش الحلاق يعرفك ملي توصل نوبتك.",ph_add:"زيد تصويرة",ph_chg:"بدل",ph_del:"حيد",photo_err:"ما قدرناش نقراو هاد التصويرة. جرب وحدة أخرى.",b_photo:"تصويرة الصالون",b_photo_h:"الكليان كيشوفوها فليستة الصالونات وفالتيكي ديالهم.",b_photo_add:"ختار تصويرة",b_photo_saved:"التصويرة تسجلات",ios_t:"ثبت NOBTK فالآيفون ديالك",ios_c:"فالآيفون، التنبيهات كيوصلو غير إلا زدتي NOBTK للشاشة الرئيسية (iOS 16.4 ولا جديد). ولا خلي هاد الصفحة محلولة.",ios_b:"زيد NOBTK للشاشة الرئيسية: كيتحل بحال تطبيق، والشاشة كتبقى شاعلة.",ios_1:"ورك على بوطون المشاركة {i} لتحت فـ Safari",ios_2:"ختار « Sur l'écran d'accueil »",ios_3:"ورك « Ajouter »، ومن بعد حل NOBTK من الأيقونة",ios_4:"فالتطبيق، شعل التنبيهات",fin_sub:"الكرسي {c} · رقم {n} {name}",fin_next:"من بعد: رقم {n}",fin_nonext:"ما كاين حتى واحد من بعد",undo_msg:"رقم {n} {name} سالا",undo:"رجع",undone:"ترجع: رقم {n} رجع للكرسي {c}",remote_t:"بوطون سالا من بعيد",remote_h:"بوطون بلوتوث صغير (تيليكوموند ديال السيلفي) ولا بوطون الصوت + فالتيليفون كيدير سالا للكرسي اللي ختاريتي. الصوت − كيرجع. فالكمبيوتر: الأزرار 1 حتى 4.",remote_off:"لا",remote_h_ios:"فالآيفون، بوطون الصوت ما كيخدمش. خود تيليكوموند بلوتوث صغيرة ديال « page turner » ولا ديال البريزونطاسيون (كتصيفط Entrée ولا الفليشات): كدير سالا، والفليشة ديال اليسار كترجع.",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
+b_done:"سالا",anon:"كليان",b_plus1:"+1 فالصالون",b_plus1_h:"كليان بلا سمية، كيتزاد بضغطة وحدة.",b_plus1_ok:"رقم {n} تزاد",pref_t:"الحلاق ديالك",pref_any:"اللي خوا اللول",pref_any_s:"الأسرع",b_pref:"الحلاق",b_pref_chip:"← {b}",with_b:"مع {b}",
+b_barbers:"الحلاقة (واحد لكل كرسي)",b_barbers_h:"الكليان يقدرو يختارو الحلاق ديالهم.",b_svcs:"الخدمات والأثمنة",b_svc_name:"الخدمة",b_svc_price:"الثمن",b_svc_min:"المدة",b_svc_add:"+ زيد خدمة",b_svc_real:"اليوم فالحقيقة: {m} دقيقة",b_hours:"الأوقات",b_closed:"مسدود",
+days7:"الاثنين,الثلاثاء,الأربعاء,الخميس,الجمعة,السبت,الأحد",today_h:"اليوم {a} – {b}",today_closed:"مسدود اليوم",
+net_off:"ما كاينش الانترنت",net_off_p:"الحاجات اللي درتي محفوظين فالتيليفون وغادي يتصيفطو ملي يرجع الريزو.",net_wait:"{n} حاجة كتسنى",net_back:"رجع الانترنت: كلشي تصيفط",
+b_rev_hide:"خبي المدخول فهاد الشاشة",b_rev_noonline:"ما تسجلش المدخول فالانترنت",b_rev_noonline_h:"المدخول ديال النهار ما بقاش كيتسجل.",b_rev_show:"بين",
+b_noblame:"بلا تنبيه لرقم {n}: يمكن ما وصلاتوش التنبيه.",st_noshow_nob:"دازت نوبتك. هاد المرة بلا تنبيه: يمكن التنبيه ما خدمش. شعل التنبيهات للمرة الجاية.",
+share_t:"جيب الكليان ديالك",share_p:"صيفط اللين ديال الصالون. الكليان ياخدو نوبتهم بلا ما يعيطو ليك.",share_wa:"واتساب",share_copy:"نسخ اللين",share_more:"شارك…",share_copied:"تنسخ اللين: حطو فالبيو ديال إنستغرام ولا فالستوري.",share_msg:"خود نوبتك عند {s} بلا ما تسنى:",
+ph_more:"+ زيد التصويرة ديالك (اختياري)",auto_day:"نهار جديد: الصف ديال البارح تسالا.",chg_shop:"بدل الصالون",ph_t:"التصويرة ديالك (اختياري)",ph_h:"باش الحلاق يعرفك ملي توصل نوبتك.",ph_add:"زيد تصويرة",ph_chg:"بدل",ph_del:"حيد",photo_err:"ما قدرناش نقراو هاد التصويرة. جرب وحدة أخرى.",b_photo:"تصويرة الصالون",b_photo_h:"الكليان كيشوفوها فليستة الصالونات وفالتيكي ديالهم.",b_photo_add:"ختار تصويرة",b_photo_saved:"التصويرة تسجلات",ios_t:"ثبت NOBTK فالآيفون ديالك",ios_c:"فالآيفون، التنبيهات كيوصلو غير إلا زدتي NOBTK للشاشة الرئيسية (iOS 16.4 ولا جديد). ولا خلي هاد الصفحة محلولة.",ios_b:"زيد NOBTK للشاشة الرئيسية: كيتحل بحال تطبيق، والشاشة كتبقى شاعلة.",ios_1:"ورك على بوطون المشاركة {i} لتحت فـ Safari",ios_2:"ختار « Sur l'écran d'accueil »",ios_3:"ورك « Ajouter »، ومن بعد حل NOBTK من الأيقونة",ios_4:"فالتطبيق، شعل التنبيهات",fin_sub:"{c} · رقم {n} {name}",fin_next:"من بعد: رقم {n}",fin_nonext:"ما كاين حتى واحد من بعد",undo_msg:"رقم {n} {name} سالا",undo:"رجع",undone:"ترجع: رقم {n} رجع عند {c}",remote_t:"بوطون سالا من بعيد",remote_h:"بوطون بلوتوث صغير (تيليكوموند ديال السيلفي) ولا بوطون الصوت + فالتيليفون كيدير سالا للكرسي اللي ختاريتي. الصوت − كيرجع. فالكمبيوتر: الأزرار 1 حتى 4.",remote_off:"لا",remote_h_ios:"فالآيفون، بوطون الصوت ما كيخدمش. خود تيليكوموند بلوتوث صغيرة ديال « page turner » ولا ديال البريزونطاسيون (كتصيفط Entrée ولا الفليشات): كدير سالا، والفليشة ديال اليسار كترجع.",b_auto:"الزبون اللي من بعد كيدوز هنا أوتوماتيكيا.",b_fill:"دخل اللي من بعد",b_grace_left:"الوصول {t}",
 b_notcome:"ما جاش؟",b_delay:"رجعو جوج بلايص",b_absent_confirm:"غايب",b_delayed_chip:"مأخر",b_strike_chip:"{s}/3 غيابات",
 b_abs_t:"غيابات الزبناء",b_rule:"الزبون عندو {g} دقايق باش يوصل. ما جاش: رجعو مرة وحدة جوج بلايص، ولا حسبو غايب. الغياب 1 = تنبيه، 2 = آخر تنبيه، 3 = الحجز من التطبيق مبلوكي {d} أيام. يقدر ديما يجي للصالون. الأولوية للي فالصالون: إلا ما وصلش فالوقت و كاين واحد كيتسنى فالصالون، كيدوز هو أوتوماتيكيا.",
 b_abs_none:"حتى غياب ما زال. الزبناء اللي تحسبو غايبين كيبانو هنا.",b_blocked:"مبلوكي",b_until:"حتى {d}",b_forgive:"سامحو",
@@ -554,37 +578,70 @@ function startDb(db,shopId){
  const fail=e=>{console.warn("db",e);if(!Store.ready&&!fellBack){fellBack=true;clearTimeout(slow);startLocal()}};
  slow=setTimeout(()=>{if(!Store.ready&&!fellBack){fellBack=true;startLocal()}},12000);
  shopRef.onSnapshot(s=>{if(fellBack)return;Store.shopExists=s.exists;Store.shop={...DEFAULT_SHOP,...(s.exists?s.data():{})};got.s=true;done()},fail);
- col.onSnapshot(s=>{if(fellBack)return;Store.tickets=s.docs.map(d=>({id:d.id,...d.data()}));got.t=true;done()},fail);
+ col.onSnapshot({includeMetadataChanges:true},s=>{if(fellBack)return;Net.cache=s.metadata.fromCache;Store.tickets=s.docs.map(d=>({id:d.id,...d.data()}));got.t=true;done();Net.draw()},fail);
  cl.onSnapshot(s=>{if(fellBack)return;Store.clients=s.docs.map(d=>({id:d.id,...d.data()}));got.c=true;done()},fail);
- Store.setTicket=(id,d)=>col.doc(id).set(d).catch(writeFail);
- Store.patchTicket=(id,p)=>col.doc(id).update(p).catch(writeFail);
- Store.delTicket=id=>col.doc(id).delete().catch(writeFail);
- Store.patchShop=p=>shopRef.set({...Store.shop,...p}).catch(writeFail);
+ // Offline, a write is kept on the phone and sent later: don't wait for the server, only for the local copy to update.
+ const W=pr=>Net.track(pr.catch(writeFail));
+ Store.setTicket=(id,d)=>W(col.doc(id).set(d));
+ Store.patchTicket=(id,p)=>W(col.doc(id).update(p));
+ Store.delTicket=id=>W(col.doc(id).delete());
+ Store.patchShop=p=>W(shopRef.set({...Store.shop,...p}));
  Store.saveDay=(k,d)=>db.collection(base+"/days").doc(k).set(d,{merge:true}).catch(e=>console.warn(e));
  Store.setClient=(id,d)=>cl.doc(id).set(d).catch(writeFail);
  Store.delClient=id=>cl.doc(id).delete().catch(writeFail);
  Store.mode="live";
 }
 
+/* ================= Connection ================= */
+// A bar at the top says when the phone has no connection, and how many actions wait to be sent.
+const Net={pending:0,cache:false,shownOff:false,timer:null,
+ track(pr){this.pending++;this.draw();pr.finally(()=>{this.pending=Math.max(0,this.pending-1);this.draw()});return Promise.race([pr,new Promise(r=>setTimeout(r,350))])},
+ off(){return Store.mode==="live"&&(!navigator.onLine||this.cache)},
+ draw(){let el=document.getElementById("netbar");if(!el){el=document.createElement("div");el.id="netbar";el.setAttribute("role","status");document.body.appendChild(el)}
+  const off=this.off();
+  if(off){if(!this.timer&&!this.shownOff)this.timer=setTimeout(()=>{this.timer=null;if(this.off()){this.shownOff=true;this.draw()}},2500);
+   if(this.shownOff){el.className="netbar off";el.innerHTML=`<b>${t("net_off")}</b>${this.pending?` · ${t("net_wait",{n:this.pending})}`:""}<span>${t("net_off_p")}</span>`}return}
+  clearTimeout(this.timer);this.timer=null;
+  if(this.shownOff){this.shownOff=false;el.className="netbar back";el.innerHTML=`<b>${t("net_back")}</b>`;setTimeout(()=>{if(!this.shownOff)el.className="netbar"},2500)}}};
+window.addEventListener("online",()=>Net.draw());window.addEventListener("offline",()=>Net.draw());
+
 /* ================= Derived state ================= */
+// The salon's day starts at 05:00: tickets from before are yesterday's, hidden and archived automatically.
+const DAY_START_H=5;
+function dayStart(){const d=new Date();if(d.getHours()<DAY_START_H)d.setDate(d.getDate()-1);d.setHours(DAY_START_H,0,0,0);return d.getTime()}
+const isStale=x=>!x.ex&&(x.created||0)<dayStart();
+// How long cuts really take: today's finished cuts set the pace (from 3 cuts on), else the pace saved from earlier days.
+function paceNow(){const d=Store.tickets.filter(x=>x.status==="done"&&x.startedAt&&x.doneAt&&!x.ex&&!isStale(x));
+ if(d.length>=3){const r=d.map(x=>((x.doneAt-x.startedAt)/60000)/(svc(x.svc).min||20));return Math.min(1.8,Math.max(.7,r.reduce((a,b)=>a+b,0)/r.length))}
+ const p=+Store.shop.pace;return p>0?Math.min(1.8,Math.max(.7,p)):1}
+function realMin(id){const d=Store.tickets.filter(x=>x.status==="done"&&x.svc===id&&x.startedAt&&x.doneAt&&!x.ex&&!isStale(x));return d.length?Math.round(d.reduce((a,x)=>a+(x.doneAt-x.startedAt),0)/d.length/60000):null}
 function durMin(id){
- const done=Store.tickets.filter(x=>x.status==="done"&&x.svc===id&&x.startedAt&&x.doneAt);
+ const done=Store.tickets.filter(x=>x.status==="done"&&x.svc===id&&x.startedAt&&x.doneAt&&!isStale(x));
  if(done.length>=3){const avg=done.reduce((a,x)=>a+(x.doneAt-x.startedAt),0)/done.length/60000;return Math.max(5,Math.round(avg))}
- return svc(id).min}
+ return Math.max(5,Math.round(svc(id).min*paceNow()))}
 const inChairSt=x=>x.status==="chair"||x.status==="called";
 const isHere=x=>!!x&&(x.src==="walkin"||!!x.arrived||x.travel===0);
+// Each chair can carry its barber's name; a client may ask for one barber (pref = chair number) or take the first free.
+function todayHours(){const h=Store.shop.hours;if(!Array.isArray(h)||h.length<7)return"";const d=h[(new Date().getDay()+6)%7];if(!d)return"";return d.open?t("today_h",{a:d.from||"",b:d.to||""}):t("today_closed")}
+function chairName(i){const b=(Store.shop.barbers||[])[i];return (b&&String(b).trim())||t("chair")+" "+(i+1)}
+const hasNames=()=>(Store.shop.barbers||[]).some(b=>b&&String(b).trim());
+const prefOf=(x,n)=>(x&&x.pref!=null&&+x.pref<n)?+x.pref:null;
+const prefOk=(x,i,n)=>{const p=prefOf(x,n);return p==null||p===i};
 function Q(){
- const all=Store.tickets.slice().sort((a,b)=>a.num-b.num);
+ const all=Store.tickets.filter(x=>!isStale(x)).sort((a,b)=>a.num-b.num);
  const chairs=Math.max(1,Math.min(4,+Store.shop.chairs||1));
  const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(isHere(b)-isHere(a))||((a.pos??a.num)-(b.pos??b.num)));
  const inChair=Array.from({length:chairs},(_,i)=>all.find(x=>inChairSt(x)&&x.chair===i)||null);
  const now=Date.now();
  const free=inChair.map(x=>{if(!x)return 0;const d=durMin(x.svc)*60000;return Math.max(60000,(x.startedAt||x.calledAt||now)+d-now)});
- const eta={},ahead={};
- waiting.forEach((x,i)=>{let k=0;for(let j=1;j<free.length;j++)if(free[j]<free[k])k=j;eta[x.id]=free[k];ahead[x.id]=i;free[k]+=durMin(x.svc)*60000});
+ const eta={},ahead={},goes={};
+ waiting.forEach((x,i)=>{const p=prefOf(x,chairs);let k=p;if(k==null){k=0;for(let j=1;j<free.length;j++)if(free[j]<free[k])k=j}
+  eta[x.id]=free[k];goes[x.id]=k;ahead[x.id]=p==null?i:waiting.slice(0,i).filter(y=>{const py=prefOf(y,chairs);return py==null||py===p}).length;free[k]+=durMin(x.svc)*60000});
  const nextFree=Math.min(...free);
+ // the wait for one barber, for the client's choice
+ const freeFor=i=>{let f=inChair[i]?Math.max(60000,(inChair[i].startedAt||now)+durMin(inChair[i].svc)*60000-now):0;waiting.forEach(x=>{if(goes[x.id]===i)f+=durMin(x.svc)*60000});return f};
  const done=all.filter(x=>x.status==="done"),noshow=all.filter(x=>x.status==="noshow");
- return {all,chairs,waiting,inChair,eta,ahead,nextFree,done,noshow};
+ return {all,chairs,waiting,inChair,eta,ahead,goes,nextFree,freeFor,done,noshow};
 }
 const phoneKey=p=>{let d=String(p||"").replace(/\D/g,"");if(d.startsWith("212"))d="0"+d.slice(3);if(d.length===9&&/^[5-7]/.test(d))d="0"+d;return /^0[5-7]\d{8}$/.test(d)?d:null};
 function clientRec(phone){const k=phoneKey(phone);if(!k)return null;const c=Store.clients.find(x=>x.id===k);if(!c)return null;
@@ -597,17 +654,21 @@ const mmss=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+"
 function strikeMsg(s,bu){if(bu&&bu>Date.now())return t("strike_block",{d:dateStr(bu)});if(s>=2)return t("strike_2",{d:blockDays()});if(s===1)return t("strike_1");return""}
 
 /* ================= Actions ================= */
+function canBlame(x){if(x.src!=="app")return true;if(x.alertOk)return true;const t0=(x.startedAt||Date.now())-10*60000;return !!(x.seen&&x.seen>=t0)}
 const newId=()=>"t"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const A={
- async join({name,phone,svcId,src,travel,photo}){const q=Q();const num=(q.all.reduce((m,x)=>Math.max(m,x.num||0),0))+1;const id=newId();
-  const d={num,pos:num,name:name.trim().slice(0,40),phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,price:svc(svcId).price,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0,travel:(travel==null?null:+travel)};if(photo)d.photo=photo;
+ async join({name,phone,svcId,src,travel,photo,pref,alertOk}){const q=Q();const num=(q.all.reduce((m,x)=>Math.max(m,x.num||0),0))+1;const id=newId();
+  const nm=String(name||"").trim().slice(0,40)||t("anon")+" "+num;
+  const d={num,pos:num,name:nm,pref:(pref==null||pref==="")?null:+pref,alertOk:!!alertOk,phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,price:svc(svcId).price,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0,travel:(travel==null?null:+travel)};if(photo)d.photo=photo;
   await Store.setTicket(id,d);await A.fill();return id},
  // Puts the first person in line into every free chair. Runs after any change that can free a chair.
- async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id));if(!w)return;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
+ async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id)&&prefOk(x,i,n));if(!w)continue;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
  async finish(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;await Store.patchTicket(id,{status:"done",doneAt:Date.now(),startedAt:x.startedAt||Date.now()});await A.fill()},
  // Undo a Terminé tapped by mistake: the client goes back to his chair, and whoever was placed there goes back to the head of the line.
  async undoFinish(id,chair,nextId){if(nextId)await Store.patchTicket(nextId,{status:"waiting",chair:null,startedAt:null});await Store.patchTicket(id,{status:"chair",chair,doneAt:null})},
  async absent(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;const now=Date.now();const k=phoneKey(x.phone);let s=null,bu=null;
+  // no warning when the client may never have been alerted (no phone alerts and the app not open around their turn)
+  if(!canBlame(x)){await Store.patchTicket(id,{status:"noshow",chair:null,noshowAt:now,strike:null,noBlame:true});await A.fill();return "noblame"}
   if(k){s=strikesOf(x.phone)+1;if(s>=MAX_STRIKES)bu=now+blockDays()*864e5;await Store.setClient(k,{phone:k,name:x.name,strikes:s,lastNoShow:now,blockedUntil:bu})}
   await Store.patchTicket(id,{status:"noshow",chair:null,noshowAt:now,strike:s,blockedUntil:bu});await A.fill()},
  async delay(id){const x=Store.tickets.find(y=>y.id===id);const w=Q().waiting;if(!x||!w.length||x.delayed)return;
@@ -629,13 +690,20 @@ const A={
   await Store.setClient(phones[3],{phone:phones[3],name:names[(start+3)%names.length],strikes:1,lastNoShow:now-3*864e5,blockedUntil:null,ex:true});
   for(let i=0;i<5;i++){num++;const id=newId()+i;await Store.setTicket(id,{num,pos:num,name:names[(start+i)%names.length],phone:phones[i],svc:svcs[i],src:srcs[i],status:"waiting",ex:true,created:now-(18-i*3)*60000,onWay:i===1,chair:null,etaAtJoin:(i+1)*20*60000})}
   const n=Q().chairs;for(let c=0;c<n;c++){const qq=Q();if(!qq.inChair[c]&&qq.waiting.length){await Store.patchTicket(qq.waiting[0].id,{status:"chair",chair:c,startedAt:now-(8+c*6)*60000})}}},
- async newDay(){
-  // keep a summary of the day (real tickets only) before clearing the line
-  const real=Store.tickets.filter(x=>!x.ex);
-  if(real.length&&Store.saveDay){const done=real.filter(x=>x.status==="done");const byHour=Array(24).fill(0);done.forEach(x=>{byHour[new Date(x.doneAt||x.created).getHours()]++});
-   const d0=new Date(Math.min(...real.map(x=>x.created||Date.now())));const pad=n=>String(n).padStart(2,"0");const key=d0.getFullYear()+"-"+pad(d0.getMonth()+1)+"-"+pad(d0.getDate());
-   await Store.saveDay(key,{date:key,served:done.length,revenue:done.reduce((a,x)=>a+(x.price??svc(x.svc).price),0),noshow:real.filter(x=>x.status==="noshow").length,app:real.filter(x=>x.src==="app").length,total:real.length,byHour,savedAt:Date.now()})}
-  for(const x of Store.tickets.slice())await Store.delTicket(x.id)}
+ // onlyStale: the automatic reset, which archives yesterday's tickets and leaves today's.
+ async newDay(onlyStale){
+  const set=onlyStale?Store.tickets.filter(isStale):Store.tickets.slice();if(!set.length)return;
+  const real=set.filter(x=>!x.ex);const pad=n=>String(n).padStart(2,"0");
+  const dayKey=ts=>{const d=new Date((ts||Date.now())-DAY_START_H*3600e3);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+  const groups={};real.forEach(x=>{(groups[dayKey(x.created)]=groups[dayKey(x.created)]||[]).push(x)});
+  if(Store.saveDay)for(const key in groups){const g=groups[key];const done=g.filter(x=>x.status==="done");const byHour=Array(24).fill(0);done.forEach(x=>{byHour[new Date(x.doneAt||x.created).getHours()]++});
+   const sum={date:key,served:done.length,noshow:g.filter(x=>x.status==="noshow").length,app:g.filter(x=>x.src==="app").length,total:g.length,byHour,savedAt:Date.now()};
+   if(!Store.shop.noRevenue)sum.revenue=done.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);
+   await Store.saveDay(key,sum)}
+  // remember the real pace for tomorrow's first estimates
+  const d=real.filter(x=>x.status==="done"&&x.startedAt&&x.doneAt);
+  if(d.length>=3){const r=d.map(x=>((x.doneAt-x.startedAt)/60000)/(svc(x.svc).min||20));let m=r.reduce((a,b)=>a+b,0)/r.length;const old=+Store.shop.pace;if(old>0)m=(m+old)/2;await Store.patchShop({pace:Math.round(Math.min(1.8,Math.max(.7,m))*100)/100})}
+  for(const x of set)await Store.delTicket(x.id)}
 };
 
 /* ================= Client view ================= */
@@ -645,8 +713,12 @@ function ClientView(root,key,standalone){
  const body=root.querySelector(".cv-body"),bannerBox=root.querySelector(".banners"),ov=root.querySelector(".called-ov");
  const myKey="nobtk-my-"+key;
  const setT=id=>{try{const u=new URL(location.href);if(id)u.searchParams.set("t",id);else u.searchParams.delete("t");if(!u.searchParams.get("s")&&!PILOT)u.searchParams.set("s",SHOP_ID);history.replaceState(null,"",u)}catch{}};
- const setMine=id=>{ls.set(myKey,id);setT(id)},clearMine=()=>{clearMine();setT(null)};
- {const tq=new URLSearchParams(location.search).get("t");if(tq&&!ls.get(myKey))ls.set(myKey,tq)}let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10);
+ const setMine=id=>{ls.set(myKey,id);setT(id)},clearMine=()=>{ls.del(myKey);setT(null)};
+ {const tq=new URLSearchParams(location.search).get("t");if(tq&&!ls.get(myKey))ls.set(myKey,tq)}let screen=null,picked=null,cancelArm=false,ovTimer=null,travelPick=ls.get("nobtk-travel-"+key,10),prefPick=ls.get("nobtk-pref-"+key,null),lastBeat=0;
+ // phone alerts that can reach the client even when the app is closed
+ const alertsWork=()=>{try{if(AN)return window.NobtkAndroid.notifyPermission()==="granted";return "Notification" in window&&Notification.permission==="granted"&&(!IOS||STANDALONE)}catch{return false}};
+ // while the client's turn is close and the app is open, the ticket says so, so a missed turn is not blamed on a lost alert
+ function beat(x,q,stg){if(document.visibilityState!=="visible"||Store.mode!=="live")return;if(!(stg==="next"||stg==="soon"||stg==="called"))return;const now=Date.now();if(now-lastBeat<90000)return;lastBeat=now;Store.patchTicket(x.id,{seen:now,...(alertsWork()&&!x.alertOk?{alertOk:true}:{})})}
  const firedKey=x=>"nobtk-fired-"+key+"-"+x.id+(x.delayed?"-d":"")+(x.bumps?"-b"+x.bumps:"");
  const hist=id=>ls.get("nobtk-hist-"+key+"-"+id,[]);
  const addHist=(id,title)=>{const h=hist(id);h.unshift({ts:Date.now(),title});ls.set("nobtk-hist-"+key+"-"+id,h.slice(0,20))};
@@ -666,7 +738,8 @@ function ClientView(root,key,standalone){
     <h2 style="font-size:20px">${t("join_t")}</h2>
     <div class="field"><label class="lbl" for="nm-${key}">${t("name")}</label><input id="nm-${key}" autocomplete="given-name" placeholder="${t("name_ph")}" maxlength="40"></div>
     <div class="field"><label class="lbl" for="ph-${key}">${t("phone_req")}</label><input id="ph-${key}" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" maxlength="20"></div>
-    <div class="field"><span class="lbl">${t("ph_t")}</span><div class="mephoto"><span class="ph" data-k="myph"></span><div style="flex:1;min-width:0"><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn"><span data-k="phlbl"></span><input type="file" accept="image/*" data-a="phadd"></label><button type="button" class="btn ghost sm" data-a="phdel" hidden>${t("ph_del")}</button></div><small>${t("ph_h")}</small></div></div></div>
+    <div class="field" data-k="prefbox" hidden><span class="lbl">${t("pref_t")}</span><div class="prefs" data-k="prefs"></div></div>
+    <details class="phdet" ${okPhoto(ls.get("nobtk-myphoto",null))?"open":""}><summary>${t("ph_more")}</summary><div class="mephoto"><span class="ph" data-k="myph"></span><div style="flex:1;min-width:0"><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn"><span data-k="phlbl"></span><input type="file" accept="image/*" data-a="phadd"></label><button type="button" class="btn ghost sm" data-a="phdel" hidden>${t("ph_del")}</button></div><small>${t("ph_h")}</small></div></div></details>
     <div class="field"><span class="lbl">${t("services")}</span><div class="svc-list" role="radiogroup">
      ${SERVICES_L().map(s=>`<button type="button" class="svc" role="radio" aria-checked="${picked===s.id}" data-s="${s.id}"><span class="rad"></span><span class="nm">${esc(s[lang])}<small>~${s.min} ${t("min")}</small></span><span class="pr">${money(s.price)}</span></button>`).join("")}
     </div></div>
@@ -690,12 +763,16 @@ function ClientView(root,key,standalone){
    if(!name.trim())return fail(t("need_name"));
    if(!phoneKey(phone))return fail(t("need_phone"));
    const c=clientRec(phone);if(c&&c.blockedUntil&&c.blockedUntil>Date.now())return fail(t("blocked_msg",{d:dateStr(c.blockedUntil)}));
-   if(Store.tickets.some(x=>phoneKey(x.phone)===phoneKey(phone)&&(x.status==="waiting"||inChairSt(x))))return fail(t("already"));
+   if(Q().all.some(x=>phoneKey(x.phone)===phoneKey(phone)&&(x.status==="waiting"||inChairSt(x))))return fail(t("already"));
    if(!picked)return fail(t("need_svc"));
-   err.hidden=true;const mp=ls.get("nobtk-myphoto",null);const id=await A.join({name,phone,svcId:picked,src:"app",travel:travelPick,photo:okPhoto(mp)?mp:null});setMine(id);
+   err.hidden=true;const mp=ls.get("nobtk-myphoto",null);const id=await A.join({name,phone,svcId:picked,src:"app",travel:travelPick,photo:okPhoto(mp)?mp:null,pref:hasNames()&&Q().chairs>1?prefPick:null,alertOk:alertsWork()});setMine(id);
    if(ls.get("nobtk-notif",null)==null)ls.set("nobtk-notif","app");update()};
  }
- function updateShop(){const q=Q();{const im=body.querySelector('[data-k="sphoto"]');if(im){const ok=okPhoto(Store.shop.photo);im.hidden=!ok;if(ok&&im.getAttribute("src")!==Store.shop.photo)im.src=Store.shop.photo}}body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"));
+ function updateShop(){const q=Q();{const im=body.querySelector('[data-k="sphoto"]');if(im){const ok=okPhoto(Store.shop.photo);im.hidden=!ok;if(ok&&im.getAttribute("src")!==Store.shop.photo)im.src=Store.shop.photo}}body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"))+(todayHours()?" · "+todayHours():"");
+  {const box=body.querySelector('[data-k="prefbox"]');const show=hasNames()&&q.chairs>1;box.hidden=!show;
+   if(show){if(prefPick!=null&&+prefPick>=q.chairs)prefPick=null;const opts=[{v:null,n:t("pref_any"),m:q.nextFree,sub:t("pref_any_s")}].concat(Array.from({length:q.chairs},(_,i)=>({v:i,n:chairName(i),m:q.freeFor(i)})));
+    const h=opts.map(o=>`<button type="button" data-pref="${o.v==null?"":o.v}" aria-pressed="${(o.v==null?prefPick==null:+prefPick===o.v)}">${esc(o.n)}<small>${Store.shop.paused?"":"~"+mins(o.m)+" "+t("min")}${o.sub?" · "+o.sub:""}</small></button>`).join("");
+    const pb=body.querySelector('[data-k="prefs"]');if(pb.dataset.h!==h){pb.dataset.h=h;pb.innerHTML=h;pb.querySelectorAll("[data-pref]").forEach(b=>b.onclick=()=>{prefPick=b.dataset.pref===""?null:+b.dataset.pref;ls.set("nobtk-pref-"+key,prefPick);updateShop()})}}}
   body.querySelector('[data-k="w"]').textContent=q.waiting.length;body.querySelector('[data-k="e"]').textContent=Store.shop.paused?"–":`${mins(q.nextFree)} ${t("min")}`;
   body.querySelector('[data-k="pol"]').textContent=t("policy_short",{g:+Store.shop.grace||5,d:blockDays()});
   const th=body.querySelector('[data-k="thint"]');if(th){const w=mins(q.nextFree);th.textContent=Store.shop.paused?"":(travelPick>0&&travelPick>=w?t("travel_far"):t("travel_note",{m:travelPick+5}))}
@@ -727,7 +804,7 @@ function ClientView(root,key,standalone){
  const RANK={wait:0,soon:1,next:2,called:3,done:4,noshow:5};
  function graceLeft(x){return (x.startedAt||Date.now())+graceMs()-Date.now()}
  function renderOverlay(x){
-  const c=(x.chair??0)+1,left=graceLeft(x);
+  const c=chairName(x.chair??0),left=graceLeft(x);
   ov.innerHTML=`<div class="pulse num">${String(x.num).padStart(2,"0")}</div><h2>${t("st_called")}</h2><p>${t("st_called_p",{c})}</p>
    <div class="cdbox">${left>0?`<span>${t("grace_left")}</span><b class="num cd">${mmss(left)}</b>`:`<b class="cd-over">${t("grace_over_client")}</b>`}</div>
    <button class="btn acc" type="button" style="margin-top:6px;min-width:200px;font-size:16px">${t("coming")}</button>
@@ -739,16 +816,16 @@ function ClientView(root,key,standalone){
  }
  function stopOv(){if(ovTimer){clearInterval(ovTimer);ovTimer=null}}
  function updateTicket(){
-  const id=ls.get(myKey);const x=Store.tickets.find(y=>y.id===id);if(!x)return;const q=Q();const stg=stageOf(x,q);
+  const id=ls.get(myKey);const q=Q();const x=q.all.find(y=>y.id===id);if(!x)return;const stg=stageOf(x,q);beat(x,q,stg);
   root.classList.toggle("state-soon",stg==="soon"||stg==="next");
   const $=k=>body.querySelector(`[data-k="${k}"]`);
-  $("no").textContent=String(x.num).padStart(2,"0");$("shop").innerHTML=`${esc(Store.shop.name)}<br><span style="opacity:.75;font-weight:500">${esc(svcName(x.svc))}</span>`;
-  const etaMs=q.eta[x.id]||0,a=q.ahead[x.id]??0,c=(x.chair??0)+1,left=graceLeft(x);
+  $("no").textContent=String(x.num).padStart(2,"0");$("shop").innerHTML=`${esc(Store.shop.name)}<br><span style="opacity:.75;font-weight:500">${esc(svcName(x.svc))}${prefOf(x,q.chairs)!=null&&hasNames()?" · "+esc(t("with_b",{b:chairName(prefOf(x,q.chairs))})):""}</span>`;
+  const etaMs=q.eta[x.id]||0,a=q.ahead[x.id]??0,c=chairName(x.chair??0),left=graceLeft(x);
   const msg={wait:["st_wait","st_wait_p"],soon:["st_soon","st_soon_p"],next:["st_next","st_next_p"],called:["st_called","st_called_p"],done:["st_done","st_done_p"],noshow:["st_noshow","st_noshow_p"]}[stg];
   $("st").textContent=t(msg[0]);
   let p=t(msg[1],{c,p:money(svc(x.svc).price)});
   if(stg==="called")p+=" "+(left>0?t("grace_inline",{m:Math.ceil(left/60000)}):t("grace_over_client"));
-  if(stg==="noshow")p+=" "+(x.strike?strikeMsg(x.strike,x.blockedUntil):"");
+  if(stg==="noshow")p+=" "+(x.noBlame?t("st_noshow_nob"):x.strike?strikeMsg(x.strike,x.blockedUntil):"");
   if(x.delayed&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("st_delayed_p");
   if(x.bumps&&!isHere(x)&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("n_bump_b");
   $("stp").textContent=p;
@@ -757,7 +834,7 @@ function ClientView(root,key,standalone){
    const total=Math.max(x.etaAtJoin||0,etaMs,60000);$("arc").style.strokeDashoffset=String(276.5*(etaMs/total));
    const busy=q.inChair.filter(Boolean).length;
    $("ahead").innerHTML=`<span style="font-size:13px;font-weight:700;margin-inline-end:4px">${a} ${t("ahead")}${busy?` · ${busy} ${t("lq_chair")}`:""}</span>`+Array.from({length:busy},()=>'<i class="ch"></i>').join("")+(busy?'<span style="width:2px;height:14px;background:rgba(255,255,255,.4)"></span>':"")+Array.from({length:Math.min(a,8)},()=>"<i></i>").join("")+`<i class="me"></i>`;
-  }else if(stg==="called"){$("eta").textContent=c;$("etal").textContent=t("chair");$("arc").style.strokeDashoffset="0";$("ahead").innerHTML=""}
+  }else if(stg==="called"){$("eta").textContent=(x.chair??0)+1;$("etal").textContent=t("chair");$("arc").style.strokeDashoffset="0";$("ahead").innerHTML=""}
   else{$("eta").textContent=stg==="done"?"✓":"!";$("etal").textContent="";$("arc").style.strokeDashoffset=stg==="done"?"0":"276.5";$("ahead").innerHTML=""}
   const lvl={wait:0,soon:1,next:1,called:2,done:3,noshow:0}[stg];
   $("track").querySelectorAll("div").forEach((d,i)=>{d.className=stg==="done"||i<lvl?"on":i===lvl?"on now":""});
@@ -780,8 +857,8 @@ function ClientView(root,key,standalone){
   const lc=$("lineCard"); lc.hidden=stg==="done"||stg==="noshow";
   if(!lc.hidden){const num=n=>String(n).padStart(2,"0");let h="";
    q.inChair.forEach((y,i)=>{const me=y&&y.id===x.id;
-    h+=y?`<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${t("chair")} ${i+1}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm">${t("lq_chair")}</span></div>`
-     :`<div class="lq-row free"><span class="bdg">–</span><span class="lbl2">${t("chair")} ${i+1}<small>${t("b_free")}</small></span></div>`});
+    h+=y?`<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${esc(chairName(i))}${me?" · "+t("lq_you"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm">${t("lq_chair")}</span></div>`
+     :`<div class="lq-row free"><span class="bdg">–</span><span class="lbl2">${esc(chairName(i))}<small>${t("b_free")}</small></span></div>`});
    h+=`<div class="lq-sep">${t("lv_wait")} · ${q.waiting.length}</div>`;
    h+=q.waiting.length?q.waiting.map((y,i)=>{const me=y.id===x.id;return `<div class="lq-row ${me?"me":""}"><span class="bdg num">${num(y.num)}</span><span class="lbl2">${i+1}${i===0?t("lq_first"):t("lq_nth")}${me?" · "+t("lq_you"):""}${isHere(y)?" · "+t("lq_here"):""}<small>${esc(svcName(y.svc))}</small></span><span class="tm num">≈ ${mins(q.eta[y.id])} ${t("min")}</span></div>`}).join(""):`<div class="muted" style="font-size:14px;padding:4px 2px">${t("lq_empty")}</div>`;
    $("lineList").innerHTML=h}
@@ -789,7 +866,7 @@ function ClientView(root,key,standalone){
   const nState=ls.get("nobtk-notif",null);
   {const box=$("ios");if(box&&!box.dataset.done){box.dataset.done=1;const c=iosCard("client");if(c){box.style.marginTop="10px";box.appendChild(c)}}}
   $("nst").innerHTML=nState==="system"?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_on")}`:nState?`<span class="dot" style="color:var(--ok)"></span>${t("alerts_app")}`:`<span class="dot" style="color:var(--warn)"></span>${t("alerts_off")}`;
-  if(nState!=="system"&&(AN||"Notification" in window)){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=AN?await askAndroidNotify():await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);updateTicket()};$("nst").appendChild(b)}
+  if(nState!=="system"&&(AN||"Notification" in window)){const b=document.createElement("button");b.className="btn ghost sm";b.type="button";b.style.marginInlineStart="auto";b.textContent=t("enable");b.onclick=async()=>{unlockAudio();let s="app";try{const p=AN?await askAndroidNotify():await Notification.requestPermission();if(p==="granted")s="system"}catch{}ls.set("nobtk-notif",s);if(s==="system"&&alertsWork()){const tid=ls.get(myKey);if(tid)Store.patchTicket(tid,{alertOk:true})}updateTicket()};$("nst").appendChild(b)}
   $("warn").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.m===travelOf(x)));
   $("tnote").textContent=(travelOf(x)===0?t("travel_note0"):t("travel_note",{m:warnMin(x)}))+(isHere(x)?"":" "+t("prio_note"));
   $("det").innerHTML=`<div class="kv"><span>${t("service")}</span><b>${esc(svcName(x.svc))}</b></div><div class="kv"><span>${t("price")}</span><b>${money(svc(x.svc).price)}</b></div><div class="kv"><span>${t("joined")}</span><b class="num">${hhmm(x.created)}</b></div>`;
@@ -812,7 +889,7 @@ function ClientView(root,key,standalone){
  function update(){
   if(!Store.ready){if(screen!=="load"){body.innerHTML=`<div class="loading">${t("connecting")}</div>`;screen="load"}return}
   if(Store.shop.active===false||(Store.mode==="live"&&Store.shopExists===false)){if(screen!=="off"){ov.hidden=true;stopOv();body.innerHTML=`<div class="card" style="text-align:center;padding:34px 18px;display:flex;flex-direction:column;gap:8px"><h2 style="font-size:22px">${esc(Store.shopExists===false?"NOBTK":Store.shop.name)}</h2><p class="muted" style="margin:0">${t(Store.shopExists===false?"shop_missing":"shop_off")}</p></div>`;screen="off"}return}
-  const id=ls.get(myKey);const x=id&&Store.tickets.find(y=>y.id===id);
+  const id=ls.get(myKey);const x=id&&Q().all.find(y=>y.id===id);
   if(id&&!x){ls.del(myKey)}
   if(x&&x.status!=="cancelled"){if(screen!=="ticket"){renderTicket();screen="ticket";toTop()}updateTicket()}
   else{if(x)clearMine();ov.hidden=true;stopOv();if(screen!=="shop"){const was=screen;renderShop();screen="shop";if(was&&was!=="load")toTop()}updateShop()}
@@ -833,17 +910,26 @@ function BarberView(root){
    <section class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:10px;flex-wrap:wrap"><h2 style="font-size:19px">${t("b_queue")} <span class="muted num" data-k="qn"></span></h2><span class="muted" style="font-size:13px" data-k="nf"></span></div><div class="qlist" data-k="q"></div></section>
    <div class="side">
     <form class="card setg" data-k="add" novalidate><h3 style="font-size:17px">${t("b_add")}</h3>
+     <button class="btn acc" type="button" data-a="plus1" style="font-size:17px;min-height:52px">${t("b_plus1")}</button><span class="muted" style="font-size:12.5px;margin-top:-4px">${t("b_plus1_h")}</span>
      <div class="srcsw">${["walkin","phone"].map(s=>`<button type="button" class="btn ghost sm" data-src="${s}">${t(s==="walkin"?"b_walkin":"b_phone")}</button>`).join("")}</div>
      <div class="field"><label class="lbl" for="b-nm">${t("name")}</label><input id="b-nm" maxlength="40" placeholder="${t("name_ph")}"></div>
      <div class="field"><label class="lbl" for="b-ph">${t("phone")}</label><input id="b-ph" type="tel" inputmode="tel" maxlength="20" placeholder="06 12 34 56 78"></div>
-     <div class="field"><label class="lbl" for="b-svc">${t("service")}</label><select id="b-svc">${SERVICES_L().map(s=>`<option value="${s.id}">${esc(s[lang])} · ${money(s.price)}</option>`).join("")}</select></div>
+     <div class="field"><label class="lbl" for="b-svc">${t("service")}</label><select id="b-svc"></select></div>
+     <div class="field" data-k="bprefbox" hidden><label class="lbl" for="b-pref">${t("b_pref")}</label><select id="b-pref"></select></div>
      <div class="err" data-k="adderr" hidden></div>
      <button class="btn pri" type="submit">${ICON.plus} ${t("b_add_btn")}</button></form>
+    <section class="card setg"><h3 style="font-size:17px">${t("share_t")}</h3><p class="muted" style="margin:0;font-size:13px">${t("share_p")}</p>
+     <div class="share"><a class="btn" data-k="shwa" target="_blank" rel="noopener" style="background:#25D366;color:#fff">${t("share_wa")}</a><button class="btn ghost" type="button" data-a="shcopy">${t("share_copy")}</button>${navigator.share?`<button class="btn ghost" type="button" data-a="shmore">${t("share_more")}</button>`:""}</div></section>
     <section class="card setg"><h3 style="font-size:17px">${t("b_abs_t")}</h3><p class="muted" style="margin:0;font-size:13px" data-k="rule"></p><div class="qlist" data-k="abs"></div></section>
     <details class="card set"><summary>${t("b_settings")}<span class="muted">⌄</span></summary><div class="setg">
      <div class="field"><label class="lbl" for="b-shop">${t("b_shopname")}</label><div style="display:flex;gap:6px"><input id="b-shop" maxlength="40"><button class="btn ghost sm" type="button" data-a="saveName">${t("b_save")}</button></div></div>
      <div class="field"><span class="lbl">${t("b_photo")}</span><div class="shopphoto"><span data-k="sph"></span><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn">${t("b_photo_add")}<input type="file" accept="image/*" data-a="sphadd"></label><button class="btn ghost sm" type="button" data-a="sphdel" hidden>${t("ph_del")}</button></div></div><span class="muted" style="font-size:12.5px">${t("b_photo_h")}</span></div>
      <div class="field"><span class="lbl">${t("b_nchairs")}</span><div class="stepper" data-k="nch">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
+     <div class="field"><span class="lbl">${t("b_barbers")}</span><div class="setg" data-k="bnames" style="gap:6px"></div><span class="muted" style="font-size:12.5px">${t("b_barbers_h")}</span><button class="btn ghost sm" type="button" data-a="saveBarbers">${t("b_save")}</button></div>
+     <div class="field"><span class="lbl">${t("b_svcs")}</span><div class="svced" data-k="svced"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" type="button" data-a="svcAdd">${t("b_svc_add")}</button><button class="btn pri sm" type="button" data-a="svcSave">${t("b_save")}</button></div></div>
+     <div class="field"><span class="lbl">${t("b_hours")}</span><div class="hrs" data-k="hrs"></div><button class="btn ghost sm" type="button" data-a="hrsSave">${t("b_save")}</button></div>
+     <label style="display:flex;gap:10px;align-items:center;font-weight:600;font-size:14px"><input type="checkbox" data-k="revhide" style="width:20px;height:20px">${t("b_rev_hide")}</label>
+     <label style="display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:14px"><input type="checkbox" data-k="revno" style="width:20px;height:20px;margin-top:2px"><span>${t("b_rev_noonline")}<br><small class="muted" style="font-weight:500">${t("b_rev_noonline_h")}</small></span></label>
      <div class="field"><span class="lbl">${t("b_grace")}</span><div class="stepper" data-k="grace">${[3,5,10].map(n=>`<button type="button" data-n="${n}">${n} ${t("min")}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("b_blockdays")}</span><div class="stepper" data-k="bdays">${[3,7,14].map(n=>`<button type="button" data-n="${n}">${n} ${t("days")}</button>`).join("")}</div></div>
      <div class="field"><span class="lbl">${t("remote_t")}</span><div class="stepper" data-k="remote">${[0,1,2,3,4].map(n=>`<button type="button" data-n="${n}" aria-label="${n?t("chair")+" "+n:t("remote_off")}">${n?"F"+n:t("remote_off")}</button>`).join("")}</div><span class="muted" style="font-size:12.5px">${t(IOS?"remote_h_ios":"remote_h")}</span></div>
@@ -858,7 +944,37 @@ function BarberView(root){
  root.querySelectorAll("[data-src]").forEach(b=>b.onclick=()=>setSrc(b.dataset.src));
  $("add").onsubmit=async e=>{e.preventDefault();const nm=root.querySelector("#b-nm"),ph=root.querySelector("#b-ph"),er=$("adderr");if(!nm.value.trim()){nm.focus();return}
   if(ph.value.trim()&&!phoneKey(ph.value)){er.textContent=t("need_phone");er.hidden=false;return}er.hidden=true;
-  await A.join({name:nm.value,phone:ph.value,svcId:root.querySelector("#b-svc").value,src});nm.value="";ph.value=""};
+  const pv=root.querySelector("#b-pref").value;await A.join({name:nm.value,phone:ph.value,svcId:root.querySelector("#b-svc").value,src,pref:$("bprefbox").hidden||pv===""?null:+pv});nm.value="";ph.value=""};
+ root.querySelector('[data-a="plus1"]').onclick=async()=>{const sl=SERVICES_L();const id=await A.join({name:"",phone:"",svcId:sl[0].id,src:"walkin",pref:null});const x=Store.tickets.find(y=>y.id===id);vibrate(40);toast(t("b_plus1_ok",{n:x?x.num:""}))};
+ // client link of this salon, to share
+ const clientLink=()=>{const u=new URL("index.html",location.href);u.search="?s="+encodeURIComponent(SHOP_ID);u.hash="client";return u.toString()};
+ const shareText=()=>t("share_msg",{s:Store.shop.name})+" "+clientLink();
+ root.querySelector('[data-a="shcopy"]').onclick=async()=>{try{await navigator.clipboard.writeText(clientLink());toast(t("share_copied"))}catch{prompt(t("share_copy"),clientLink())}};
+ {const m=root.querySelector('[data-a="shmore"]');if(m)m.onclick=()=>navigator.share({title:Store.shop.name,text:t("share_msg",{s:Store.shop.name}),url:clientLink()}).catch(()=>{})}
+ // services, prices, hours and barbers: the barber changes them himself
+ let svcDraft=null,hrsDraft=null,edInit=false;
+ const svcRowsHtml=()=>svcDraft.map((x,i)=>{const r=realMin(x.id);return `<div class="r"><input data-sv="${i}" data-f="name" value="${esc(x.name)}" placeholder="${t("b_svc_name")}" maxlength="40" aria-label="${t("b_svc_name")}"><input data-sv="${i}" data-f="price" type="number" inputmode="numeric" min="0" value="${x.price}" aria-label="${t("b_svc_price")} (${t("dh")})"><input data-sv="${i}" data-f="minutes" type="number" inputmode="numeric" min="5" value="${x.minutes}" aria-label="${t("b_svc_min")} (${t("min")})"><button class="ibtn" type="button" data-svdel="${i}" aria-label="${t("b_remove")}">${ICON.x}</button>${r!=null?`<small>${t("b_svc_real",{m:r})}</small>`:""}</div>`}).join("");
+ function drawSvc(){const box=$("svced");box.innerHTML=`<div class="r" style="font-size:11.5px;color:var(--muted);font-weight:700"><span>${t("b_svc_name")}</span><span>${t("b_svc_price")} (${t("dh")})</span><span>${t("min")}</span><span></span></div>`+svcRowsHtml();
+  box.querySelectorAll("[data-sv]").forEach(inp=>inp.oninput=()=>{const x=svcDraft[+inp.dataset.sv];x[inp.dataset.f]=inp.dataset.f==="name"?inp.value:+inp.value});
+  box.querySelectorAll("[data-svdel]").forEach(b=>b.onclick=()=>{if(svcDraft.length>1){svcDraft.splice(+b.dataset.svdel,1);drawSvc()}})}
+ function drawHrs(){const D=t("days7").split(",");$("hrs").innerHTML=hrsDraft.map((h,i)=>`<div class="r"><label><input type="checkbox" data-hr="${i}" data-f="open" ${h.open?"checked":""}>${esc(D[i])}</label>${h.open?`<input type="time" data-hr="${i}" data-f="from" value="${esc(h.from||"09:00")}"><input type="time" data-hr="${i}" data-f="to" value="${esc(h.to||"21:00")}">`:`<span class="muted" style="grid-column:2/-1;font-size:13px">${t("b_closed")}</span>`}</div>`).join("");
+  $("hrs").querySelectorAll("[data-hr]").forEach(inp=>inp.onchange=()=>{const h=hrsDraft[+inp.dataset.hr];if(inp.dataset.f==="open"){h.open=inp.checked;drawHrs()}else h[inp.dataset.f]=inp.value})}
+ function drawNames(n){const cur=(Store.shop.barbers||[]);$("bnames").innerHTML=Array.from({length:n},(_,i)=>`<input data-bn="${i}" maxlength="24" placeholder="${t("chair")} ${i+1}" value="${esc(cur[i]||"")}">`).join("")}
+ function initEditors(){if(edInit)return;edInit=true;
+  svcDraft=SERVICES_L().map(x=>({id:x.id,name:x[lang]||x.fr,price:x.price,minutes:x.min}));drawSvc();
+  const D=t("days7").split(",");const h=Array.isArray(Store.shop.hours)&&Store.shop.hours.length>=7?Store.shop.hours:D.map((d,i)=>({day:d,open:i<6,from:"09:00",to:"21:00"}));hrsDraft=h.slice(0,7).map((x,i)=>({day:x.day||D[i],open:!!x.open,from:x.from||"09:00",to:x.to||"21:00"}));drawHrs();
+  drawNames(Q().chairs)}
+ root.querySelector('[data-a="svcAdd"]').onclick=()=>{svcDraft.push({id:"s"+Date.now().toString(36),name:"",price:50,minutes:20});drawSvc();const l=$("svced").querySelectorAll('[data-f="name"]');l[l.length-1].focus()};
+ root.querySelector('[data-a="svcSave"]').onclick=async()=>{const list=svcDraft.filter(x=>String(x.name).trim()).map(x=>({id:x.id,name:String(x.name).trim().slice(0,40),price:Math.max(0,Math.round(+x.price||0)),minutes:Math.max(5,Math.round(+x.minutes||20))}));if(!list.length)return;await Store.patchShop({services:list});toast(t("saved"));drawAddSvc(true)};
+ root.querySelector('[data-a="hrsSave"]').onclick=async()=>{await Store.patchShop({hours:hrsDraft.map(x=>({...x}))});toast(t("saved"))};
+ root.querySelector('[data-a="saveBarbers"]').onclick=async()=>{const n=Q().chairs;const cur=(Store.shop.barbers||[]).slice();$("bnames").querySelectorAll("[data-bn]").forEach(i=>{cur[+i.dataset.bn]=i.value.trim().slice(0,24)});await Store.patchShop({barbers:cur.slice(0,4).map(x=>x||"")});toast(t("saved"))};
+ const revKey="nobtk-hiderev-"+SHOP_ID;let revPeek=0;
+ $("revhide").checked=!!ls.get(revKey,false);$("revhide").onchange=e=>{ls.set(revKey,e.target.checked);update()};
+ $("revno").onchange=e=>Store.patchShop({noRevenue:e.target.checked});
+ let svcSig="",prefSig="";
+ function drawAddSvc(force){const l=SERVICES_L();const sig=JSON.stringify(l.map(x=>[x.id,x.fr,x.price]));if(!force&&sig===svcSig)return;svcSig=sig;const sel=root.querySelector("#b-svc"),v=sel.value;sel.innerHTML=l.map(x=>`<option value="${x.id}">${esc(x[lang]||x.fr)} · ${money(x.price)}</option>`).join("");if(l.some(x=>x.id===v))sel.value=v}
+ function drawAddPref(n){const show=hasNames()&&n>1;$("bprefbox").hidden=!show;if(!show)return;const sig=n+JSON.stringify(Store.shop.barbers||[]);if(sig===prefSig)return;prefSig=sig;const sel=root.querySelector("#b-pref"),v=sel.value;sel.innerHTML=`<option value="">${t("pref_any")}</option>`+Array.from({length:n},(_,i)=>`<option value="${i}">${esc(chairName(i))}</option>`).join("");sel.value=v}
+ let autoDay=false;
  root.querySelector('[data-a="pause"]').onclick=()=>Store.patchShop({paused:!Store.shop.paused});
  root.querySelector('[data-a="saveName"]').onclick=async()=>{const v=root.querySelector("#b-shop").value.trim();if(v){await Store.patchShop({name:v});toast(t("saved"))}};
  root.querySelector('[data-a="sphadd"]').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;try{const u=await window.NOBTK_IMG(f,320,.8);await Store.patchShop({photo:u});toast(t("b_photo_saved"))}catch(x){toast(t("photo_err"))}};
@@ -882,12 +998,12 @@ function BarberView(root){
   const chair=x.chair;await A.finish(id);const nx=Q().inChair[chair];
   undo={id,num:x.num,name:x.name,chair,nextId:nx?nx.id:null};clearTimeout(undoT);undoT=setTimeout(()=>{undo=null;update()},8000);update()}
  const finishChair=i=>{const x=Q().inChair[i];if(x)finishId(x.id)};
- async function undoLast(){if(!undo)return;const u=undo;undo=null;clearTimeout(undoT);locks.delete(u.id);locks.delete("c"+u.chair);vibrate([40,60,40]);await A.undoFinish(u.id,u.chair,u.nextId);toast(t("undone",{n:u.num,c:u.chair+1}));update()}
+ async function undoLast(){if(!undo)return;const u=undo;undo=null;clearTimeout(undoT);locks.delete(u.id);locks.delete("c"+u.chair);vibrate([40,60,40]);await A.undoFinish(u.id,u.chair,u.nextId);toast(t("undone",{n:u.num,c:chairName(u.chair)}));update()}
  // the big always-visible Terminé bar (rebuilt only when it changes, so a tap is never lost)
  function renderDock(q){
   const occ=q.inChair.map((x,i)=>x?{x,i}:null).filter(Boolean);const nx=q.waiting[0];
   const h=(undo?`<div class="fundo"><span>✓ ${esc(t("undo_msg",{n:undo.num,name:undo.name}))}</span><button type="button" data-undo="1">${t("undo")}</button></div>`:"")+
-   (occ.length?`<div class="fgrid">${occ.map(({x,i})=>{return `<button class="fbtn" type="button" data-fin="${x.id}"><b>✓ ${t("b_done")}</b><span>${esc(t("fin_sub",{c:i+1,n:x.num,name:x.name}))}</span><i>${nx?esc(t("fin_next",{n:nx.num})):t("fin_nonext")}</i></button>`}).join("")}</div>`:"");
+   (occ.length?`<div class="fgrid">${occ.map(({x,i})=>{return `<button class="fbtn" type="button" data-fin="${x.id}"><b>✓ ${t("b_done")}</b><span>${esc(t("fin_sub",{c:chairName(i),n:x.num,name:x.name}))}</span><i>${nx?esc(t("fin_next",{n:nx.num})):t("fin_nonext")}</i></button>`}).join("")}</div>`:"");
   if(h!==dockHtml){dockHtml=h;$("dock").innerHTML=h}}
  root.addEventListener("click",e=>{const f=e.target.closest("[data-fin]");if(f){e.preventDefault();finishId(f.dataset.fin);return}if(e.target.closest("[data-undo]"))undoLast()});
  $("remote").querySelectorAll("button").forEach(b=>b.onclick=()=>{setRemote(+b.dataset.n);update()});
@@ -902,15 +1018,21 @@ function BarberView(root){
  const strikeChip=phone=>{const r=clientRec(phone);if(!r||!r.strikes)return"";return `<span class="chip bad">${t("b_strike_chip",{s:r.strikes})}</span>`};
  function update(){
   if(!Store.ready){$("q").innerHTML=`<div class="loading">${t("connecting")}</div>`;return}
-  const q=Q(),now=Date.now();
-  const cur={};Store.tickets.forEach(x=>cur[x.id]={s:x.status,w:x.onWay});
+  // a new day: yesterday's line is archived by itself, nothing to tap
+  if(!autoDay&&Store.tickets.some(isStale)){autoDay=true;A.newDay(true).then(()=>toast(t("auto_day"))).finally(()=>{autoDay=false})}
+  initEditors();drawAddSvc();
+  const q=Q(),now=Date.now();drawAddPref(q.chairs);
+  {const w=$("shwa");if(w)w.href="https://wa.me/?text="+encodeURIComponent(shareText())}
+  $("revno").checked=!!Store.shop.noRevenue;
+  if($("bnames").children.length!==q.chairs)drawNames(q.chairs);
+  const cur={};q.all.forEach(x=>cur[x.id]={s:x.status,w:x.onWay});
   const fresh=new Set();
-  if(seen){Store.tickets.forEach(x=>{const p=seen[x.id];
+  if(seen){q.all.forEach(x=>{const p=seen[x.id];
    if(!p&&(x.status==="waiting"||inChairSt(x))){fresh.add(x.id);if(x.src==="app"&&!x.ex){toast(t("b_toast_new",{n:x.num,name:x.name}));chime(false)}}
    else if(p){if(!p.w&&x.onWay&&x.status!=="done"){toast(t("b_toast_way",{n:x.num,name:x.name}))}
     if(p.s!=="cancelled"&&x.status==="cancelled"&&!x.byShop){toast(t("b_toast_cancel",{n:x.num,name:x.name}))}}})}
   seen=cur;
-  q.inChair.forEach(x=>{if(x&&!isHere(x)&&!bumping.has(x.id)&&now-(x.startedAt||now)>graceMs()){const nx=q.waiting.find(isHere);if(nx){bumping.add(x.id);toast(t("b_toast_bump",{n:x.num,name:x.name,m:nx.num}));A.bump(x.id)}}});
+  q.inChair.forEach(x=>{if(x&&!isHere(x)&&!bumping.has(x.id)&&now-(x.startedAt||now)>graceMs()){const nx=q.waiting.find(y=>isHere(y)&&prefOk(y,x.chair,q.chairs));if(nx){bumping.add(x.id);toast(t("b_toast_bump",{n:x.num,name:x.name,m:nx.num}));A.bump(x.id)}}});
   {const ok=okPhoto(Store.shop.photo),box=$("sph"),k=ok?Store.shop.photo.length+Store.shop.photo.slice(-24):"none";if(box&&box.dataset.ph!==k){box.dataset.ph=k;box.innerHTML=ok?`<img src="${Store.shop.photo}" alt="">`:`<span class="ini">${esc((Store.shop.name||"?").charAt(0).toUpperCase())}</span>`;root.querySelector('[data-a="sphdel"]').hidden=!ok}}
   $("title").textContent=Store.shop.name;if(!nameInit){root.querySelector("#b-shop").value=Store.shop.name;nameInit=true}
   $("state").className="pill "+(Store.shop.paused?"paused":"live");$("state").innerHTML=`<span class="dot"></span>${Store.shop.paused?t("paused"):t("open")}`;
@@ -918,15 +1040,15 @@ function BarberView(root){
   const rev=q.done.reduce((s,x)=>s+(x.price??svc(x.svc).price),0);
   const durs=q.done.filter(x=>x.startedAt&&x.doneAt).map(x=>(x.doneAt-x.startedAt)/60000);
   const avg=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
-  $("stats").innerHTML=`<div class="stat"><b class="num">${q.done.length}</b><span>${t("b_served")}</span></div><div class="stat"><b class="num">${money(rev)}</b><span>${t("b_rev")}</span></div><div class="stat"><b class="num">${avg==null?"–":avg+" "+t("min")}</b><span>${t("b_avg")}</span></div><div class="stat"><b class="num">${q.noshow.length}</b><span>${t("b_noshow")}</span></div>`;
+  $("stats").innerHTML=`<div class="stat"><b class="num">${q.done.length}</b><span>${t("b_served")}</span></div><div class="stat ${ls.get(revKey,false)?"revh":""}" data-a="revpeek"><b class="num">${ls.get(revKey,false)&&Date.now()>revPeek?"•••• "+t("dh"):money(rev)}</b><span>${t("b_rev")}${ls.get(revKey,false)&&Date.now()>revPeek?" · "+t("b_rev_show"):""}</span></div><div class="stat"><b class="num">${avg==null?"–":avg+" "+t("min")}</b><span>${t("b_avg")}</span></div><div class="stat"><b class="num">${q.noshow.length}</b><span>${t("b_noshow")}</span></div>`;
   $("chairs").innerHTML=q.inChair.map((x,i)=>{
-   if(!x)return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span><span class="chip">${t("b_free")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("b_free")}</b><span>${t("b_auto")}</span></div></div>${q.waiting.length?`<div class="acts"><button class="btn acc" data-fill="1" type="button">${t("b_fill")}</button></div>`:""}</div>`;
+   if(!x)return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${esc(chairName(i))}</span><span class="chip">${t("b_free")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("b_free")}</b><span>${t("b_auto")}</span></div></div>${q.waiting.length?`<div class="acts"><button class="btn acc" data-fill="1" type="button">${t("b_fill")}</button></div>`:""}</div>`;
    const el=mins(now-(x.startedAt||now)),d=durMin(x.svc),pct=Math.min(100,el/d*100);
    const gl=(x.startedAt||now)+graceMs()-now;
    const hereNow=isHere(x);
    const gchip=hereNow?"":(gl>0?`<span class="chip ph num">${t("b_not_here")} · ${mmss(gl)}</span>`:`<span class="chip bad">${t("b_not_here")}</span>`);
    const arm=noshowArm===x.id;
-   return `<div class="chair st-chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${t("chair")} ${i+1}</span>${gchip||`<span class="chip app">${t("tr3")}</span>`}</div>
+   return `<div class="chair st-chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${esc(chairName(i))}</span>${gchip||`<span class="chip app">${t("tr3")}</span>`}</div>
     <div class="who"><div class="badge num">${x.num}</div>${cav(x)}<div style="min-width:0"><b>${esc(x.name)} ${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${money(svc(x.svc).price)}${x.onWay?" · "+t("b_onway"):""}</span></div></div>
     <div><div class="bar ${el>d?"over":""}"><i style="width:${pct}%"></i></div><div class="muted num" style="font-size:12.5px;margin-top:4px">${t("b_since",{m:el,d})}</div></div>
     <div class="acts"><button class="btn okb" data-fin="${x.id}" type="button" style="flex-basis:100%">${t("b_done")}</button>
@@ -935,7 +1057,7 @@ function BarberView(root){
   $("qn").textContent=q.waiting.length?`· ${q.waiting.length}`:"";
   $("nf").textContent=Store.shop.paused?t("paused"):`${t("b_next_free")} ≈ ${mins(q.nextFree)} ${t("min")}`;
   $("q").innerHTML=q.waiting.length?q.waiting.map((x,i)=>{const srcChip=x.src==="app"?`<span class="chip app">${t("b_app")}</span>`:x.src==="phone"?`<span class="chip ph">${t("b_phone")}</span>`:`<span class="chip">${t("b_walkin")}</span>`;
-    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div>${cav(x,true)}<div class="info"><b>${esc(x.name)} ${srcChip}${x.travel===0||x.arrived?`<span class="chip way">${t("lq_here")}</span>`:x.onWay?`<span class="chip way">${x.travel?t("b_arrive",{t:hhmm((x.onWayAt||now)+x.travel*60000)}):t("b_onway")}</span>`:x.travel?`<span class="chip">${t("b_travel_at",{m:x.travel})}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
+    return `<div class="qrow ${fresh.has(x.id)?"fresh":""}"><div class="badge sm num">${x.num}</div>${cav(x,true)}<div class="info"><b>${esc(x.name)} ${srcChip}${x.travel===0||x.arrived?`<span class="chip way">${t("lq_here")}</span>`:x.onWay?`<span class="chip way">${x.travel?t("b_arrive",{t:hhmm((x.onWayAt||now)+x.travel*60000)}):t("b_onway")}</span>`:x.travel?`<span class="chip">${t("b_travel_at",{m:x.travel})}</span>`:""}${x.delayed?`<span class="chip ph">${t("b_delayed_chip")}</span>`:""}${prefOf(x,q.chairs)!=null&&hasNames()?`<span class="chip app">${esc(t("b_pref_chip",{b:chairName(prefOf(x,q.chairs))}))}</span>`:""}${strikeChip(x.phone)}</b><span>${esc(svcName(x.svc))} · ${t("b_waited",{m:mins(now-x.created)})}</span></div><div class="eta"><b class="num">≈ ${mins(q.eta[x.id])} ${t("min")}</b>${hhmm(now+q.eta[x.id])}</div>
      ${isHere(x)?"":`<button class="btn ghost sm" data-here="${x.id}" type="button" style="padding:7px 10px;flex:none">${t("b_here")}</button>`}<button class="ibtn" data-up="${x.id}" ${i===0?"disabled style='opacity:.3'":""} title="${t("b_up")}" aria-label="${t("b_up")}" type="button">${ICON.up}</button><button class="ibtn" data-rm="${x.id}" title="${t("b_remove")}" aria-label="${t("b_remove")}" type="button">${ICON.x}</button></div>`}).join("")
    :`<div class="empty">${ICON.users}<div>${t("b_empty")}</div><button class="btn ghost sm" data-a="ex2" type="button">${t("b_examples")}</button></div>`;
   // absences list
@@ -950,7 +1072,8 @@ function BarberView(root){
   renderDock(q);
   $("remote").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===remote));
   root.querySelectorAll("[data-nsarm]").forEach(b=>b.onclick=()=>{noshowArm=b.dataset.nsarm;update();setTimeout(()=>{if(noshowArm===b.dataset.nsarm){noshowArm=null;update()}},8000)});
-  root.querySelectorAll("[data-abs]").forEach(b=>b.onclick=()=>{noshowArm=null;A.absent(b.dataset.abs)});
+  root.querySelectorAll("[data-abs]").forEach(b=>b.onclick=async()=>{noshowArm=null;const x=Store.tickets.find(y=>y.id===b.dataset.abs);const r=await A.absent(b.dataset.abs);if(r==="noblame"&&x)toast(t("b_noblame",{n:x.num}))});
+  {const rp=root.querySelector('[data-a="revpeek"]');if(rp&&ls.get(revKey,false))rp.onclick=()=>{revPeek=Date.now()+5000;update();setTimeout(update,5100)}}
   root.querySelectorAll("[data-delay]").forEach(b=>b.onclick=()=>{noshowArm=null;A.delay(b.dataset.delay)});
   root.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>A.up(b.dataset.up));
   root.querySelectorAll("[data-here]").forEach(b=>b.onclick=()=>A.here(b.dataset.here));
@@ -973,7 +1096,7 @@ function ScreenView(root){
   const q=Q();const blink=new Set();
   q.inChair.forEach((x,i)=>{if(x&&lastCalled[i]!==undefined&&lastCalled[i]!==x.id){blink.add(i);chime(true)}lastCalled[i]=x?x.id:null});
   root.innerHTML=`<div class="tv"><div class="now"><h2>${t("tv_now")}</h2>
-   ${q.inChair.map((x,i)=>`<div class="tvchair ${blink.has(i)?"called":""}"><div class="n num ${x?"":"free"}">${x?String(x.num).padStart(2,"0"):"–"}</div><div><b>${t("chair")} ${i+1}</b><span>${x?esc(x.name):t("b_free")}</span></div></div>`).join("")}
+   ${q.inChair.map((x,i)=>`<div class="tvchair ${blink.has(i)?"called":""}"><div class="n num ${x?"":"free"}">${x?String(x.num).padStart(2,"0"):"–"}</div><div><b>${esc(chairName(i))}</b><span>${x?esc(x.name):t("b_free")}</span></div></div>`).join("")}
    <h2 style="margin-top:8px">${t("tv_next")}</h2><div class="nexts">${q.waiting.slice(0,6).map(x=>`<span class="num">${String(x.num).padStart(2,"0")}</span>`).join("")||`<span style="opacity:.5">–</span>`}</div></div>
    <div class="side2"><div><div class="clock num" data-clock>${hhmm(Date.now())}</div><div style="opacity:.85;margin-top:6px;font-weight:600">${esc(Store.shop.name)}</div></div>
     <div style="font-size:clamp(18px,2vw,24px);font-weight:700"><span class="num">${q.waiting.length}</span> ${t("tv_waiting")}<br><span style="opacity:.85;font-weight:500">${Store.shop.paused?t("paused"):t("tv_new",{m:mins(q.nextFree)})}</span></div>
