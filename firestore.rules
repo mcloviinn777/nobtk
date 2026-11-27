@@ -13,7 +13,7 @@ service cloud.firestore {
         || (request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen', 'photo',
                       'services', 'hours', 'barbers', 'pace', 'noRevenue',
-                      'setupDone', 'working'])
+                      'setupDone', 'working', 'bpause'])
             && (!('photo' in request.resource.data)
                 || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000)));
 

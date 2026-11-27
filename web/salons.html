@@ -87,7 +87,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,Tajawal,
   var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
   var norm=function(s){return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim()};
   var t=function(k,v){var s=(T[lang][k]||T.fr[k]||k);if(v)for(var x in v)s=s.split("{"+x+"}").join(v[x]);return s};
-  function state(s){if(s.paused)return"pause";return(Date.now()-(s.lastSeen||0)<4*60000)?"on":"off"}
+  // outside the opening hours a salon is closed, whatever its phone says
+  function inHours(s){var h=s.hours;if(!Array.isArray(h)||h.length<7)return true;var now=new Date(),min=now.getHours()*60+now.getMinutes();var hm=function(v){var m=/^(\d{1,2}):(\d{2})/.exec(v||"");return m?(+m[1])*60+(+m[2]):null};
+   var y=h[(now.getDay()+5)%7];if(y&&y.open){var f0=hm(y.from),t0=hm(y.to);if(f0!=null&&t0!=null&&t0<f0&&min<t0)return true}
+   var d=h[(now.getDay()+6)%7];if(!d||!d.open)return false;var f=hm(d.from),to=hm(d.to);if(f==null||to==null)return true;var end=to<=f?to+1440:to;return min>=f&&min<end}
+  function state(s){if(!inHours(s))return"off";if(s.paused)return"pause";return(Date.now()-(s.lastSeen||0)<4*60000)?"on":"off"}
   function card(s,mine){
     var st=state(s),ini=esc((s.name||"?").trim().charAt(0).toUpperCase());
     var av=s.photo&&/^data:image\/(jpeg|png|webp);base64,/.test(s.photo)?'<img class="av" src="'+esc(s.photo)+'" alt="" onerror="this.outerHTML=\'<div class=ini>'+ini+'</div>\'">':'<div class="ini">'+ini+'</div>';
