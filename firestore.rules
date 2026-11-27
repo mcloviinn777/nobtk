@@ -12,7 +12,8 @@ service cloud.firestore {
       allow update: if request.auth != null
         || (request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['name', 'paused', 'chairs', 'grace', 'blockDays', 'lastSeen', 'photo',
-                      'services', 'hours', 'barbers', 'pace', 'noRevenue'])
+                      'services', 'hours', 'barbers', 'pace', 'noRevenue',
+                      'setupDone', 'working'])
             && (!('photo' in request.resource.data)
                 || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000)));
 

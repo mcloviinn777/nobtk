@@ -264,6 +264,17 @@ svg.i{width:18px;height:18px;flex:none}
 .share{display:flex;gap:8px;flex-wrap:wrap}.share .btn{flex:1;min-width:110px}
 .phdet summary{cursor:pointer;color:var(--primary);font-weight:700;font-size:14px;list-style:none}.phdet summary::-webkit-details-marker{display:none}.phdet[open] summary{margin-bottom:8px}
 .revh{cursor:pointer}
+.setup{background:var(--surface);border:2px solid var(--primary);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.setup h2{font-size:22px}.setup .q{font-weight:800;font-size:17px}
+.setup .opts4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.setup .opts4 button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:16px 12px;font:inherit;font-weight:800;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.setup .opts4 button small{font-weight:500;font-size:12.5px;color:var(--muted)}
+.setup .opts4 button[aria-pressed=true]{border-color:var(--primary);background:var(--primary);color:#fff}.setup .opts4 button[aria-pressed=true] small{color:#D9D6FF}
+.setup .names{display:flex;flex-direction:column;gap:8px}.setup .row2{display:flex;gap:8px}.setup .row2 .btn{flex:1}
+.wk{display:flex;flex-direction:column;gap:8px}.wk label{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;background:var(--bg);border-radius:14px;padding:12px 14px}.wk input{width:22px;height:22px}
+.pbt{width:100%;border-collapse:collapse;font-size:14px}.pbt th{font-size:11.5px;color:var(--muted);text-align:end;font-weight:700;padding:4px 6px;text-transform:uppercase;letter-spacing:.04em}.pbt th:first-child,.pbt td:first-child{text-align:start}
+.pbt td{padding:8px 6px;border-top:1px solid var(--line);text-align:end;white-space:nowrap}.pbt td:first-child{font-weight:800;white-space:normal}.pbt small{display:block;color:var(--muted);font-size:11.5px;font-weight:500}
+.chip.off{background:var(--line);color:var(--muted)}
 .fdock{position:sticky;bottom:0;z-index:30;margin:0 -2px;padding:14px 2px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to bottom,transparent,var(--bg) 22%);display:flex;flex-direction:column;gap:8px}
 .fdock:empty{display:none}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
@@ -456,7 +467,10 @@ strike_1:"Avertissement : 1 absence sur 3.",strike_2:"Dernier avertissement : 2 
 strike_block:"3 absences : réservation en ligne bloquée jusqu'au {d}.",cancel_free:"Annuler ton ticket ne compte jamais comme absence.",
 blocked_msg:"Ce numéro est bloqué jusqu'au {d} après 3 absences. Tu peux toujours venir directement au salon.",
 policy_short:"Quand c'est ton tour, tu as {g} min pour te présenter. Annuler est gratuit, mais 3 absences bloquent la réservation {d} jours. Priorité aux clients présents au salon.",
-b_done:"Terminé",anon:"Client",b_plus1:"+1 sur place",b_plus1_h:"Un client sans nom, ajouté en un geste.",b_plus1_ok:"N°{n} ajouté",pref_t:"Ton coiffeur",pref_any:"Le premier libre",pref_any_s:"le plus rapide",b_pref:"Coiffeur",b_pref_chip:"→ {b}",with_b:"avec {b}",
+b_done:"Terminé",su_t:"Bienvenue sur NOBTK",su_q:"Combien de coiffeurs travaillent dans ton salon ?",su_solo:"Juste moi",su_solo_s:"Tu travailles seul",su_n:"{n} coiffeurs",su_names:"Comment ils s'appellent ?",su_names_h:"Les clients pourront choisir leur coiffeur, et tu verras les coupes de chacun.",su_name_ph:"Prénom du coiffeur {i}",su_go:"C'est parti",su_back:"Retour",su_need:"Écris le prénom de chaque coiffeur.",
+team_t:"Mon équipe",team_solo:"Tu travailles seul.",team_edit:"Modifier l'équipe",
+wk_t:"Qui travaille aujourd'hui ?",wk_h:"Décoche ceux qui sont absents : les clients ne pourront plus les choisir aujourd'hui.",wk_ok:"C'est bon",wk_need:"Au moins un coiffeur doit travailler.",wk_edit:"Qui travaille aujourd'hui",off_today:"Absent aujourd'hui",off_moved:"{b} est absent aujourd'hui : tu passes avec le premier coiffeur libre.",
+pb_t:"Par coiffeur",pb_today:"Aujourd'hui",pb_week:"7 derniers jours",pb_cuts:"{n} coupes",pb_cut1:"{n} coupe",wk_solo:"7 derniers jours : {n} coupes · {r}",anon:"Client",b_plus1:"+1 sur place",b_plus1_h:"Un client sans nom, ajouté en un geste.",b_plus1_ok:"N°{n} ajouté",pref_t:"Ton coiffeur",pref_any:"Le premier libre",pref_any_s:"le plus rapide",b_pref:"Coiffeur",b_pref_chip:"→ {b}",with_b:"avec {b}",
 b_barbers:"Coiffeurs (un par fauteuil)",b_barbers_h:"Les clients pourront choisir leur coiffeur.",b_svcs:"Services et prix",b_svc_name:"Service",b_svc_price:"Prix",b_svc_min:"Durée",b_svc_add:"+ Ajouter un service",b_svc_real:"réel aujourd'hui : {m} min",b_hours:"Horaires",b_closed:"Fermé",
 days7:"Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi,Dimanche",today_h:"Aujourd'hui {a} – {b}",today_closed:"Fermé aujourd'hui",
 net_off:"Pas de connexion",net_off_p:"Tes actions sont gardées sur ce téléphone et partiront dès que le réseau revient.",net_wait:"{n} action(s) en attente",net_back:"Connexion revenue : tout est envoyé",
@@ -477,7 +491,10 @@ strike_1:"تنبيه: غياب 1 من 3.",strike_2:"آخر تنبيه: جوج غ
 strike_block:"3 غيابات: الحجز من التطبيق مبلوكي حتى {d}.",cancel_free:"إلغاء النوبة عمرو ما كيتحسب غياب.",
 blocked_msg:"هاد النمرة مبلوكية حتى {d} من بعد 3 غيابات. تقدر ديما تجي للصالون نيشان.",
 policy_short:"ملي توصل نوبتك عندك {g} دقايق باش توصل. الإلغاء فابور، و لكن 3 غيابات كيبلوكيو الحجز {d} أيام. الأولوية للكليان اللي فالصالون.",
-b_done:"سالا",anon:"كليان",b_plus1:"+1 فالصالون",b_plus1_h:"كليان بلا سمية، كيتزاد بضغطة وحدة.",b_plus1_ok:"رقم {n} تزاد",pref_t:"الحلاق ديالك",pref_any:"اللي خوا اللول",pref_any_s:"الأسرع",b_pref:"الحلاق",b_pref_chip:"← {b}",with_b:"مع {b}",
+b_done:"سالا",su_t:"مرحبا بك فـ NOBTK",su_q:"شحال من حلاق خدام فالصالون ديالك؟",su_solo:"غير أنا",su_solo_s:"خدام بوحدك",su_n:"{n} حلاقة",su_names:"شنو سميتهم؟",su_names_h:"الكليان يقدرو يختارو الحلاق ديالهم، ونتا تشوف الحلاقات ديال كل واحد.",su_name_ph:"سمية الحلاق {i}",su_go:"يالاه نبداو",su_back:"رجع",su_need:"كتب السمية ديال كل حلاق.",
+team_t:"الفريق ديالي",team_solo:"خدام بوحدك.",team_edit:"بدل الفريق",
+wk_t:"شكون خدام اليوم؟",wk_h:"حيد العلامة على اللي غايب: الكليان ما يقدروش يختاروه اليوم.",wk_ok:"صافي",wk_need:"خاص على الأقل حلاق واحد يخدم.",wk_edit:"شكون خدام اليوم",off_today:"غايب اليوم",off_moved:"{b} غايب اليوم: غادي تدوز مع أول حلاق خاوي.",
+pb_t:"على حساب الحلاق",pb_today:"اليوم",pb_week:"آخر 7 أيام",pb_cuts:"{n} حلاقة",pb_cut1:"{n} حلاقة",wk_solo:"آخر 7 أيام: {n} حلاقة · {r}",anon:"كليان",b_plus1:"+1 فالصالون",b_plus1_h:"كليان بلا سمية، كيتزاد بضغطة وحدة.",b_plus1_ok:"رقم {n} تزاد",pref_t:"الحلاق ديالك",pref_any:"اللي خوا اللول",pref_any_s:"الأسرع",b_pref:"الحلاق",b_pref_chip:"← {b}",with_b:"مع {b}",
 b_barbers:"الحلاقة (واحد لكل كرسي)",b_barbers_h:"الكليان يقدرو يختارو الحلاق ديالهم.",b_svcs:"الخدمات والأثمنة",b_svc_name:"الخدمة",b_svc_price:"الثمن",b_svc_min:"المدة",b_svc_add:"+ زيد خدمة",b_svc_real:"اليوم فالحقيقة: {m} دقيقة",b_hours:"الأوقات",b_closed:"مسدود",
 days7:"الاثنين,الثلاثاء,الأربعاء,الخميس,الجمعة,السبت,الأحد",today_h:"اليوم {a} – {b}",today_closed:"مسدود اليوم",
 net_off:"ما كاينش الانترنت",net_off_p:"الحاجات اللي درتي محفوظين فالتيليفون وغادي يتصيفطو ملي يرجع الريزو.",net_wait:"{n} حاجة كتسنى",net_back:"رجع الانترنت: كلشي تصيفط",
@@ -567,6 +584,8 @@ function startLocal(){
  Store.patchShop=async p=>{st.shop={...st.shop,...p};save()};
  Store.setClient=async(id,d)=>{st.clients[id]={...d};save()};
  Store.delClient=async id=>{delete st.clients[id];save()};
+ Store.saveDay=async(k,d)=>{st.days=st.days||{};st.days[k]={...(st.days[k]||{}),...d};save()};
+ Store.loadDays=async()=>Object.values(st.days||{}).sort((a,b)=>a.date<b.date?1:-1).slice(0,7);
  Store.mode="local";Store.ready=true;load();
  if(fresh)A.examples();
 }
@@ -587,6 +606,7 @@ function startDb(db,shopId){
  Store.delTicket=id=>W(col.doc(id).delete());
  Store.patchShop=p=>W(shopRef.set({...Store.shop,...p}));
  Store.saveDay=(k,d)=>db.collection(base+"/days").doc(k).set(d,{merge:true}).catch(e=>console.warn(e));
+ Store.loadDays=()=>db.collection(base+"/days").orderBy("date","desc").limit(7).get().then(s=>s.docs.map(d=>d.data())).catch(()=>[]);
  Store.setClient=(id,d)=>cl.doc(id).set(d).catch(writeFail);
  Store.delClient=id=>cl.doc(id).delete().catch(writeFail);
  Store.mode="live";
@@ -625,7 +645,11 @@ const isHere=x=>!!x&&(x.src==="walkin"||!!x.arrived||x.travel===0);
 function todayHours(){const h=Store.shop.hours;if(!Array.isArray(h)||h.length<7)return"";const d=h[(new Date().getDay()+6)%7];if(!d)return"";return d.open?t("today_h",{a:d.from||"",b:d.to||""}):t("today_closed")}
 function chairName(i){const b=(Store.shop.barbers||[])[i];return (b&&String(b).trim())||t("chair")+" "+(i+1)}
 const hasNames=()=>(Store.shop.barbers||[]).some(b=>b&&String(b).trim());
-const prefOf=(x,n)=>(x&&x.pref!=null&&+x.pref<n)?+x.pref:null;
+const pad2=n=>String(n).padStart(2,"0");
+const todayKey=()=>{const d=new Date(dayStart());return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())};
+// "Qui travaille aujourd'hui ?": an absent barber is out of the line for the day (never all of them)
+function isOff(i){const w=Store.shop.working;if(!w||w.day!==todayKey()||!Array.isArray(w.on))return false;const n=Math.max(1,Math.min(4,+Store.shop.chairs||1));if(!w.on.slice(0,n).some(Boolean))return false;return w.on[i]===false}
+const prefOf=(x,n)=>(x&&x.pref!=null&&+x.pref<n&&!isOff(+x.pref))?+x.pref:null;
 const prefOk=(x,i,n)=>{const p=prefOf(x,n);return p==null||p===i};
 function Q(){
  const all=Store.tickets.filter(x=>!isStale(x)).sort((a,b)=>a.num-b.num);
@@ -633,15 +657,17 @@ function Q(){
  const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(isHere(b)-isHere(a))||((a.pos??a.num)-(b.pos??b.num)));
  const inChair=Array.from({length:chairs},(_,i)=>all.find(x=>inChairSt(x)&&x.chair===i)||null);
  const now=Date.now();
- const free=inChair.map(x=>{if(!x)return 0;const d=durMin(x.svc)*60000;return Math.max(60000,(x.startedAt||x.calledAt||now)+d-now)});
+ const free=inChair.map((x,i)=>{if(isOff(i)&&!x)return Infinity;if(!x)return 0;const d=durMin(x.svc)*60000;return Math.max(60000,(x.startedAt||x.calledAt||now)+d-now)});
  const eta={},ahead={},goes={};
- waiting.forEach((x,i)=>{const p=prefOf(x,chairs);let k=p;if(k==null){k=0;for(let j=1;j<free.length;j++)if(free[j]<free[k])k=j}
+ // an absent barber takes no new client once his chair is empty
+ const pick=()=>{let k=-1;for(let j=0;j<free.length;j++)if(!isOff(j)&&(k<0||free[j]<free[k]))k=j;return k<0?0:k};
+ waiting.forEach((x,i)=>{const p=prefOf(x,chairs);let k=p;if(k==null)k=pick();
   eta[x.id]=free[k];goes[x.id]=k;ahead[x.id]=p==null?i:waiting.slice(0,i).filter(y=>{const py=prefOf(y,chairs);return py==null||py===p}).length;free[k]+=durMin(x.svc)*60000});
- const nextFree=Math.min(...free);
+ const nextFree=Math.min(...free.filter((f,j)=>!isOff(j)&&isFinite(f)),Infinity);
  // the wait for one barber, for the client's choice
  const freeFor=i=>{let f=inChair[i]?Math.max(60000,(inChair[i].startedAt||now)+durMin(inChair[i].svc)*60000-now):0;waiting.forEach(x=>{if(goes[x.id]===i)f+=durMin(x.svc)*60000});return f};
  const done=all.filter(x=>x.status==="done"),noshow=all.filter(x=>x.status==="noshow");
- return {all,chairs,waiting,inChair,eta,ahead,goes,nextFree,freeFor,done,noshow};
+ return {all,chairs,waiting,inChair,eta,ahead,goes,nextFree:isFinite(nextFree)?nextFree:0,freeFor,done,noshow};
 }
 const phoneKey=p=>{let d=String(p||"").replace(/\D/g,"");if(d.startsWith("212"))d="0"+d.slice(3);if(d.length===9&&/^[5-7]/.test(d))d="0"+d;return /^0[5-7]\d{8}$/.test(d)?d:null};
 function clientRec(phone){const k=phoneKey(phone);if(!k)return null;const c=Store.clients.find(x=>x.id===k);if(!c)return null;
@@ -662,7 +688,7 @@ const A={
   const d={num,pos:num,name:nm,pref:(pref==null||pref==="")?null:+pref,alertOk:!!alertOk,phone:phoneKey(phone)||(phone||"").trim().slice(0,20),svc:svcId,price:svc(svcId).price,src,status:"waiting",created:Date.now(),onWay:false,chair:null,etaAtJoin:q.nextFree+0,travel:(travel==null?null:+travel)};if(photo)d.photo=photo;
   await Store.setTicket(id,d);await A.fill();return id},
  // Puts the first person in line into every free chair. Runs after any change that can free a chair.
- async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;const w=q.waiting.find(x=>!used.has(x.id)&&prefOk(x,i,n));if(!w)continue;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
+ async fill(){const used=new Set();const n=Q().chairs;for(let i=0;i<n;i++){const q=Q();if(q.inChair[i])continue;if(isOff(i))continue;const w=q.waiting.find(x=>!used.has(x.id)&&prefOk(x,i,n));if(!w)continue;used.add(w.id);await Store.patchTicket(w.id,{status:"chair",chair:i,startedAt:Date.now()})}},
  async finish(id){const x=Store.tickets.find(y=>y.id===id);if(!x)return;await Store.patchTicket(id,{status:"done",doneAt:Date.now(),startedAt:x.startedAt||Date.now()});await A.fill()},
  // Undo a Terminé tapped by mistake: the client goes back to his chair, and whoever was placed there goes back to the head of the line.
  async undoFinish(id,chair,nextId){if(nextId)await Store.patchTicket(nextId,{status:"waiting",chair:null,startedAt:null});await Store.patchTicket(id,{status:"chair",chair,doneAt:null})},
@@ -699,6 +725,7 @@ const A={
   if(Store.saveDay)for(const key in groups){const g=groups[key];const done=g.filter(x=>x.status==="done");const byHour=Array(24).fill(0);done.forEach(x=>{byHour[new Date(x.doneAt||x.created).getHours()]++});
    const sum={date:key,served:done.length,noshow:g.filter(x=>x.status==="noshow").length,app:g.filter(x=>x.src==="app").length,total:g.length,byHour,savedAt:Date.now()};
    if(!Store.shop.noRevenue)sum.revenue=done.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);
+   const n=Math.max(1,Math.min(4,+Store.shop.chairs||1));if(n>1)sum.byBarber=Array.from({length:n},(_,i)=>{const d=done.filter(x=>x.chair===i);const o={name:chairName(i),served:d.length};if(!Store.shop.noRevenue)o.revenue=d.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);return o});
    await Store.saveDay(key,sum)}
   // remember the real pace for tomorrow's first estimates
   const d=real.filter(x=>x.status==="done"&&x.startedAt&&x.doneAt);
@@ -769,8 +796,9 @@ function ClientView(root,key,standalone){
    if(ls.get("nobtk-notif",null)==null)ls.set("nobtk-notif","app");update()};
  }
  function updateShop(){const q=Q();{const im=body.querySelector('[data-k="sphoto"]');if(im){const ok=okPhoto(Store.shop.photo);im.hidden=!ok;if(ok&&im.getAttribute("src")!==Store.shop.photo)im.src=Store.shop.photo}}body.querySelector(".shopname").textContent=Store.shop.name+" · "+(Store.shop.paused?t("paused"):t("open"))+(todayHours()?" · "+todayHours():"");
-  {const box=body.querySelector('[data-k="prefbox"]');const show=hasNames()&&q.chairs>1;box.hidden=!show;
-   if(show){if(prefPick!=null&&+prefPick>=q.chairs)prefPick=null;const opts=[{v:null,n:t("pref_any"),m:q.nextFree,sub:t("pref_any_s")}].concat(Array.from({length:q.chairs},(_,i)=>({v:i,n:chairName(i),m:q.freeFor(i)})));
+  {const box=body.querySelector('[data-k="prefbox"]');const show=hasNames()&&q.chairs>1&&Array.from({length:q.chairs},(_,i)=>!isOff(i)).filter(Boolean).length>1;box.hidden=!show;
+   if(show){if(prefPick!=null&&+prefPick>=q.chairs)prefPick=null;const opts=[{v:null,n:t("pref_any"),m:q.nextFree,sub:t("pref_any_s")}].concat(Array.from({length:q.chairs},(_,i)=>i).filter(i=>!isOff(i)).map(i=>({v:i,n:chairName(i),m:q.freeFor(i)})));
+    if(prefPick!=null&&isOff(+prefPick))prefPick=null;
     const h=opts.map(o=>`<button type="button" data-pref="${o.v==null?"":o.v}" aria-pressed="${(o.v==null?prefPick==null:+prefPick===o.v)}">${esc(o.n)}<small>${Store.shop.paused?"":"~"+mins(o.m)+" "+t("min")}${o.sub?" · "+o.sub:""}</small></button>`).join("");
     const pb=body.querySelector('[data-k="prefs"]');if(pb.dataset.h!==h){pb.dataset.h=h;pb.innerHTML=h;pb.querySelectorAll("[data-pref]").forEach(b=>b.onclick=()=>{prefPick=b.dataset.pref===""?null:+b.dataset.pref;ls.set("nobtk-pref-"+key,prefPick);updateShop()})}}}
   body.querySelector('[data-k="w"]').textContent=q.waiting.length;body.querySelector('[data-k="e"]').textContent=Store.shop.paused?"–":`${mins(q.nextFree)} ${t("min")}`;
@@ -828,6 +856,7 @@ function ClientView(root,key,standalone){
   if(stg==="noshow")p+=" "+(x.noBlame?t("st_noshow_nob"):x.strike?strikeMsg(x.strike,x.blockedUntil):"");
   if(x.delayed&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("st_delayed_p");
   if(x.bumps&&!isHere(x)&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("n_bump_b");
+  if(x.pref!=null&&+x.pref<q.chairs&&isOff(+x.pref)&&(stg==="wait"||stg==="soon"||stg==="next"))p=t("off_moved",{b:chairName(+x.pref)});
   $("stp").textContent=p;
   const waitingLike=stg==="wait"||stg==="soon"||stg==="next";
   if(waitingLike){$("eta").textContent=mins(etaMs);$("etal").textContent=t("min");
@@ -904,7 +933,10 @@ function BarberView(root){
  root.innerHTML=`
   <div class="bhead"><h1 data-k="title"></h1><span class="pill" data-k="state"></span><button class="btn ghost sm" data-a="pause" type="button"></button></div>
   <div data-k="iosb"></div>
+  <section class="setup" data-k="setup" hidden></section>
+  <section class="setup" data-k="wk" hidden></section>
   <div class="stats" data-k="stats"></div>
+  <section class="card" data-k="pb" hidden></section>
   <section><div class="lbl" style="margin-bottom:8px">${t("b_chairs")}</div><div class="chairs" data-k="chairs"></div></section>
   <div class="qwrap">
    <section class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:10px;flex-wrap:wrap"><h2 style="font-size:19px">${t("b_queue")} <span class="muted num" data-k="qn"></span></h2><span class="muted" style="font-size:13px" data-k="nf"></span></div><div class="qlist" data-k="q"></div></section>
@@ -924,8 +956,7 @@ function BarberView(root){
     <details class="card set"><summary>${t("b_settings")}<span class="muted">⌄</span></summary><div class="setg">
      <div class="field"><label class="lbl" for="b-shop">${t("b_shopname")}</label><div style="display:flex;gap:6px"><input id="b-shop" maxlength="40"><button class="btn ghost sm" type="button" data-a="saveName">${t("b_save")}</button></div></div>
      <div class="field"><span class="lbl">${t("b_photo")}</span><div class="shopphoto"><span data-k="sph"></span><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn ghost sm filebtn">${t("b_photo_add")}<input type="file" accept="image/*" data-a="sphadd"></label><button class="btn ghost sm" type="button" data-a="sphdel" hidden>${t("ph_del")}</button></div></div><span class="muted" style="font-size:12.5px">${t("b_photo_h")}</span></div>
-     <div class="field"><span class="lbl">${t("b_nchairs")}</span><div class="stepper" data-k="nch">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
-     <div class="field"><span class="lbl">${t("b_barbers")}</span><div class="setg" data-k="bnames" style="gap:6px"></div><span class="muted" style="font-size:12.5px">${t("b_barbers_h")}</span><button class="btn ghost sm" type="button" data-a="saveBarbers">${t("b_save")}</button></div>
+     <div class="field"><span class="lbl">${t("team_t")}</span><div data-k="teamsum" style="font-weight:700"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" type="button" data-a="teamEdit">${t("team_edit")}</button><button class="btn ghost sm" type="button" data-a="wkEdit">${t("wk_edit")}</button></div></div>
      <div class="field"><span class="lbl">${t("b_svcs")}</span><div class="svced" data-k="svced"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" type="button" data-a="svcAdd">${t("b_svc_add")}</button><button class="btn pri sm" type="button" data-a="svcSave">${t("b_save")}</button></div></div>
      <div class="field"><span class="lbl">${t("b_hours")}</span><div class="hrs" data-k="hrs"></div><button class="btn ghost sm" type="button" data-a="hrsSave">${t("b_save")}</button></div>
      <label style="display:flex;gap:10px;align-items:center;font-weight:600;font-size:14px"><input type="checkbox" data-k="revhide" style="width:20px;height:20px">${t("b_rev_hide")}</label>
@@ -959,27 +990,55 @@ function BarberView(root){
   box.querySelectorAll("[data-svdel]").forEach(b=>b.onclick=()=>{if(svcDraft.length>1){svcDraft.splice(+b.dataset.svdel,1);drawSvc()}})}
  function drawHrs(){const D=t("days7").split(",");$("hrs").innerHTML=hrsDraft.map((h,i)=>`<div class="r"><label><input type="checkbox" data-hr="${i}" data-f="open" ${h.open?"checked":""}>${esc(D[i])}</label>${h.open?`<input type="time" data-hr="${i}" data-f="from" value="${esc(h.from||"09:00")}"><input type="time" data-hr="${i}" data-f="to" value="${esc(h.to||"21:00")}">`:`<span class="muted" style="grid-column:2/-1;font-size:13px">${t("b_closed")}</span>`}</div>`).join("");
   $("hrs").querySelectorAll("[data-hr]").forEach(inp=>inp.onchange=()=>{const h=hrsDraft[+inp.dataset.hr];if(inp.dataset.f==="open"){h.open=inp.checked;drawHrs()}else h[inp.dataset.f]=inp.value})}
- function drawNames(n){const cur=(Store.shop.barbers||[]);$("bnames").innerHTML=Array.from({length:n},(_,i)=>`<input data-bn="${i}" maxlength="24" placeholder="${t("chair")} ${i+1}" value="${esc(cur[i]||"")}">`).join("")}
  function initEditors(){if(edInit)return;edInit=true;
   svcDraft=SERVICES_L().map(x=>({id:x.id,name:x[lang]||x.fr,price:x.price,minutes:x.min}));drawSvc();
   const D=t("days7").split(",");const h=Array.isArray(Store.shop.hours)&&Store.shop.hours.length>=7?Store.shop.hours:D.map((d,i)=>({day:d,open:i<6,from:"09:00",to:"21:00"}));hrsDraft=h.slice(0,7).map((x,i)=>({day:x.day||D[i],open:!!x.open,from:x.from||"09:00",to:x.to||"21:00"}));drawHrs();
-  drawNames(Q().chairs)}
+  }
  root.querySelector('[data-a="svcAdd"]').onclick=()=>{svcDraft.push({id:"s"+Date.now().toString(36),name:"",price:50,minutes:20});drawSvc();const l=$("svced").querySelectorAll('[data-f="name"]');l[l.length-1].focus()};
  root.querySelector('[data-a="svcSave"]').onclick=async()=>{const list=svcDraft.filter(x=>String(x.name).trim()).map(x=>({id:x.id,name:String(x.name).trim().slice(0,40),price:Math.max(0,Math.round(+x.price||0)),minutes:Math.max(5,Math.round(+x.minutes||20))}));if(!list.length)return;await Store.patchShop({services:list});toast(t("saved"));drawAddSvc(true)};
  root.querySelector('[data-a="hrsSave"]').onclick=async()=>{await Store.patchShop({hours:hrsDraft.map(x=>({...x}))});toast(t("saved"))};
- root.querySelector('[data-a="saveBarbers"]').onclick=async()=>{const n=Q().chairs;const cur=(Store.shop.barbers||[]).slice();$("bnames").querySelectorAll("[data-bn]").forEach(i=>{cur[+i.dataset.bn]=i.value.trim().slice(0,24)});await Store.patchShop({barbers:cur.slice(0,4).map(x=>x||"")});toast(t("saved"))};
+ // ---- team setup: asked once, changed later from Réglages
+ let suOpen=false,suN=null,wkOpen=false,days=[],daysAt=0;
+ function drawSetup(){const box=$("setup");const show=suOpen||(Store.ready&&!Store.shop.setupDone);box.hidden=!show;if(!show)return;
+  if(!box.dataset.step)box.dataset.step="1";
+  const n0=Math.max(1,Math.min(4,+Store.shop.chairs||1));
+  if(box.dataset.step==="1"){const sig="1|"+n0+"|"+!!Store.shop.setupDone;if(box.dataset.sig===sig)return;box.dataset.sig=sig;
+   box.innerHTML=`<h2>${t("su_t")}</h2><div class="q">${t("su_q")}</div><div class="opts4">${[1,2,3,4].map(n=>`<button type="button" data-su="${n}" aria-pressed="${n===n0&&!!Store.shop.setupDone}">${n===1?t("su_solo"):n}<small>${n===1?t("su_solo_s"):t("su_n",{n})}</small></button>`).join("")}</div>${Store.shop.setupDone?`<button class="btn ghost" type="button" data-a="suClose">${t("su_back")}</button>`:""}`;
+   box.querySelectorAll("[data-su]").forEach(b=>b.onclick=async()=>{suN=+b.dataset.su;if(suN===1){await saveTeam(1,[])}else{box.dataset.step="2";box.dataset.sig="";drawSetup()}})}
+  else{const sig="2|"+suN;if(box.dataset.sig===sig)return;box.dataset.sig=sig;const cur=Store.shop.barbers||[];
+   box.innerHTML=`<h2>${t("su_names")}</h2><p class="muted" style="margin:0">${t("su_names_h")}</p><div class="names">${Array.from({length:suN},(_,i)=>`<input data-sun="${i}" maxlength="24" placeholder="${esc(t("su_name_ph",{i:i+1}))}" value="${esc(cur[i]||"")}">`).join("")}</div><div class="err" data-k="suerr" hidden></div><div class="row2"><button class="btn ghost" type="button" data-a="suBack">${t("su_back")}</button><button class="btn pri" type="button" data-a="suGo">${t("su_go")}</button></div>`;
+   box.querySelector('[data-a="suBack"]').onclick=()=>{box.dataset.step="1";box.dataset.sig="";drawSetup()};
+   box.querySelector('[data-a="suGo"]').onclick=async()=>{const names=[...box.querySelectorAll("[data-sun]")].map(i=>i.value.trim().slice(0,24));if(names.some(x=>!x)){const e=box.querySelector('[data-k="suerr"]');e.textContent=t("su_need");e.hidden=false;return}await saveTeam(suN,names)}}
+  const cl=box.querySelector('[data-a="suClose"]');if(cl)cl.onclick=()=>{suOpen=false;suN=null;box.dataset.step="";box.dataset.sig="";drawSetup()}}
+ async function saveTeam(n,names){await Store.patchShop({chairs:n,barbers:n>1?names:[],setupDone:true,working:{day:todayKey(),on:Array.from({length:n},()=>true)}});suOpen=false;suN=null;$("setup").dataset.step="";$("setup").dataset.sig="";toast(t("saved"));await A.fill();update()}
+ root.querySelector('[data-a="teamEdit"]').onclick=()=>{suOpen=true;suN=null;$("setup").dataset.step="1";$("setup").dataset.sig="";drawSetup();$("setup").scrollIntoView({behavior:"smooth",block:"start"})};
+ // ---- each morning: who works today (teams only)
+ function drawWk(q){const box=$("wk");const w=Store.shop.working;const ask=q.chairs>1&&Store.shop.setupDone&&(!w||w.day!==todayKey());const show=$("setup").hidden&&(wkOpen||ask);box.hidden=!show;if(!show)return;
+  const on=(w&&w.day===todayKey()&&Array.isArray(w.on))?w.on:[];const sig=q.chairs+"|"+JSON.stringify(on)+(Store.shop.barbers||[]).join();if(box.dataset.sig===sig)return;box.dataset.sig=sig;
+  box.innerHTML=`<h2>${t("wk_t")}</h2><p class="muted" style="margin:0">${t("wk_h")}</p><div class="wk">${Array.from({length:q.chairs},(_,i)=>`<label><input type="checkbox" data-wk="${i}" ${on[i]===false?"":"checked"}>${esc(chairName(i))}</label>`).join("")}</div><div class="err" data-k="wkerr" hidden></div><button class="btn pri" type="button" data-a="wkGo">${t("wk_ok")}</button>`;
+  box.querySelector('[data-a="wkGo"]').onclick=async()=>{const v=[...box.querySelectorAll("[data-wk]")].map(i=>i.checked);if(!v.some(Boolean)){const e=box.querySelector('[data-k="wkerr"]');e.textContent=t("wk_need");e.hidden=false;return}wkOpen=false;box.dataset.sig="";await Store.patchShop({working:{day:todayKey(),on:v}});await A.fill();update()}}
+ root.querySelector('[data-a="wkEdit"]').onclick=()=>{wkOpen=true;$("wk").dataset.sig="";update();$("wk").scrollIntoView({behavior:"smooth",block:"start"})};
+ // ---- numbers per barber (teams) or for the last 7 days (solo)
+ async function refreshDays(){if(!Store.loadDays||Date.now()-daysAt<5*60000)return;daysAt=Date.now();days=await Store.loadDays();update()}
+ function drawPb(q){const box=$("pb");const hide=ls.get(revKey,false)&&Date.now()>revPeek;const dh=v=>hide?"•••• "+t("dh"):money(v);const tk=todayKey();const past=days.filter(d=>d.date&&d.date!==tk).slice(0,6);
+  const price=x=>x.price??svc(x.svc).price;
+  if(q.chairs<=1){const n=q.done.length+past.reduce((a,d)=>a+(d.served||0),0),r=q.done.reduce((a,x)=>a+price(x),0)+past.reduce((a,d)=>a+(d.revenue||0),0);box.hidden=!n;if(n)box.innerHTML=`<div style="font-weight:700">${t("wk_solo",{n,r:dh(r)})}</div>`;return}
+  box.hidden=false;
+  const rows=Array.from({length:q.chairs},(_,i)=>{const nm=chairName(i);const d=q.done.filter(x=>x.chair===i);let wn=d.length,wr=d.reduce((a,x)=>a+price(x),0);past.forEach(day=>(day.byBarber||[]).forEach(b=>{if(b&&b.name===nm){wn+=b.served||0;wr+=b.revenue||0}}));
+   return `<tr><td>${esc(nm)}${isOff(i)?`<small>${t("off_today")}</small>`:""}</td><td>${t(d.length>1?"pb_cuts":"pb_cut1",{n:d.length})}<small>${dh(d.reduce((a,x)=>a+price(x),0))}</small></td><td>${t(wn>1?"pb_cuts":"pb_cut1",{n:wn})}<small>${dh(wr)}</small></td></tr>`}).join("");
+  box.innerHTML=`<h3 style="font-size:17px;margin-bottom:6px">${t("pb_t")}</h3><table class="pbt"><tr><th></th><th>${t("pb_today")}</th><th>${t("pb_week")}</th></tr>${rows}</table>`}
+
  const revKey="nobtk-hiderev-"+SHOP_ID;let revPeek=0;
  $("revhide").checked=!!ls.get(revKey,false);$("revhide").onchange=e=>{ls.set(revKey,e.target.checked);update()};
  $("revno").onchange=e=>Store.patchShop({noRevenue:e.target.checked});
  let svcSig="",prefSig="";
  function drawAddSvc(force){const l=SERVICES_L();const sig=JSON.stringify(l.map(x=>[x.id,x.fr,x.price]));if(!force&&sig===svcSig)return;svcSig=sig;const sel=root.querySelector("#b-svc"),v=sel.value;sel.innerHTML=l.map(x=>`<option value="${x.id}">${esc(x[lang]||x.fr)} · ${money(x.price)}</option>`).join("");if(l.some(x=>x.id===v))sel.value=v}
- function drawAddPref(n){const show=hasNames()&&n>1;$("bprefbox").hidden=!show;if(!show)return;const sig=n+JSON.stringify(Store.shop.barbers||[]);if(sig===prefSig)return;prefSig=sig;const sel=root.querySelector("#b-pref"),v=sel.value;sel.innerHTML=`<option value="">${t("pref_any")}</option>`+Array.from({length:n},(_,i)=>`<option value="${i}">${esc(chairName(i))}</option>`).join("");sel.value=v}
+ function drawAddPref(n){const show=hasNames()&&n>1;$("bprefbox").hidden=!show;if(!show)return;const sig=n+JSON.stringify(Store.shop.barbers||[])+JSON.stringify(Store.shop.working||null);if(sig===prefSig)return;prefSig=sig;const sel=root.querySelector("#b-pref"),v=sel.value;sel.innerHTML=`<option value="">${t("pref_any")}</option>`+Array.from({length:n},(_,i)=>isOff(i)?"":`<option value="${i}">${esc(chairName(i))}</option>`).join("");sel.value=v}
  let autoDay=false;
  root.querySelector('[data-a="pause"]').onclick=()=>Store.patchShop({paused:!Store.shop.paused});
  root.querySelector('[data-a="saveName"]').onclick=async()=>{const v=root.querySelector("#b-shop").value.trim();if(v){await Store.patchShop({name:v});toast(t("saved"))}};
  root.querySelector('[data-a="sphadd"]').onchange=async e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;try{const u=await window.NOBTK_IMG(f,320,.8);await Store.patchShop({photo:u});toast(t("b_photo_saved"))}catch(x){toast(t("photo_err"))}};
  root.querySelector('[data-a="sphdel"]').onclick=()=>Store.patchShop({photo:""});
- $("nch").querySelectorAll("button").forEach(b=>b.onclick=async()=>{await Store.patchShop({chairs:+b.dataset.n});await A.fill()});
  $("grace").querySelectorAll("button").forEach(b=>b.onclick=()=>Store.patchShop({grace:+b.dataset.n}));
  $("bdays").querySelectorAll("button").forEach(b=>b.onclick=()=>Store.patchShop({blockDays:+b.dataset.n}));
  root.querySelector('[data-a="ex"]').onclick=()=>A.examples();
@@ -1024,7 +1083,9 @@ function BarberView(root){
   const q=Q(),now=Date.now();drawAddPref(q.chairs);
   {const w=$("shwa");if(w)w.href="https://wa.me/?text="+encodeURIComponent(shareText())}
   $("revno").checked=!!Store.shop.noRevenue;
-  if($("bnames").children.length!==q.chairs)drawNames(q.chairs);
+  drawSetup();drawWk(q);drawPb(q);refreshDays();
+  $("teamsum").textContent=q.chairs>1?Array.from({length:q.chairs},(_,i)=>chairName(i)+(isOff(i)?" ("+t("off_today")+")":"")).join(" · "):t("team_solo");
+  root.querySelector('[data-a="wkEdit"]').hidden=q.chairs<=1;
   const cur={};q.all.forEach(x=>cur[x.id]={s:x.status,w:x.onWay});
   const fresh=new Set();
   if(seen){q.all.forEach(x=>{const p=seen[x.id];
@@ -1042,6 +1103,7 @@ function BarberView(root){
   const avg=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
   $("stats").innerHTML=`<div class="stat"><b class="num">${q.done.length}</b><span>${t("b_served")}</span></div><div class="stat ${ls.get(revKey,false)?"revh":""}" data-a="revpeek"><b class="num">${ls.get(revKey,false)&&Date.now()>revPeek?"•••• "+t("dh"):money(rev)}</b><span>${t("b_rev")}${ls.get(revKey,false)&&Date.now()>revPeek?" · "+t("b_rev_show"):""}</span></div><div class="stat"><b class="num">${avg==null?"–":avg+" "+t("min")}</b><span>${t("b_avg")}</span></div><div class="stat"><b class="num">${q.noshow.length}</b><span>${t("b_noshow")}</span></div>`;
   $("chairs").innerHTML=q.inChair.map((x,i)=>{
+   if(!x&&isOff(i))return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${esc(chairName(i))}</span><span class="chip off">${t("off_today")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("off_today")}</b></div></div></div>`;
    if(!x)return `<div class="chair"><div class="chair-h"><span class="lbl">${ICON.chair} ${esc(chairName(i))}</span><span class="chip">${t("b_free")}</span></div><div class="who"><div class="badge free">–</div><div><b>${t("b_free")}</b><span>${t("b_auto")}</span></div></div>${q.waiting.length?`<div class="acts"><button class="btn acc" data-fill="1" type="button">${t("b_fill")}</button></div>`:""}</div>`;
    const el=mins(now-(x.startedAt||now)),d=durMin(x.svc),pct=Math.min(100,el/d*100);
    const gl=(x.startedAt||now)+graceMs()-now;
@@ -1065,7 +1127,6 @@ function BarberView(root){
   const abs=Store.clients.map(c=>({...c,...(clientRec(c.id)||{})})).filter(c=>c.strikes>0).sort((a,b)=>(b.strikes-a.strikes)||((b.lastNoShow||0)-(a.lastNoShow||0)));
   $("abs").innerHTML=abs.length?abs.map(c=>{const blocked=c.blockedUntil&&c.blockedUntil>now;return `<div class="qrow"><div class="info"><b>${esc(c.name||c.id)} <span class="chip ${blocked?"bad":"ph"}">${blocked?t("b_blocked"):t("b_strike_chip",{s:c.strikes})}</span></b><span class="num">${esc(c.id)}${blocked?" · "+t("b_until",{d:dateStr(c.blockedUntil)}):""}</span></div><button class="btn ghost sm" data-forgive="${esc(c.id)}" type="button">${t("b_forgive")}</button></div>`}).join("")
    :`<div class="muted" style="font-size:13px;padding:6px 0">${t("b_abs_none")}</div>`;
-  $("nch").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===q.chairs));
   $("grace").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===(+Store.shop.grace||5)));
   $("bdays").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.n===blockDays()));
   root.querySelectorAll("[data-fill]").forEach(b=>b.onclick=()=>A.fill());

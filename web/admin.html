@@ -303,7 +303,7 @@ function dashboard(db) {
       while (taken.has(id)) id = slugify(x.shop) + "-" + n++;
       const pin = newPin(), now = Date.now(), trialEnds = isoDay(addMonths(now, 2));
       const services = (x.services || []).filter((s) => s.name).map((s, i) => ({ id: "s" + (i + 1), name: s.name, price: +s.price || 0, minutes: +s.minutes || 20 }));
-      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: Math.max(1, Math.min(4, x.chairs || 1)), grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", address: x.address || "", active: true, pinHash: await sha(id + ":" + pin) });
+      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: Math.max(1, Math.min(4, x.barbers || x.chairs || 1)), grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", address: x.address || "", active: true, pinHash: await sha(id + ":" + pin) });
       await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: x.shop, owner: x.owner || "", phone: x.phone || "", email: x.email || "", city: x.city || "", address: x.address || "", chairs: x.chairs || 1, barbers: x.barbers || 1,
         services, hours: x.hours || [], plan: x.plan || ((x.chairs || 1) <= 1 ? "solo" : "salon"), billing: x.billing || "month", price: x.price || priceFor(x.chairs || 1, x.billing), status: "essai", trialEnds, nextPayment: trialEnds,
         pin, notes: "", signupId: x.id, source: x.source || "", createdAt: now, activatedAt: now, history: [{ at: now, type: "activation", text: "Salon activé, essai gratuit de 2 mois" }] });
