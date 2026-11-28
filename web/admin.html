@@ -84,6 +84,7 @@ textarea{resize:vertical}
 .ibtn{border:0;background:var(--surface-2);border-radius:10px;cursor:pointer;font-size:18px;color:var(--muted)}
 .hr{display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;gap:6px;align-items:center}
 .hr input[type=time]{border:1.5px solid var(--line);border-radius:10px;padding:7px 8px;font:inherit}
+.dup{margin-top:6px;background:#FFF0D6;color:#6B4300;border-radius:10px;padding:7px 10px;font-size:13px;line-height:1.4}
 .hist{max-height:220px;overflow:auto}
 code{background:var(--surface-2);padding:2px 6px;border-radius:6px}
 @media (max-width:760px){.su{grid-template-columns:1fr}}
@@ -140,7 +141,17 @@ async function sha(x) { const b = await crypto.subtle.digest("SHA-256", new Text
 const newPin = () => String(Math.floor(1000 + Math.random() * 9000));
 const monthlyOf = (x) => x.billing === "year" ? Math.round((x.price || 0) / 12) : (x.price || 0);
 const tprice = (t, svcs) => t.price ?? ((svcs || []).find((s) => s.id === t.svc) || {}).price ?? ((DEF_SVC.find((s) => s[0] === t.svc) || [])[2] || 0);
-const priceFor = (chairs, billing) => { const m = chairs <= 1 ? 99 : Math.min(299, 149 + 20 * Math.max(0, chairs - 5)); return billing === "year" ? m * 10 : m; };
+// Price by number of barbers: Solo (1) 99 DH, Salon (2-3) 149 DH, Grand salon (4) 199 DH. Yearly = 10 months.
+const nb4 = (n) => Math.max(1, Math.min(4, +n || 1));
+const tierOf = (n) => { n = nb4(n); return n <= 1 ? { k: "solo", name: "Solo", m: 99 } : n <= 3 ? { k: "salon", name: "Salon", m: 149 } : { k: "grand", name: "Grand salon", m: 199 }; };
+const priceFor = (n, billing) => { const m = tierOf(n).m; return billing === "year" ? m * 10 : m; };
+const planLabel = (x) => { const n = nb4(x.barbers || x.chairs); return tierOf(n).name + " · " + n + " barbier" + (n > 1 ? "s" : ""); };
+// test and demo salons never expire
+const isSpecial = (id) => id === "nobtk-demo" || /^test-\d+$/.test(id);
+const endOfDay = (iso) => { const d = new Date(String(iso) + "T23:59:59"); return isNaN(d) ? null : d.getTime(); };
+// a phone number reduced to 0XXXXXXXXX, to spot the same person signing up twice
+const pkey = (v) => { let d = String(v || "").replace(/\D/g, ""); if (d.startsWith("212")) d = "0" + d.slice(3); if (d.length === 9) d = "0" + d; return d.length >= 10 ? d : ""; };
+const nkey = (v) => String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\b(barber|barbers|shop|salon|coiffure|coiffeur|chez|le|la|el|al)\b/g, "").replace(/[^a-z0-9\u0600-\u06ff]/g, "");
 
 if (!C.firebase || !window.firebase) {
   $("main").innerHTML = `<div class="card empty">Firebase n'est pas configuré. Ajoute la configuration dans <b>config.js</b>.</div>`;
@@ -184,14 +195,54 @@ function dashboard(db) {
 
   function watchShop(id) {
     if (shopUnsubs[id]) return;
-    const a = db.doc("shops/" + id).onSnapshot((s) => { shopDocs[id] = s.exists ? s.data() : null; render(true); }, () => {});
+    const a = db.doc("shops/" + id).onSnapshot((s) => { shopDocs[id] = s.exists ? s.data() : null; syncPlan(id); render(true); }, () => {});
     const b = db.collection("shops/" + id + "/tickets").onSnapshot((s) => { shopTickets[id] = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(true); }, () => {});
     shopUnsubs[id] = () => { a(); b(); };
   }
   unsubs.push(db.collection("signups").orderBy("createdAt", "desc").onSnapshot((s) => { signups = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(true); }, (e) => { console.warn(e); $("view").innerHTML = `<div class="err">Lecture refusée. Vérifie que ton compte est bien connecté.</div>`; }));
-  unsubs.push(db.collection("shopProfiles").onSnapshot((s) => { profiles = s.docs.map((d) => ({ id: d.id, ...d.data() })); profiles.forEach((p) => watchShop(p.id)); render(true); }, (e) => console.warn(e)));
+  unsubs.push(db.collection("shopProfiles").onSnapshot((s) => { profiles = s.docs.map((d) => ({ id: d.id, ...d.data() })); profiles.forEach((p) => { watchShop(p.id); syncPlan(p.id); }); render(true); }, (e) => console.warn(e)));
   watchShop(C.shopId || "salon-1");
   const tick = setInterval(() => render(true), 30000);
+
+  // ---------- plan limits on the shop document ----------
+  // The barber's phone can't change these (see firestore.rules): how many barbers the plan covers,
+  // and until when it is paid. After that date + 3 days, clients can no longer take a ticket.
+  const lastSync = {};
+  function syncPlan(id) {
+    const p = profiles.find((x) => x.id === id), sd = shopDocs[id];
+    if (!p || !sd) return;
+    const max = isSpecial(id) ? 4 : nb4(p.barbers || p.chairs);
+    const until = isSpecial(id) || p.status === "suspendu" || p.status === "annule" ? null : endOfDay(p.status === "essai" ? (p.trialEnds || p.nextPayment) : p.nextPayment);
+    const onTrial = p.status === "essai";
+    const want = { maxBarbers: max, paidUntilMs: until, onTrial };
+    const sig = JSON.stringify(want) + "|" + (sd.chairs || 1) + "|" + (sd.barbers || []).length;
+    if (lastSync[id] === sig) return;
+    const patch = {};
+    if (sd.maxBarbers !== max) patch.maxBarbers = max;
+    if (until == null) { if (sd.paidUntilMs != null) patch.paidUntilMs = firebase.firestore.FieldValue.delete(); }
+    else if (sd.paidUntilMs !== until) patch.paidUntilMs = until;
+    if (!!sd.onTrial !== onTrial) patch.onTrial = onTrial;
+    if ((+sd.chairs || 1) > max) patch.chairs = max;
+    if (Array.isArray(sd.barbers) && sd.barbers.length > (max > 1 ? max : 0)) patch.barbers = max > 1 ? sd.barbers.slice(0, max) : [];
+    lastSync[id] = sig;
+    if (Object.keys(patch).length) db.doc("shops/" + id).set(patch, { merge: true }).catch((e) => { console.warn(e); delete lastSync[id]; });
+  }
+
+  // ---------- the same salon signing up again (a new free trial) ----------
+  function dupsOf(x) {
+    const ph = pkey(x.phone), nm = nkey(x.shop), ad = nkey(x.address), city = nkey(x.city), out = [];
+    const same = (y, yCity) => {
+      const why = [];
+      if (ph && pkey(y.phone) === ph) why.push("même téléphone");
+      if (nm.length >= 3 && nkey(y.shop) === nm && nkey(yCity) === city) why.push("même nom");
+      if (ad.length >= 8 && nkey(y.address) === ad) why.push("même adresse");
+      return why;
+    };
+    profiles.forEach((p) => { if (p.signupId === x.id) return; const w = same(p, p.city); if (w.length) out.push({ name: p.shop, st: p.status, end: p.status === "essai" ? p.trialEnds : p.nextPayment, why: w, salon: true }); });
+    signups.forEach((y) => { if (y.id === x.id || (toD(y.createdAt) || 0) > (toD(x.createdAt) || 0) || profiles.some((p) => p.signupId === y.id)) return; const w = same(y, y.city); if (w.length) out.push({ name: y.shop, st: y.status || "nouveau", why: w }); });
+    return out;
+  }
+  const dupHtml = (x) => { const d = dupsOf(x); return d.length ? `<div class="dup">⚠️ Déjà vu : ${d.map((y) => `<b>${esc(y.name)}</b> (${esc(y.why.join(", "))}${y.salon ? " · salon " + esc(y.st || "") + (y.end ? ", jusqu'au " + dateStr(y.end) : "") : " · inscription " + esc(y.st)})`).join(" · ")}. Vérifie avant de donner un nouvel essai gratuit.</div>` : ""; };
 
   // ---------- live status of a shop: who's working ----------
   function live(id) {
@@ -290,8 +341,8 @@ function dashboard(db) {
     const services = (sd.services && sd.services.length) ? sd.services : DEF_SVC.map((s) => ({ id: s[0], name: s[1], price: s[2], minutes: s[3] }));
     const trialEnds = isoDay(addMonths(now, 2));
     await db.doc("shops/" + id).set({ active: true, pinHash: await sha(id + ":" + pin), services }, { merge: true });
-    await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: sd.name || "Salon pilote", owner: "", phone: "", email: "", city: "Mohammedia", address: "", chairs: sd.chairs || 2, barbers: sd.chairs || 2,
-      services, hours: [], plan: (sd.chairs || 2) <= 1 ? "solo" : "salon", billing: "month", price: priceFor(sd.chairs || 2, "month"), status: "essai", trialEnds, nextPayment: trialEnds, pin, notes: "Salon pilote",
+    await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: sd.name || "Salon pilote", owner: "", phone: "", email: "", city: "Mohammedia", address: "", chairs: nb4(sd.chairs || 2), barbers: nb4(sd.chairs || 2),
+      services, hours: [], plan: tierOf(sd.chairs || 2).k, billing: "month", price: priceFor(sd.chairs || 2, "month"), status: "essai", trialEnds, nextPayment: trialEnds, pin, notes: "Salon pilote",
       createdAt: now, activatedAt: now, history: [{ at: now, type: "activation", text: "Profil créé pour le salon pilote" }] });
     pid = id; mountedPid = null; render();
   }
@@ -303,9 +354,10 @@ function dashboard(db) {
       while (taken.has(id)) id = slugify(x.shop) + "-" + n++;
       const pin = newPin(), now = Date.now(), trialEnds = isoDay(addMonths(now, 2));
       const services = (x.services || []).filter((s) => s.name).map((s, i) => ({ id: "s" + (i + 1), name: s.name, price: +s.price || 0, minutes: +s.minutes || 20 }));
-      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: Math.max(1, Math.min(4, x.barbers || x.chairs || 1)), grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", address: x.address || "", active: true, pinHash: await sha(id + ":" + pin) });
-      await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: x.shop, owner: x.owner || "", phone: x.phone || "", email: x.email || "", city: x.city || "", address: x.address || "", chairs: x.chairs || 1, barbers: x.barbers || 1,
-        services, hours: x.hours || [], plan: x.plan || ((x.chairs || 1) <= 1 ? "solo" : "salon"), billing: x.billing || "month", price: x.price || priceFor(x.chairs || 1, x.billing), status: "essai", trialEnds, nextPayment: trialEnds,
+      const nb = nb4(x.barbers || x.chairs), billing = x.billing === "year" ? "year" : "month";
+      await db.doc("shops/" + id).set({ name: x.shop, paused: false, chairs: nb, maxBarbers: nb, paidUntilMs: endOfDay(trialEnds), onTrial: true, grace: 5, blockDays: 7, services, hours: x.hours || [], city: x.city || "", address: x.address || "", active: true, pinHash: await sha(id + ":" + pin) });
+      await db.collection("shopProfiles").doc(id).set({ shopId: id, shop: x.shop, owner: x.owner || "", phone: x.phone || "", email: x.email || "", city: x.city || "", address: x.address || "", chairs: nb, barbers: nb,
+        services, hours: x.hours || [], plan: tierOf(nb).k, billing, price: priceFor(nb, billing), status: "essai", trialEnds, nextPayment: trialEnds,
         pin, notes: "", signupId: x.id, source: x.source || "", createdAt: now, activatedAt: now, history: [{ at: now, type: "activation", text: "Salon activé, essai gratuit de 2 mois" }] });
       await db.collection("signups").doc(x.id).update({ status: "essai", shopId: id });
       pid = id; tab = "salons"; mountedPid = null; document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.tab === "salons")); render(); window.scrollTo(0, 0);
@@ -377,7 +429,7 @@ function dashboard(db) {
             ${fieldRow("pf-phone", "Téléphone", p.phone, "tel")}${fieldRow("pf-email", "Email", p.email, "email")}
             ${fieldRow("pf-city", "Ville", p.city)}${fieldRow("pf-address", "Adresse", p.address)}
             <label class="pf" style="display:flex;align-items:center;gap:10px;flex-direction:row"><input id="pf-listed" type="checkbox" style="width:22px;height:22px" ${(shopDocs[id] || {}).listed === false ? "" : "checked"}><span style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)">Visible dans « Trouve ton salon » (décoche pour un salon de démo)</span></label>
-            ${fieldRow("pf-chairs", "Fauteuils", p.chairs, "number")}${fieldRow("pf-barbers", "Barbiers", p.barbers, "number")}
+            ${fieldRow("pf-barbers", "Barbiers payés (1 à 4)", nb4(p.barbers || p.chairs), "number")}<div class="muted" style="font-size:12.5px;align-self:end;padding-bottom:10px">Formule : <b id="pf-tier">${esc(planLabel(p))} · ${priceFor(p.barbers || p.chairs, p.billing)} DH</b>. Le barbier ne peut pas ajouter plus de coiffeurs dans l'appli.</div>
           </div>
           <button class="btn pri sm" id="pf-info-save" type="button" style="margin-top:12px">Enregistrer</button>
         </section>
@@ -407,12 +459,18 @@ function dashboard(db) {
       $("pf-next").value = next; $("pf-status").value = "payant"; flash(e.target, true); };
     $("pf-newpin").onclick = async () => { const pin = newPin(); await saveShop({ pinHash: await sha(id + ":" + pin) }); await save({ pin, history: [...(P().history || []), { at: Date.now(), type: "code", text: "Nouveau code barbier" }] }); $("pf-pin").textContent = pin; const b = $("pf-send"); if (b) { b.textContent = "Envoyer le nouveau code sur WhatsApp"; } };
     $("pf-qr").onclick = () => { qrFor = id; setTab("qr"); };
+    $("pf-billing").onchange = () => { $("pf-price").value = priceFor(P().barbers || P().chairs, $("pf-billing").value); };
     $("pf-listed").onchange = (e) => saveShop({ listed: e.target.checked });
     $("pf-photo-btn").onchange = async (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return; try { const u = await window.NOBTK_IMG(f, 320, 0.8); { await saveShop({ photo: u }); $("pf-photo").innerHTML = `<img src="${u}" alt="" style="width:76px;height:76px;border-radius:19px;object-fit:cover">`; say(e.target, "Enregistré"); } } catch (x) { say(e.target, "Erreur"); } };
     $("pf-send").onclick = (e) => sendAccess(e.target);
     if ($("pf-send-top")) $("pf-send-top").onclick = (e) => sendAccess(e.target);
-    $("pf-info-save").onclick = async (e) => { const d = { shop: $("pf-shop").value.trim(), owner: $("pf-owner").value.trim(), phone: $("pf-phone").value.trim(), email: $("pf-email").value.trim(), city: $("pf-city").value.trim(), address: $("pf-address").value.trim(), chairs: Math.max(1, +$("pf-chairs").value || 1), barbers: Math.max(1, +$("pf-barbers").value || 1) };
-      await save(d); await saveShop({ name: d.shop, city: d.city, address: d.address, chairs: Math.min(4, d.chairs), listed: $("pf-listed").checked }); $("pf-name").textContent = d.shop; flash(e.target, true); };
+    $("pf-info-save").onclick = async (e) => { const d = { shop: $("pf-shop").value.trim(), owner: $("pf-owner").value.trim(), phone: $("pf-phone").value.trim(), email: $("pf-email").value.trim(), city: $("pf-city").value.trim(), address: $("pf-address").value.trim(), barbers: nb4($("pf-barbers").value) };
+      d.chairs = d.barbers; $("pf-barbers").value = d.barbers;
+      const p0 = P(), was = nb4(p0.barbers || p0.chairs);
+      if (d.barbers !== was) { d.plan = tierOf(d.barbers).k; d.price = priceFor(d.barbers, p0.billing); $("pf-price").value = d.price;
+        d.history = [...(p0.history || []), { at: Date.now(), type: "formule", text: "Formule : " + planLabel(d) + " · " + fmt(d.price) + " DH / " + (p0.billing === "year" ? "an" : "mois") }]; }
+      $("pf-tier").textContent = planLabel(d) + " · " + priceFor(d.barbers, p0.billing) + " DH";
+      await save(d); await saveShop({ name: d.shop, city: d.city, address: d.address, listed: $("pf-listed").checked }); $("pf-name").textContent = d.shop; flash(e.target, true); };
     $("pf-svc-add").onclick = () => { $("pf-svcs").insertAdjacentHTML("beforeend", svcRow({ id: "s" + Date.now().toString(36), name: "", price: "", minutes: 20 })); bindSvcDel(); };
     const bindSvcDel = () => document.querySelectorAll("#pf-svcs [data-del-svc]").forEach((b) => b.onclick = () => b.closest(".sv").remove());
     bindSvcDel();
@@ -521,12 +579,12 @@ function dashboard(db) {
   }
   function row(x) {
     const st = x.status || "nouveau";
-    const plan = (x.plan === "solo" ? "Solo" : "Salon") + " · " + (x.chairs || 1) + " fauteuil" + ((x.chairs || 1) > 1 ? "s" : "");
+    const plan = planLabel(x);
     const svcRows = (x.services || []).map((s) => `<tr><td>${esc(s.name)} <span style="color:var(--muted)">· ${s.minutes} min</span></td><td><b>${s.price} DH</b></td></tr>`).join("");
     const hourRows = (x.hours || []).map((h) => `<tr><td>${esc(h.day)}</td><td>${h.open ? esc(h.from) + " – " + esc(h.to) : "<span style='color:var(--muted)'>Fermé</span>"}</td></tr>`).join("");
     return `<div class="card" style="padding:14px 16px">
       <div class="su">
-        <div class="nm"><b>${esc(x.shop)}</b> <span class="chip st-${st}">${esc((STATUSES.find((s) => s[0] === st) || [, st])[1])}</span><div>${esc(x.owner)} · ${esc(x.city)} · inscrit le ${dateStr(x.createdAt)}</div></div>
+        <div class="nm"><b>${esc(x.shop)}</b> <span class="chip st-${st}">${esc((STATUSES.find((s) => s[0] === st) || [, st])[1])}</span><div>${esc(x.owner)} · ${esc(x.city)} · inscrit le ${dateStr(x.createdAt)}</div>${dupHtml(x)}</div>
         <div style="font-size:14px"><b>${esc(plan)}</b><div style="color:var(--muted)">${fmt(x.price || 0)} DH / ${x.billing === "year" ? "an" : "mois"}</div></div>
         ${x.shopId ? `<button class="btn ghost sm" data-open="${esc(x.shopId)}" type="button">Voir le profil</button>` : `<button class="btn pri sm" data-activate="${esc(x.id)}" type="button">Activer le salon</button>`}
       </div>

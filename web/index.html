@@ -268,6 +268,8 @@ svg.i{width:18px;height:18px;flex:none}
 .setup h2{font-size:22px}.setup .q{font-weight:800;font-size:17px}
 .setup .opts4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .setup .opts4 button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:16px 12px;font:inherit;font-weight:800;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.setup .opts4 button:disabled{opacity:.45;cursor:not-allowed}
+.subnote{background:#FFF0D6;color:#5A3A00;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}.subnote.bad{background:#FDE4E7;color:#7A1222}.subnote p{margin:0}.subnote b{font-size:16px}.subnote .btn{text-decoration:none;align-self:flex-start;background:#25D366;color:#fff;margin-top:4px}
 .setup .opts4 button small{font-weight:500;font-size:12.5px;color:var(--muted)}
 .setup .opts4 button[aria-pressed=true]{border-color:var(--primary);background:var(--primary);color:#fff}.setup .opts4 button[aria-pressed=true] small{color:#D9D6FF}
 .setup .names{display:flex;flex-direction:column;gap:8px}.setup .row2{display:flex;gap:8px}.setup .row2 .btn{flex:1}
@@ -463,7 +465,7 @@ demo_cap1:"تيليفون الزبون",demo_cap2:"الحلاق، مباشرة",
 mins_ago:"هادي {m} دقيقة",now:"دابا"}
 };
 
-Object.assign(STR.fr,{pin_shop:"Identifiant du salon",pin_code:"Code du salon",shop_off:"Ce salon n'utilise pas NOBTK en ce moment.",shop_missing:"Salon introuvable. Vérifie le lien ou scanne le QR code du salon.",pro_t:"Vous êtes barbier ?",pro_p:"Inscrivez votre salon sur NOBTK : 2 mois gratuits.",here_btn:"Je suis au salon",here_ok:"Le barbier sait que tu es au salon",prio_note:"Priorité aux clients présents au salon : en arrivant, appuie sur « Je suis au salon ».",n_bump_t:"Ton tour est passé à un client présent",n_bump_b:"Tu n'étais pas au salon à temps. Tu restes en tête : présente-toi et appuie sur « Je suis au salon ».",lq_here:"au salon",b_here:"Arrivé",b_not_here:"pas encore là",b_toast_bump:"#{n} {name} n'est pas là : #{m}, présent au salon, passe avant",travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
+Object.assign(STR.fr,{su_up:"Formule supérieure",su_plan1:"Ta formule Solo couvre 1 coiffeur.",su_plan:"Ta formule couvre {n} coiffeurs.",su_plan_a:"Ajouter des coiffeurs",su_wa:"Salam NOBTK, je veux ajouter des coiffeurs pour mon salon {s}.",sub_exp_t:"Ton abonnement NOBTK est terminé",sub_exp:"Tes clients ne peuvent plus prendre de ticket. Contacte NOBTK pour le renouveler : tout revient tout de suite.",sub_late_t:"Paiement en retard",sub_late:"Tes clients peuvent encore prendre des tickets pendant {d} jours. Contacte NOBTK pour payer.",sub_late1:"Tes clients peuvent encore prendre des tickets aujourd'hui seulement. Contacte NOBTK pour payer.",sub_trial_t:"Ton essai gratuit se termine le {d}",sub_soon_t:"Ton prochain paiement est le {d}",sub_soon:"Pour continuer sans coupure, contacte NOBTK.",sub_btn:"Contacter NOBTK sur WhatsApp",sub_wa:"Salam NOBTK, je veux payer mon abonnement pour le salon {s}.",pin_shop:"Identifiant du salon",pin_code:"Code du salon",shop_off:"Ce salon n'utilise pas NOBTK en ce moment.",shop_missing:"Salon introuvable. Vérifie le lien ou scanne le QR code du salon.",pro_t:"Vous êtes barbier ?",pro_p:"Inscrivez votre salon sur NOBTK : 2 mois gratuits.",here_btn:"Je suis au salon",here_ok:"Le barbier sait que tu es au salon",prio_note:"Priorité aux clients présents au salon : en arrivant, appuie sur « Je suis au salon ».",n_bump_t:"Ton tour est passé à un client présent",n_bump_b:"Tu n'étais pas au salon à temps. Tu restes en tête : présente-toi et appuie sur « Je suis au salon ».",lq_here:"au salon",b_here:"Arrivé",b_not_here:"pas encore là",b_toast_bump:"#{n} {name} n'est pas là : #{m}, présent au salon, passe avant",travel_q:"Tu es à combien de minutes du salon ?",travel_0:"Déjà au salon",travel_lbl:"Temps pour venir au salon",travel_note:"On te prévient environ {m} min avant ton tour.",travel_note0:"Tu es au salon : on te prévient quand tu es parmi les prochains.",travel_far:"Le salon est presque libre. Pars maintenant pour arriver à temps.",b_travel_at:"à {m} min",b_arrive:"arrive ~{t}",lq_chair:"Au fauteuil",lq_t:"La file en direct",lq_live:"En direct",lq_you:"toi",lq_first:"er",lq_nth:"e",lq_empty:"Personne en attente pour l'instant.",pin_t:"Espace barbier",pin_p:"Entre le code du salon pour ouvrir le tableau de bord.",pin_btn:"Ouvrir",pin_bad:"Code incorrect.",phone_req:"Téléphone",need_phone:"Écris un numéro marocain valide (06 ou 07…).",already:"Ce numéro a déjà un ticket en cours.",
 st_called_p:"C'est ton tour : {c}.",tr3:"Ton tour",tr4:"Terminé",
 grace_left:"Temps pour te présenter",grace_inline:"Il te reste {m} min pour te présenter.",grace_over_client:"Le délai est passé : un client présent au salon peut passer avant toi.",
 cant_come:"Je ne peux pas venir",n_called_b:"{c} t'attend. Tu as {g} min pour te présenter.",
@@ -490,7 +492,7 @@ b_notcome:"Pas venu ?",b_delay:"Décaler de 2 places",b_absent_confirm:"Absent",
 b_abs_t:"Absences clients",b_rule:"Le client a {g} min pour se présenter. Pas venu : décale-le une fois de 2 places, ou marque-le absent. 1re absence = avertissement, 2e = dernier avertissement, 3e = réservation en ligne bloquée {d} jours. Il peut toujours venir sur place. Priorité aux clients présents : si le client n'est pas là à la fin du délai et qu'un autre attend au salon, celui-ci passe automatiquement.",
 b_abs_none:"Aucune absence pour l'instant. Les clients marqués absents apparaissent ici.",b_blocked:"Bloqué",b_until:"jusqu'au {d}",b_forgive:"Pardonner",
 lv_chair:"Au fauteuil",lv_wait:"En attente",lv_you:"Ta place",b_grace:"Délai pour se présenter",b_blockdays:"Blocage après 3 absences",days:"j",phone:"Téléphone (optionnel)"});
-Object.assign(STR.ar,{pin_shop:"المعرف ديال الصالون",pin_code:"الكود ديال الصالون",shop_off:"هاد الصالون ما خدامش بـ NOBTK دابا.",shop_missing:"ما لقيناش الصالون. شوف الرابط ولا سكاني QR ديال الصالون.",pro_t:"نتا حلاق؟",pro_p:"سجل الصالون ديالك فـ NOBTK: جوج شهور فابور.",here_btn:"أنا فالصالون",here_ok:"الحلاق عارف بلي راك فالصالون",prio_note:"الأولوية للكليان اللي فالصالون: ملي توصل، كليكي على «أنا فالصالون».",n_bump_t:"نوبتك دازت لكليان اللي كان فالصالون",n_bump_b:"ما كنتيش فالصالون فالوقت. باقي نتا الأول: اجي و كليكي على «أنا فالصالون».",lq_here:"فالصالون",b_here:"وصل",b_not_here:"مازال ما وصل",b_toast_bump:"#{n} {name} ما وصلش: #{m} اللي فالصالون دوز قبلو",travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
+Object.assign(STR.ar,{su_up:"اشتراك أكبر",su_plan1:"الاشتراك Solo ديالك فيه حلاق واحد.",su_plan:"الاشتراك ديالك فيه {n} حلاقة.",su_plan_a:"زيد حلاقة",su_wa:"السلام NOBTK، بغيت نزيد حلاقة فالصالون ديالي {s}.",sub_exp_t:"الاشتراك ديالك فـ NOBTK سالا",sub_exp:"الكليان ما بقاوش يقدرو ياخدو نوبة. تواصل مع NOBTK باش تجدد، وكلشي يرجع دغيا.",sub_late_t:"الخلاص تعطل",sub_late:"الكليان باقي يقدرو ياخدو نوبة {d} يام. تواصل مع NOBTK باش تخلص.",sub_late1:"الكليان يقدرو ياخدو نوبة غير اليوم. تواصل مع NOBTK باش تخلص.",sub_trial_t:"التجربة الفابور ديالك كتسالا نهار {d}",sub_soon_t:"الخلاص الجاي نهار {d}",sub_soon:"باش تكمل بلا ما يتقطع، تواصل مع NOBTK.",sub_btn:"تواصل مع NOBTK فالواتساب",sub_wa:"السلام NOBTK، بغيت نخلص الاشتراك ديال الصالون {s}.",pin_shop:"المعرف ديال الصالون",pin_code:"الكود ديال الصالون",shop_off:"هاد الصالون ما خدامش بـ NOBTK دابا.",shop_missing:"ما لقيناش الصالون. شوف الرابط ولا سكاني QR ديال الصالون.",pro_t:"نتا حلاق؟",pro_p:"سجل الصالون ديالك فـ NOBTK: جوج شهور فابور.",here_btn:"أنا فالصالون",here_ok:"الحلاق عارف بلي راك فالصالون",prio_note:"الأولوية للكليان اللي فالصالون: ملي توصل، كليكي على «أنا فالصالون».",n_bump_t:"نوبتك دازت لكليان اللي كان فالصالون",n_bump_b:"ما كنتيش فالصالون فالوقت. باقي نتا الأول: اجي و كليكي على «أنا فالصالون».",lq_here:"فالصالون",b_here:"وصل",b_not_here:"مازال ما وصل",b_toast_bump:"#{n} {name} ما وصلش: #{m} اللي فالصالون دوز قبلو",travel_q:"شحال بينك و بين الصالون؟",travel_0:"أنا فالصالون",travel_lbl:"الوقت باش توصل للصالون",travel_note:"غادي نعلموك تقريبا {m} دقيقة قبل نوبتك.",travel_note0:"راك فالصالون: غادي نعلموك ملي تقرب نوبتك.",travel_far:"الصالون قريب يخوا. خرج دابا باش توصل فالوقت.",b_travel_at:"على {m} دقيقة",b_arrive:"يوصل ~{t}",lq_chair:"فالكرسي",lq_t:"الصف مباشرة",lq_live:"مباشرة",lq_you:"نتا",lq_first:"",lq_nth:"",lq_empty:"حتى واحد ما كيتسنى دابا.",pin_t:"فضاء الحلاق",pin_p:"دخل الكود ديال الصالون باش تحل لوحة التحكم.",pin_btn:"حل",pin_bad:"الكود غالط.",phone_req:"التيليفون",need_phone:"كتب نمرة مغربية صحيحة (06 ولا 07…).",already:"هاد النمرة عندها نوبة ديجا.",
 st_called_p:"نوبتك: {c}.",tr3:"نوبتك",tr4:"سالات",
 grace_left:"الوقت باش توصل",grace_inline:"باقي ليك {m} دقيقة باش توصل.",grace_over_client:"الوقت فات: كليان اللي فالصالون يقدر يدوز قبلك.",
 cant_come:"ما نقدرش نجي",n_called_b:"{c} كيتسناك. عندك {g} دقايق باش توصل.",
@@ -671,12 +673,17 @@ const todayKey=()=>{const d=new Date(dayStart());return d.getFullYear()+"-"+pad2
 // "Qui travaille aujourd'hui ?": an absent barber is out of the line for the day (never all of them)
 // a barber on a break (prayer, lunch) takes no new client; clients who chose him keep waiting for him
 const isBreak=i=>{const b=Store.shop.bpause;return Array.isArray(b)&&!!b[i]};
-function isOff(i){const w=Store.shop.working;if(!w||w.day!==todayKey()||!Array.isArray(w.on))return false;const n=Math.max(1,Math.min(4,+Store.shop.chairs||1));if(!w.on.slice(0,n).some(Boolean))return false;return w.on[i]===false}
+function maxB(){return Math.max(1,Math.min(4,+Store.shop.maxBarbers||4))}
+function nCh(){return Math.max(1,Math.min(maxB(),+Store.shop.chairs||1))}
+// subscription: paid until the end of paidUntilMs, then 3 days of grace before clients are blocked (the server enforces the same rule)
+function subInfo(){const u=+Store.shop.paidUntilMs;if(!u)return null;const now=Date.now(),G=3*864e5;return{exp:now>u+G,late:now>u&&now<=u+G,left:Math.ceil((u-now)/864e5),graceLeft:Math.max(1,Math.ceil((u+G-now)/864e5)),date:new Date(u).toLocaleDateString(lang==="ar"?"ar-MA":"fr-FR",{day:"numeric",month:"long"}),trial:!!Store.shop.onTrial}}
+function nobtkWa(m){return "https://wa.me/212634364422?text="+encodeURIComponent(m)}
+function isOff(i){const w=Store.shop.working;if(!w||w.day!==todayKey()||!Array.isArray(w.on))return false;const n=nCh();if(!w.on.slice(0,n).some(Boolean))return false;return w.on[i]===false}
 const prefOf=(x,n)=>(x&&x.pref!=null&&+x.pref<n&&!isOff(+x.pref))?+x.pref:null;
 const prefOk=(x,i,n)=>{const p=prefOf(x,n);return p==null||p===i};
 function Q(){
  const all=Store.tickets.filter(x=>!isStale(x)).sort((a,b)=>a.num-b.num);
- const chairs=Math.max(1,Math.min(4,+Store.shop.chairs||1));
+ const chairs=nCh();
  const waiting=all.filter(x=>x.status==="waiting").sort((a,b)=>(isHere(b)-isHere(a))||((a.pos??a.num)-(b.pos??b.num)));
  const inChair=Array.from({length:chairs},(_,i)=>all.find(x=>inChairSt(x)&&x.chair===i)||null);
  const now=Date.now();
@@ -760,7 +767,7 @@ const A={
   if(Store.saveDay)for(const key in groups){const g=groups[key];const done=g.filter(x=>x.status==="done");const byHour=Array(24).fill(0);done.forEach(x=>{byHour[new Date(x.doneAt||x.created).getHours()]++});
    const sum={date:key,served:done.length,noshow:g.filter(x=>x.status==="noshow").length,app:g.filter(x=>x.src==="app").length,total:g.length,byHour,savedAt:Date.now()};
    if(!Store.shop.noRevenue)sum.revenue=done.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);
-   const n=Math.max(1,Math.min(4,+Store.shop.chairs||1));if(n>1)sum.byBarber=Array.from({length:n},(_,i)=>{const d=done.filter(x=>x.chair===i);const o={name:chairName(i),served:d.length};if(!Store.shop.noRevenue)o.revenue=d.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);return o});
+   const n=nCh();if(n>1)sum.byBarber=Array.from({length:n},(_,i)=>{const d=done.filter(x=>x.chair===i);const o={name:chairName(i),served:d.length};if(!Store.shop.noRevenue)o.revenue=d.reduce((a,x)=>a+(x.price??svc(x.svc).price),0);return o});
    await Store.saveDay(key,sum)}
   // remember the real pace for tomorrow's first estimates
   const d=real.filter(x=>x.status==="done"&&x.startedAt&&x.doneAt);
@@ -956,7 +963,7 @@ function ClientView(root,key,standalone){
  }
  function update(){
   if(!Store.ready){if(screen!=="load"){body.innerHTML=`<div class="loading">${t("connecting")}</div>`;screen="load"}return}
-  if(Store.shop.active===false||(Store.mode==="live"&&Store.shopExists===false)){if(screen!=="off"){ov.hidden=true;stopOv();body.innerHTML=`<div class="card" style="text-align:center;padding:34px 18px;display:flex;flex-direction:column;gap:8px"><h2 style="font-size:22px">${esc(Store.shopExists===false?"NOBTK":Store.shop.name)}</h2><p class="muted" style="margin:0">${t(Store.shopExists===false?"shop_missing":"shop_off")}</p></div>`;screen="off"}return}
+  if(Store.shop.active===false||(subInfo()&&subInfo().exp)||(Store.mode==="live"&&Store.shopExists===false)){if(screen!=="off"){ov.hidden=true;stopOv();body.innerHTML=`<div class="card" style="text-align:center;padding:34px 18px;display:flex;flex-direction:column;gap:8px"><h2 style="font-size:22px">${esc(Store.shopExists===false?"NOBTK":Store.shop.name)}</h2><p class="muted" style="margin:0">${t(Store.shopExists===false?"shop_missing":"shop_off")}</p></div>`;screen="off"}return}
   const id=ls.get(myKey);const x=id&&Q().all.find(y=>y.id===id);
   if(id&&!x){ls.del(myKey)}
   if(x&&x.status!=="cancelled"){if(screen!=="ticket"){renderTicket();screen="ticket";toTop()}updateTicket()}
@@ -972,6 +979,7 @@ function BarberView(root){
  root.innerHTML=`
   <div class="bhead"><h1 data-k="title"></h1><span class="pill" data-k="state"></span><button class="btn ghost sm" data-a="pause" type="button"></button></div>
   <div data-k="iosb"></div>
+  <section class="subnote" data-k="subnote" hidden></section>
   <section class="setup" data-k="setup" hidden></section>
   <section class="setup" data-k="wk" hidden></section>
   <div class="stats" data-k="stats"></div>
@@ -1039,18 +1047,24 @@ function BarberView(root){
  root.querySelector('[data-a="hrsSave"]').onclick=async()=>{await Store.patchShop({hours:hrsDraft.map(x=>({...x}))});toast(t("saved"))};
  // ---- team setup: asked once, changed later from Réglages
  let suOpen=false,suN=null,wkOpen=false,days=[],daysAt=0;
+ function drawSub(){const box=$("subnote");const si=subInfo();const nm=Store.shop.name||"";let h="",bad=false;
+  const wa=`<a class="btn" href="${esc(nobtkWa(t("sub_wa",{s:nm})))}" target="_blank" rel="noopener">${t("sub_btn")}</a>`;
+  if(si&&si.exp){bad=true;h=`<b>${t("sub_exp_t")}</b><p>${t("sub_exp")}</p>${wa}`}
+  else if(si&&si.late){bad=true;h=`<b>${t("sub_late_t")}</b><p>${t(si.graceLeft>1?"sub_late":"sub_late1",{d:si.graceLeft})}</p>${wa}`}
+  else if(si&&si.left<=5){h=`<b>${t(si.trial?"sub_trial_t":"sub_soon_t",{d:si.date})}</b><p>${t("sub_soon")}</p>${wa}`}
+  box.hidden=!h;if(box.dataset.h!==h){box.dataset.h=h;box.innerHTML=h;box.classList.toggle("bad",bad)}}
  function drawSetup(){const box=$("setup");const show=suOpen||(Store.ready&&!Store.shop.setupDone);box.hidden=!show;if(!show)return;
   if(!box.dataset.step)box.dataset.step="1";
-  const n0=Math.max(1,Math.min(4,+Store.shop.chairs||1));
-  if(box.dataset.step==="1"){const sig="1|"+n0+"|"+!!Store.shop.setupDone;if(box.dataset.sig===sig)return;box.dataset.sig=sig;
-   box.innerHTML=`<h2>${t("su_t")}</h2><div class="q">${t("su_q")}</div><div class="opts4">${[1,2,3,4].map(n=>`<button type="button" data-su="${n}" aria-pressed="${n===n0&&!!Store.shop.setupDone}">${n===1?t("su_solo"):n}<small>${n===1?t("su_solo_s"):t("su_n",{n})}</small></button>`).join("")}</div>${Store.shop.setupDone?`<button class="btn ghost" type="button" data-a="suClose">${t("su_back")}</button>`:""}`;
+  const n0=nCh();
+  if(box.dataset.step==="1"){const sig="1|"+n0+"|"+!!Store.shop.setupDone+"|"+maxB();if(box.dataset.sig===sig)return;box.dataset.sig=sig;
+   box.innerHTML=`<h2>${t("su_t")}</h2><div class="q">${t("su_q")}</div><div class="opts4">${[1,2,3,4].map(n=>`<button type="button" data-su="${n}" ${n>maxB()?"disabled":""} aria-pressed="${n===n0&&!!Store.shop.setupDone}">${n===1?t("su_solo"):n}<small>${n>maxB()?t("su_up"):n===1?t("su_solo_s"):t("su_n",{n})}</small></button>`).join("")}</div>${maxB()<4?`<p class="q" style="font-size:13.5px;font-weight:500;margin:0">${t(maxB()>1?"su_plan":"su_plan1",{n:maxB()})} <a href="${esc(nobtkWa(t("su_wa",{s:Store.shop.name||""})))}" target="_blank" rel="noopener">${t("su_plan_a")}</a></p>`:""}${Store.shop.setupDone?`<button class="btn ghost" type="button" data-a="suClose">${t("su_back")}</button>`:""}`;
    box.querySelectorAll("[data-su]").forEach(b=>b.onclick=async()=>{suN=+b.dataset.su;if(suN===1){await saveTeam(1,[])}else{box.dataset.step="2";box.dataset.sig="";drawSetup()}})}
   else{const sig="2|"+suN;if(box.dataset.sig===sig)return;box.dataset.sig=sig;const cur=Store.shop.barbers||[];
    box.innerHTML=`<h2>${t("su_names")}</h2><p class="muted" style="margin:0">${t("su_names_h")}</p><div class="names">${Array.from({length:suN},(_,i)=>`<input data-sun="${i}" maxlength="24" placeholder="${esc(t("su_name_ph",{i:i+1}))}" value="${esc(cur[i]||"")}">`).join("")}</div><div class="err" data-k="suerr" hidden></div><div class="row2"><button class="btn ghost" type="button" data-a="suBack">${t("su_back")}</button><button class="btn pri" type="button" data-a="suGo">${t("su_go")}</button></div>`;
    box.querySelector('[data-a="suBack"]').onclick=()=>{box.dataset.step="1";box.dataset.sig="";drawSetup()};
    box.querySelector('[data-a="suGo"]').onclick=async()=>{const names=[...box.querySelectorAll("[data-sun]")].map(i=>i.value.trim().slice(0,24));if(names.some(x=>!x)){const e=box.querySelector('[data-k="suerr"]');e.textContent=t("su_need");e.hidden=false;return}await saveTeam(suN,names)}}
   const cl=box.querySelector('[data-a="suClose"]');if(cl)cl.onclick=()=>{suOpen=false;suN=null;box.dataset.step="";box.dataset.sig="";drawSetup()}}
- async function saveTeam(n,names){await Store.patchShop({chairs:n,barbers:n>1?names:[],setupDone:true,working:{day:todayKey(),on:Array.from({length:n},()=>true)}});suOpen=false;suN=null;$("setup").dataset.step="";$("setup").dataset.sig="";toast(t("saved"));await A.fill();update()}
+ async function saveTeam(n,names){n=Math.max(1,Math.min(n,maxB()));names=names.slice(0,n);await Store.patchShop({chairs:n,barbers:n>1?names:[],setupDone:true,working:{day:todayKey(),on:Array.from({length:n},()=>true)}});suOpen=false;suN=null;$("setup").dataset.step="";$("setup").dataset.sig="";toast(t("saved"));await A.fill();update()}
  root.querySelector('[data-a="teamEdit"]').onclick=()=>{suOpen=true;suN=null;$("setup").dataset.step="1";$("setup").dataset.sig="";drawSetup();$("setup").scrollIntoView({behavior:"smooth",block:"start"})};
  // ---- each morning: who works today (teams only)
  function drawWk(q){const box=$("wk");const w=Store.shop.working;const ask=q.chairs>1&&Store.shop.setupDone&&(!w||w.day!==todayKey());const show=$("setup").hidden&&(wkOpen||ask);box.hidden=!show;if(!show)return;
@@ -1128,7 +1142,7 @@ function BarberView(root){
   const q=Q(),now=Date.now();drawAddPref(q.chairs);
   {const w=$("shwa");if(w)w.href="https://wa.me/?text="+encodeURIComponent(shareText())}
   $("revno").checked=!!Store.shop.noRevenue;
-  drawSetup();drawWk(q);drawPb(q);refreshDays();
+  drawSub();drawSetup();drawWk(q);drawPb(q);refreshDays();
   $("teamsum").textContent=q.chairs>1?Array.from({length:q.chairs},(_,i)=>chairName(i)+(isOff(i)?" ("+t("off_today")+")":"")).join(" · "):t("team_solo");
   root.querySelector('[data-a="wkEdit"]').hidden=q.chairs<=1;
   const cur={};q.all.forEach(x=>cur[x.id]={s:x.status,w:x.onWay});

@@ -44,6 +44,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
 .plan{background:var(--primary);color:#fff;border-radius:16px;padding:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:center}
 .plan b{font-family:"Bricolage Grotesque",sans-serif;font-size:28px}
 .plan span{color:#D9D6FF}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tiers div{border:1.5px solid var(--line,#E2E1F0);border-radius:12px;padding:9px 10px;font-size:13.5px;line-height:1.3}
+.tiers div b{display:block;font-size:15px}.tiers div.on{border-color:var(--primary);background:#F2F1FA}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:15px}
 .consent input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:var(--primary)}
 .err{background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:12px 14px;font-weight:700}
@@ -75,8 +78,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
         <label class="f">Nom du salon<input type="text" id="shop" maxlength="60" placeholder="ex. Barber Shop Al Amal" required></label>
         <label class="f">Ville<input type="text" id="city" maxlength="40" value="Mohammedia"></label>
         <label class="f" style="grid-column:1/-1">Adresse<input type="text" id="address" maxlength="120" placeholder="Rue, quartier"></label>
-        <label class="f">Nombre de fauteuils<input type="number" id="chairs" min="1" max="20" value="2"></label>
-        <label class="f">Nombre de barbiers<input type="number" id="barbers" min="1" max="20" value="2"></label>
+        <label class="f">Nombre de barbiers (toi compris)<input type="number" id="barbers" min="1" max="4" value="2" inputmode="numeric"></label>
+        <p class="muted" style="grid-column:1/-1;margin:-4px 0 0;font-size:13.5px">Ton prix dépend du nombre de barbiers qui utilisent l'appli. Plus de 4 barbiers ? <a href="https://wa.me/212634364422?text=Salam%20NOBTK%2C%20mon%20salon%20a%20plus%20de%204%20barbiers." target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Écris-nous</a>, on te fait une offre.</p>
       </div>
     </section>
 
@@ -106,6 +109,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
       <h2><i>5</i>Ta formule</h2>
       <div class="seg" role="group" aria-label="Facturation"><button type="button" data-bill="month" aria-pressed="true">Mensuel</button><button type="button" data-bill="year" aria-pressed="false">Annuel (2 mois offerts)</button></div>
       <div class="plan"><div><span id="planName">Salon</span><br><b id="planPrice">149 DH / mois</b></div><div style="text-align:right"><span>2 mois gratuits</span><br><strong id="planTrial"></strong></div></div>
+      <div class="tiers" id="tiers"></div>
       <label class="f">Comment tu as connu NOBTK ?<select id="source"><option value="">Choisir</option><option>Visite au salon</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Un autre barbier</option><option>WhatsApp</option><option>Autre</option></select></label>
       <label class="consent"><input type="checkbox" id="consent"><span>J'accepte que NOBTK me contacte sur WhatsApp pour activer mon salon, et que les informations de ce formulaire soient utilisées pour créer mon compte.</span></label>
     </section>
@@ -145,13 +149,18 @@ DAYS.forEach((d, i) => {
   $("days").appendChild(el);
 });
 
-const monthly = (ch) => ch <= 1 ? 99 : Math.min(299, 149 + 20 * Math.max(0, ch - 5));
+// Price by number of barbers: Solo (1) 99 DH, Salon (2-3) 149 DH, Grand salon (4) 199 DH. Yearly = 10 months.
+const TIERS = [{ k: "solo", name: "Solo", who: "1 barbier", m: 99 }, { k: "salon", name: "Salon", who: "2 à 3 barbiers", m: 149 }, { k: "grand", name: "Grand salon", who: "4 barbiers", m: 199 }];
+const tierOf = (n) => n <= 1 ? TIERS[0] : n <= 3 ? TIERS[1] : TIERS[2];
+const nBarbers = () => Math.max(1, Math.min(4, parseInt($("barbers").value) || 1));
+const monthly = (n) => tierOf(n).m;
 const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 function trialEnd() { const d = new Date(); d.setMonth(d.getMonth() + 2); return d; }
 function updatePlan() {
-  const ch = Math.max(1, Math.min(20, parseInt($("chairs").value) || 1));
+  const ch = nBarbers(), T = tierOf(ch);
   const m = monthly(ch), y = m * 10;
-  $("planName").textContent = ch <= 1 ? "Solo · 1 fauteuil" : `Salon · ${ch} fauteuils`;
+  $("planName").textContent = `${T.name} · ${ch} barbier${ch > 1 ? "s" : ""}`;
+  $("tiers").innerHTML = TIERS.map((x) => `<div class="${x === T ? "on" : ""}"><b>${x.name}</b>${x.who}<br>${billing === "year" ? fmt(x.m * 10) + " DH / an" : x.m + " DH / mois"}</div>`).join("");
   $("planPrice").textContent = billing === "year" ? `${fmt(y)} DH / an` : `${m} DH / mois`;
   $("planTrial").textContent = "jusqu'au " + trialEnd().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 }
@@ -160,12 +169,12 @@ document.querySelectorAll("[data-bill]").forEach((b) => b.onclick = () => {
   document.querySelectorAll("[data-bill]").forEach((x) => x.setAttribute("aria-pressed", x === b));
   updatePlan();
 });
-$("chairs").oninput = updatePlan; updatePlan();
+$("barbers").oninput = updatePlan; $("barbers").onchange = () => { $("barbers").value = nBarbers(); updatePlan(); }; updatePlan();
 
 function phoneKey(p) { let d = String(p || "").replace(/\D/g, ""); if (d.startsWith("212")) d = "0" + d.slice(3); if (d.length === 9 && /^[5-7]/.test(d)) d = "0" + d; return /^0[5-7]\d{8}$/.test(d) ? d : null; }
 
 function collect() {
-  const ch = Math.max(1, Math.min(20, parseInt($("chairs").value) || 1));
+  const ch = nBarbers();
   const services = [...document.querySelectorAll(".svc-row:not(.svc-head)")].map((r) => {
     const i = r.querySelectorAll("input"); return { name: i[0].value.trim(), price: Number(i[1].value) || 0, minutes: Number(i[2].value) || 20 };
   }).filter((s) => s.name);
@@ -174,9 +183,9 @@ function collect() {
   });
   return {
     shop: $("shop").value.trim(), city: $("city").value.trim(), address: $("address").value.trim(),
-    chairs: ch, barbers: Math.max(1, parseInt($("barbers").value) || 1),
+    chairs: ch, barbers: ch,
     owner: $("owner").value.trim(), phone: phoneKey($("phone").value) || $("phone").value.trim(), email: $("email").value.trim(),
-    services, hours, billing, plan: ch <= 1 ? "solo" : "salon",
+    services, hours, billing, plan: tierOf(ch).k,
     price: billing === "year" ? monthly(ch) * 10 : monthly(ch),
     trialEnds: trialEnd().toISOString().slice(0, 10),
     source: $("source").value, status: "nouveau", createdAt: new Date().toISOString()
@@ -184,7 +193,7 @@ function collect() {
 }
 
 function waLink(d) {
-  const txt = `Salam NOBTK, nouvelle inscription :\nSalon : ${d.shop} (${d.city})\nNom : ${d.owner}\nTél : ${d.phone}\nFauteuils : ${d.chairs}\nFormule : ${d.plan} ${d.billing === "year" ? "annuel" : "mensuel"} (${d.price} DH)`;
+  const txt = `Salam NOBTK, nouvelle inscription :\nSalon : ${d.shop} (${d.city})\nNom : ${d.owner}\nTél : ${d.phone}\nBarbiers : ${d.barbers}\nFormule : ${tierOf(d.barbers).name} ${d.billing === "year" ? "annuel" : "mensuel"} (${d.price} DH)`;
   return "https://wa.me/212634364422?text=" + encodeURIComponent(txt);
 }
 

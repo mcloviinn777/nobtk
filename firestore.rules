@@ -15,13 +15,28 @@ service cloud.firestore {
                       'services', 'hours', 'barbers', 'pace', 'noRevenue',
                       'setupDone', 'working', 'bpause'])
             && (!('photo' in request.resource.data)
-                || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000)));
+                || (request.resource.data.photo is string && request.resource.data.photo.size() < 300000))
+            // the team can't be bigger than the plan the owner set (maxBarbers, changed only by the owner)
+            && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['chairs', 'barbers'])
+                || (request.resource.data.get('chairs', 1) <= resource.data.get('maxBarbers', 4)
+                    && request.resource.data.get('barbers', []).size() <= resource.data.get('maxBarbers', 4))));
 
       // Tickets may carry the client's optional photo (small, under ~60 KB).
+      // A new ticket only if the salon is active and its subscription is paid
+      // (paidUntilMs, set only by the owner, plus 3 days of grace). Salons without a date are not limited.
+      function shopOpen(shopId) {
+        let s = get(/databases/$(database)/documents/shops/$(shopId)).data;
+        return s.get('active', true) != false
+          && request.time.toMillis() < s.get('paidUntilMs', 99999999999999) + 259200000;
+      }
+      function photoOk() {
+        return !('photo' in request.resource.data)
+          || (request.resource.data.photo is string && request.resource.data.photo.size() < 60000);
+      }
       match /tickets/{ticketId} {
         allow read, delete: if true;
-        allow create, update: if !('photo' in request.resource.data)
-          || (request.resource.data.photo is string && request.resource.data.photo.size() < 60000);
+        allow create: if photoOk() && shopOpen(shopId);
+        allow update: if photoOk();
       }
       match /clients/{phone} {
         allow read, create, update: if true;

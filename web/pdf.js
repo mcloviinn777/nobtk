@@ -8,7 +8,8 @@
   const slug = (s) => String(s || "salon").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "salon";
 
   function html(d) {
-    const plan = (d.plan === "solo" ? "Solo" : "Salon") + " · " + (d.chairs || 1) + " fauteuil" + ((d.chairs || 1) > 1 ? "s" : "");
+    const nb = Math.max(1, Math.min(4, +(d.barbers || d.chairs) || 1));
+    const plan = (nb <= 1 ? "Solo" : nb <= 3 ? "Salon" : "Grand salon") + " · " + nb + " barbier" + (nb > 1 ? "s" : "");
     const row = (l, v) => `<tr><td style="color:#5D5C86;width:38%;padding:7px 0;border-bottom:1px solid #E6E5F3">${l}</td><td style="padding:7px 0;border-bottom:1px solid #E6E5F3;font-weight:600">${v || "–"}</td></tr>`;
     const h2 = (n, t) => `<div style="display:flex;align-items:center;gap:10px;margin:22px 0 8px;font-weight:700;font-size:19px;border-bottom:2px solid #3A31D2;padding-bottom:6px"><span style="width:28px;height:28px;border-radius:8px;background:#FFC53D;color:#2B1E00;display:inline-flex;align-items:center;justify-content:center;font-size:15px">${n}</span>${t}</div>`;
     return `
@@ -19,7 +20,7 @@
         <div style="text-align:right;font-size:13px"><div style="color:#FFC53D;font-weight:700">2 mois gratuits</div><div>Reçue le ${day(d.createdAt)}</div></div>
       </div>
       ${h2(1, "Le salon")}
-      <table style="width:100%;border-collapse:collapse">${row("Nom du salon", esc(d.shop))}${row("Ville", esc(d.city))}${row("Adresse", esc(d.address))}${row("Fauteuils", d.chairs)}${row("Barbiers", d.barbers)}</table>
+      <table style="width:100%;border-collapse:collapse">${row("Nom du salon", esc(d.shop))}${row("Ville", esc(d.city))}${row("Adresse", esc(d.address))}${row("Barbiers", d.barbers || d.chairs)}</table>
       ${h2(2, "Le propriétaire")}
       <table style="width:100%;border-collapse:collapse">${row("Nom complet", esc(d.owner))}${row("Téléphone WhatsApp", esc(d.phone))}${row("Email", esc(d.email))}</table>
       ${h2(3, "Services et prix")}
