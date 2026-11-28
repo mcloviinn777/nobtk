@@ -41,7 +41,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
 .seg{display:flex;background:var(--surface-2);border-radius:12px;padding:4px;gap:4px;width:max-content;max-width:100%}
 .seg button{border:0;background:transparent;border-radius:9px;padding:10px 14px;font-weight:700;color:var(--muted);cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(21,20,58,.12)}
-.plan{background:var(--primary);color:#fff;border-radius:16px;padding:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:center}
+.plan{background:var(--primary);color:#fff;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.plan .trial{border-top:1px solid rgba(255,255,255,.2);padding-top:12px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}.plan .trial strong{color:#FFC53D}
 .plan b{font-family:"Bricolage Grotesque",sans-serif;font-size:28px}
 .plan span{color:#D9D6FF}
 .tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -108,7 +109,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
     <section class="card">
       <h2><i>5</i>Ta formule</h2>
       <div class="seg" role="group" aria-label="Facturation"><button type="button" data-bill="month" aria-pressed="true">Mensuel</button><button type="button" data-bill="year" aria-pressed="false">Annuel (2 mois offerts)</button></div>
-      <div class="plan"><div><span id="planName">Salon</span><br><b id="planPrice">149 DH / mois</b></div><div style="text-align:right"><span>2 mois gratuits</span><br><strong id="planTrial"></strong></div></div>
+      <div class="plan"><div><span id="planName">Salon</span><br><b id="planPrice">149 DH / mois</b></div><div class="trial"><span>2 mois gratuits</span><strong id="planTrial"></strong></div></div>
       <div class="tiers" id="tiers"></div>
       <label class="f">Comment tu as connu NOBTK ?<select id="source"><option value="">Choisir</option><option>Visite au salon</option><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>Un autre barbier</option><option>WhatsApp</option><option>Autre</option></select></label>
       <label class="consent"><input type="checkbox" id="consent"><span>J'accepte que NOBTK me contacte sur WhatsApp pour activer mon salon, et que les informations de ce formulaire soient utilisées pour créer mon compte.</span></label>
