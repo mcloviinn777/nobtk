@@ -44,7 +44,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
 .plan{background:var(--primary);color:#fff;border-radius:16px;padding:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:center}
 .plan b{font-family:"Bricolage Grotesque",sans-serif;font-size:28px}
 .plan span{color:#D9D6FF}
-.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .tiers div{border:1.5px solid var(--line,#E2E1F0);border-radius:12px;padding:9px 10px;font-size:13.5px;line-height:1.3}
 .tiers div b{display:block;font-size:15px}.tiers div.on{border-color:var(--primary);background:#F2F1FA}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:15px}
@@ -78,8 +78,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)
         <label class="f">Nom du salon<input type="text" id="shop" maxlength="60" placeholder="ex. Barber Shop Al Amal" required></label>
         <label class="f">Ville<input type="text" id="city" maxlength="40" value="Mohammedia"></label>
         <label class="f" style="grid-column:1/-1">Adresse<input type="text" id="address" maxlength="120" placeholder="Rue, quartier"></label>
-        <label class="f">Nombre de barbiers (toi compris)<input type="number" id="barbers" min="1" max="4" value="2" inputmode="numeric"></label>
-        <p class="muted" style="grid-column:1/-1;margin:-4px 0 0;font-size:13.5px">Ton prix dépend du nombre de barbiers qui utilisent l'appli. Plus de 4 barbiers ? <a href="https://wa.me/212634364422?text=Salam%20NOBTK%2C%20mon%20salon%20a%20plus%20de%204%20barbiers." target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Écris-nous</a>, on te fait une offre.</p>
+        <label class="f">Nombre de fauteuils<input type="number" id="barbers" min="1" max="10" value="2" inputmode="numeric"></label>
+        <p class="muted" style="grid-column:1/-1;margin:-4px 0 0;font-size:13.5px">Ton prix dépend du nombre de fauteuils (un coiffeur par fauteuil dans l'appli). Plus de 10 fauteuils ? <a href="https://wa.me/212634364422?text=Salam%20NOBTK%2C%20mon%20salon%20a%20plus%20de%2010%20fauteuils." target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">Écris-nous</a>, on te fait une offre.</p>
       </div>
     </section>
 
@@ -149,18 +149,18 @@ DAYS.forEach((d, i) => {
   $("days").appendChild(el);
 });
 
-// Price by number of barbers: Solo (1) 99 DH, Salon (2-3) 149 DH, Grand salon (4) 199 DH. Yearly = 10 months.
-const TIERS = [{ k: "solo", name: "Solo", who: "1 barbier", m: 99 }, { k: "salon", name: "Salon", who: "2 à 3 barbiers", m: 149 }, { k: "grand", name: "Grand salon", who: "4 barbiers", m: 199 }];
+// Price by number of chairs: Solo (1) 99 DH, Salon (2-3) 149 DH, Grand salon (4-5) 199 DH, then +50 DH per extra chair. Yearly = 10 months.
+const TIERS = [{ k: "solo", name: "Solo", who: "1 fauteuil", m: 99 }, { k: "salon", name: "Salon", who: "2 à 3 fauteuils", m: 149 }, { k: "grand", name: "Grand salon", who: "4 à 5 fauteuils", m: 199 }];
 const tierOf = (n) => n <= 1 ? TIERS[0] : n <= 3 ? TIERS[1] : TIERS[2];
-const nBarbers = () => Math.max(1, Math.min(4, parseInt($("barbers").value) || 1));
-const monthly = (n) => tierOf(n).m;
+const nBarbers = () => Math.max(1, Math.min(10, parseInt($("barbers").value) || 1));
+const monthly = (n) => tierOf(n).m + 50 * Math.max(0, n - 5);
 const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 function trialEnd() { const d = new Date(); d.setMonth(d.getMonth() + 2); return d; }
 function updatePlan() {
   const ch = nBarbers(), T = tierOf(ch);
   const m = monthly(ch), y = m * 10;
-  $("planName").textContent = `${T.name} · ${ch} barbier${ch > 1 ? "s" : ""}`;
-  $("tiers").innerHTML = TIERS.map((x) => `<div class="${x === T ? "on" : ""}"><b>${x.name}</b>${x.who}<br>${billing === "year" ? fmt(x.m * 10) + " DH / an" : x.m + " DH / mois"}</div>`).join("");
+  $("planName").textContent = `${T.name} · ${ch} fauteuil${ch > 1 ? "s" : ""}`;
+  $("tiers").innerHTML = TIERS.map((x) => `<div class="${x === T && ch <= 5 ? "on" : ""}"><b>${x.name}</b>${x.who}<br>${billing === "year" ? fmt(x.m * 10) + " DH / an" : x.m + " DH / mois"}</div>`).join("") + `<div class="${ch > 5 ? "on" : ""}"><b>6 fauteuils et +</b>199 DH + 50 DH par fauteuil en plus${ch > 5 ? "<br>= " + (billing === "year" ? fmt(m * 10) + " DH / an" : m + " DH / mois") : ""}</div>`;
   $("planPrice").textContent = billing === "year" ? `${fmt(y)} DH / an` : `${m} DH / mois`;
   $("planTrial").textContent = "jusqu'au " + trialEnd().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 }
@@ -193,7 +193,7 @@ function collect() {
 }
 
 function waLink(d) {
-  const txt = `Salam NOBTK, nouvelle inscription :\nSalon : ${d.shop} (${d.city})\nNom : ${d.owner}\nTél : ${d.phone}\nBarbiers : ${d.barbers}\nFormule : ${tierOf(d.barbers).name} ${d.billing === "year" ? "annuel" : "mensuel"} (${d.price} DH)`;
+  const txt = `Salam NOBTK, nouvelle inscription :\nSalon : ${d.shop} (${d.city})\nNom : ${d.owner}\nTél : ${d.phone}\nFauteuils : ${d.chairs}\nFormule : ${tierOf(d.chairs).name} ${d.billing === "year" ? "annuel" : "mensuel"} (${d.price} DH)`;
   return "https://wa.me/212634364422?text=" + encodeURIComponent(txt);
 }
 
